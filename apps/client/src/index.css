@@ -2,6 +2,12 @@
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
