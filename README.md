@@ -1,6 +1,9 @@
 # CloudCraft
 
-프로젝트 이미지 첨부 예정
+<img width="2042" height="442" alt="Image" src="https://github.com/user-attachments/assets/bee10f94-1ba3-4f56-88c5-bf39a3df97f9" />
+
+<img width="500" height="906" alt="Image" src="https://github.com/user-attachments/assets/99489363-b643-44bd-8dc9-ccc55359d5df" />
+<img width="500" height="906" alt="Image" src="https://github.com/user-attachments/assets/dc1b5866-f4c9-415a-8e51-5d7f0e0ccb61" />
 
 <br/>
 
@@ -8,9 +11,13 @@
 
 > CloudCraft는 실제 클라우드 계정 없이 콘솔형 UI에서 직접 설정을 조작하며 클라우드 아키텍처와 동작을 직관적으로 학습할 수 있도록 돕는 시뮬레이션 플랫폼입니다.
 
+### 프로젝트 데모 PPT 링크
+- [1주차 기획 데모 PPT](https://drive.google.com/file/d/1z3bfDJv9m18K8o3jC42QHthKlkWoxvxw/view?usp=sharing)
+- [2주차 프로토타입 데모 PPT](https://drive.google.com/file/d/1L-Q4C5KP9BE4utqSy2qmft2cXnQ0Py5H/view?usp=sharing)
+
 ### 프로젝트 기간
 
-`25.12.22 ~ 26.02.05`
+`25.12.08 ~ 26.02.05`
 
 <br/>
 
