@@ -16,6 +16,9 @@
     "apps/client/**/*.{ts,tsx}": [
       "pnpm --filter client exec eslint --fix"
     ],
+    "apps/web/**/*.{ts,tsx}": [
+      "pnpm --filter web exec eslint --fix"
+    ],
     "apps/server/**/*.ts": [
       "pnpm --filter server exec eslint --fix"
     ]
