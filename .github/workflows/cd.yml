@@ -3,29 +3,32 @@ name: Deploy to Production
 on:
   workflow_dispatch:
     inputs:
-      environment:
-        description: "Deployment environment"
-        required: true
-        default: "production"
-        type: choice
-        options:
-          - pre-production
-          - production
       image_tag:
-        description: "Docker image tag to deploy (default: latest)"
-        required: false
-        default: "latest"
+        description: "Docker image tag to deploy (e.g., rc-abc1234 or v1.0.0)"
+        required: true
         type: string
 
 jobs:
   deploy:
-    name: Deploy to ${{ inputs.environment }}
+    name: Deploy to Production
     runs-on: [self-hosted, Linux]
-    environment: ${{ inputs.environment }}
+    environment: production
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Validate image tag format
+        run: |
+          TAG="${{ inputs.image_tag }}"
+
+          # rc-{sha} 또는 semVer 형식 검증
+          if [[ $TAG =~ ^rc-[a-f0-9]{7}$ ]] || [[ $TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Valid tag format: $TAG"
+          else
+            echo "Error: Invalid tag format. Expected rc-{sha} or v{major}.{minor}.{patch}"
+            exit 1
+          fi
 
       - name: Setup SSH
         run: |
@@ -85,6 +88,7 @@ jobs:
       - name: Deployment notification
         if: success()
         run: |
-          echo "✅ Deployment to ${{ inputs.environment }} completed successfully!"
-          echo "Image tag: ${{ inputs.image_tag }}"
-          echo "Deployed at: $(date)"
+          echo "### Deployment Successful! :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** Production" >> $GITHUB_STEP_SUMMARY
+          echo "**Image tag:** ${{ inputs.image_tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Deployed at:** $(date)" >> $GITHUB_STEP_SUMMARY
