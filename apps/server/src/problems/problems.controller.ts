@@ -1,4 +1,4 @@
-import { Controller, Post, Param, Body } from '@nestjs/common';
+import { Controller, Post, Param, Body, ParseIntPipe } from '@nestjs/common';
 import { SubmitRequestDto } from './dto/submit-request.dto';
 import { ProblemsService } from './problems.service';
 
@@ -8,7 +8,7 @@ export class ProblemsController {
 
   @Post(':problemId/submit')
   submit(
-    @Param('problemId') problemId: string,
+    @Param('problemId', ParseIntPipe) problemId: number,
     @Body() body: SubmitRequestDto,
   ) {
     return this.problemsService.submit(problemId, body);

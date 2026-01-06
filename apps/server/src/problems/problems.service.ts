@@ -4,7 +4,7 @@ import { SubmitResponseDto } from './dto/submit-response.dto';
 
 @Injectable()
 export class ProblemsService {
-  submit(problemId: string, body: SubmitRequestDto): SubmitResponseDto {
+  submit(problemId: number, body: SubmitRequestDto): SubmitResponseDto {
     const problem_type = body.submitConfig?.[0];
     const answer = (problem_type?.configInfo?.answer ?? '') as string;
 
