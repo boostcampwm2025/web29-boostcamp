@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - production
+    tags:
+      - "v*"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
