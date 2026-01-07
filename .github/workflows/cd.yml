@@ -45,18 +45,21 @@ jobs:
         if: always()
         run: rm -f .env
 
+      # docker hub 계정이 다른데 협업 기능은 유료이므로 두 번에 걸쳐서 이미지를 가져와야함.
       - name: Deploy with Docker Compose
         uses: appleboy/ssh-action@1.2.4
         env:
           IMAGE_TAG: ${{ inputs.image_tag }}
-          REGISTRY_USER: ${{ secrets.REGISTRY_USERNAME }}
-          REGISTRY_PASS: ${{ secrets.REGISTRY_PASSWORD }}
+          DOCKERHUB_WEB_USERNAME: ${{ secrets.DOCKERHUB_WEB_USERNAME }}
+          DOCKERHUB_WEB_TOKEN: ${{ secrets.DOCKERHUB_WEB_TOKEN }}
+          DOCKERHUB_SERVER_USERNAME: ${{ secrets.DOCKERHUB_SERVER_USERNAME }}
+          DOCKERHUB_SERVER_TOKEN: ${{ secrets.DOCKERHUB_SERVER_TOKEN }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT || 22 }}
-          envs: IMAGE_TAG,REGISTRY_USER,REGISTRY_PASS
+          envs: IMAGE_TAG,DOCKERHUB_WEB_USERNAME,DOCKERHUB_WEB_TOKEN,DOCKERHUB_SERVER_USERNAME,DOCKERHUB_SERVER_TOKEN
           command_timeout: 30m
           script: |
             cd ${{ secrets.DEPLOY_PATH }} || exit 1
@@ -65,9 +68,14 @@ jobs:
 
             echo "🚀 Starting deployment for tag: $IMAGE_TAG"
 
-            echo "$REGISTRY_PASS" | docker login -u "$REGISTRY_USER" --password-stdin
+            echo "$DOCKERHUB_WEB_TOKEN" | docker login -u "$DOCKERHUB_WEB_USERNAME" --password-stdin
+            IMAGE_TAG=$IMAGE_TAG docker compose pull web
+            docker logout
 
-            IMAGE_TAG=$IMAGE_TAG docker compose pull
+            echo "$DOCKERHUB_SERVER_TOKEN" | docker login -u "$DOCKERHUB_SERVER_USERNAME" --password-stdin
+            IMAGE_TAG=$IMAGE_TAG docker compose pull server
+            docker logout
+
             IMAGE_TAG=$IMAGE_TAG docker compose up -d
 
             echo "✅ Deployment complete! Current status:"
@@ -75,8 +83,6 @@ jobs:
 
             echo "🧹 Cleaning up unused images..."
             docker image prune -f
-
-            docker logout
 
       - name: Deployment notification
         if: success()
