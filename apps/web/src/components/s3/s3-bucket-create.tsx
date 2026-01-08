@@ -5,7 +5,6 @@ import { AlertCircle, Info } from 'lucide-react'
 import React from 'react'
 
 import { SectionContainer } from '@/components/section-container'
-import { useSteps } from '@/components/steps-navigator'
 import {
   Accordion,
   AccordionContent,
@@ -44,9 +43,10 @@ function GeneralConfiguration() {
           />
           <div className="text-muted-foreground flex items-start gap-2 text-sm">
             <Info className="mt-0.5 h-4 w-4 shrink-0" />
-            <p>
-              버킷 이름은 전역적으로 고유해야 하며 DNS 규격을 준수해야 합니다.
-              소문자, 숫자, 하이픈 및 마침표만 사용할 수 있습니다.
+            <p className="">
+              버킷은 DNS를 통해 배포되기 때문에 버킷 이름은 전역적으로 고유해야
+              하며 DNS 규격을 준수해야 합니다. 소문자, 숫자, 하이픈 및 마침표만
+              사용할 수 있습니다.
             </p>
           </div>
         </div>
@@ -428,14 +428,22 @@ function AdvancedSettings() {
   )
 }
 
-export default function S3Steps() {
-  const { nextStep, prevStep, canGoNext, canGoPrev } = useSteps()
+interface S3BucketCreateProps {
+  onNext: () => void
+  onPrev: () => void
+  canGoPrev: boolean
+}
 
+export default function S3BucketCreate({
+  onNext,
+  onPrev,
+  canGoPrev,
+}: S3BucketCreateProps) {
   return (
     <div className="mx-auto max-w-4xl space-y-6 p-6">
       {/* Header Section */}
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold">버킷 생성</h1>
+        <h2 className="text-3xl font-bold">버킷 생성</h2>
         <p className="text-muted-foreground">S3 버킷 설정을 구성하세요</p>
       </div>
 
@@ -474,14 +482,12 @@ export default function S3Steps() {
 
       {/* Action Buttons */}
       <div className="flex justify-between gap-3 pt-6">
-        <Button variant="outline" onClick={prevStep} disabled={!canGoPrev}>
+        <Button variant="outline" onClick={onPrev} disabled={!canGoPrev}>
           이전
         </Button>
         <div className="flex gap-3">
           <Button variant="outline">취소</Button>
-          <Button onClick={nextStep} disabled={!canGoNext}>
-            다음 단계
-          </Button>
+          <Button onClick={onNext}>다음 단계</Button>
         </div>
       </div>
     </div>

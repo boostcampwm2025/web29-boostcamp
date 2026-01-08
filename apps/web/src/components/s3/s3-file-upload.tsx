@@ -5,7 +5,6 @@ import { ChevronRight, File, Upload, X } from 'lucide-react'
 import React from 'react'
 
 import { SectionContainer } from '@/components/section-container'
-import { useSteps } from '@/components/steps-navigator'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -23,8 +22,17 @@ interface UploadFile {
   size: string
 }
 
-export default function S3FileUpload() {
-  const { prevStep } = useSteps()
+interface S3FileUploadProps {
+  onNext: () => void
+  onPrev: () => void
+  canGoPrev: boolean
+}
+
+export default function S3FileUpload({
+  onNext,
+  onPrev,
+  canGoPrev,
+}: S3FileUploadProps) {
   const [files, setFiles] = React.useState<UploadFile[]>([])
   const [isDragging, setIsDragging] = React.useState(false)
   const fileInputRef = React.useRef<HTMLInputElement>(null)
@@ -84,7 +92,7 @@ export default function S3FileUpload() {
     <div className="mx-auto max-w-4xl space-y-6 p-6">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm">
-        <button className="text-primary hover:underline" onClick={prevStep}>
+        <button className="text-primary hover:underline" onClick={onPrev}>
           my-application-assets
         </button>
         <ChevronRight className="text-muted-foreground h-4 w-4" />
@@ -93,7 +101,7 @@ export default function S3FileUpload() {
 
       {/* Header */}
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold">업로드</h1>
+        <h2 className="text-3xl font-bold">업로드</h2>
         <p className="text-muted-foreground">
           파일 및 폴더를 my-application-assets에 업로드하세요
         </p>
@@ -258,7 +266,7 @@ export default function S3FileUpload() {
 
       {/* Action Buttons */}
       <div className="flex justify-between gap-3 pt-6">
-        <Button variant="outline" onClick={prevStep}>
+        <Button variant="outline" onClick={onPrev}>
           취소
         </Button>
         <Button

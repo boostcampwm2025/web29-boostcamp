@@ -4,7 +4,6 @@ import { Lock, LockOpen, RefreshCw, Search } from 'lucide-react'
 
 import React from 'react'
 
-import { useSteps } from '@/components/steps-navigator'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
@@ -70,8 +69,17 @@ function EmptyState({ onCreateBucket }: { onCreateBucket: () => void }) {
   )
 }
 
-export default function S3BucketList() {
-  const { nextStep } = useSteps()
+interface S3BucketListProps {
+  onNext: () => void
+  onPrev: () => void
+  canGoPrev: boolean
+}
+
+export default function S3BucketList({
+  onNext,
+  onPrev,
+  canGoPrev,
+}: S3BucketListProps) {
   const [searchQuery, setSearchQuery] = React.useState('')
   const [selectedBuckets, setSelectedBuckets] = React.useState<Set<string>>(
     new Set(),
@@ -116,7 +124,7 @@ export default function S3BucketList() {
 
   const handleBucketClick = (bucketName: string) => {
     console.log('버킷 선택:', bucketName)
-    nextStep()
+    onNext()
   }
 
   const allSelected =
@@ -128,7 +136,7 @@ export default function S3BucketList() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">버킷</h1>
+          <h2 className="text-3xl font-bold">버킷</h2>
           <p className="text-muted-foreground mt-1 text-sm">
             Amazon S3에 저장된 객체의 컨테이너입니다.
           </p>

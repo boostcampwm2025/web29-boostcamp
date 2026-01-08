@@ -4,7 +4,6 @@ import { ChevronRight, File, Folder, Search, Upload } from 'lucide-react'
 
 import React from 'react'
 
-import { useSteps } from '@/components/steps-navigator'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
@@ -81,12 +80,21 @@ function EmptyState({ onUpload }: { onUpload: () => void }) {
   )
 }
 
-export default function S3BucketDetail() {
-  const { nextStep } = useSteps()
-  const [searchQuery, setSearchQuery] = React.useState('')
+interface S3BucketDetailProps {
+  onNext: () => void
+  onPrev: () => void
+  canGoPrev: boolean
+}
+
+export default function S3BucketDetail({
+  onNext,
+  onPrev,
+  canGoPrev,
+}: S3BucketDetailProps) {
   const [selectedObjects, setSelectedObjects] = React.useState<Set<string>>(
     new Set(),
   )
+  const [searchQuery, setSearchQuery] = React.useState('')
   const [objects] = React.useState<S3Object[]>(SAMPLE_OBJECTS)
   const [currentPath] = React.useState('my-application-assets')
 
@@ -116,7 +124,7 @@ export default function S3BucketDetail() {
   }
 
   const handleUpload = () => {
-    nextStep()
+    onNext()
   }
 
   const allSelected =
@@ -135,7 +143,7 @@ export default function S3BucketDetail() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{currentPath}</h1>
+          <h2 className="text-3xl font-bold">{currentPath}</h2>
           <p className="text-muted-foreground mt-1 text-sm">
             버킷의 객체를 관리하세요
           </p>

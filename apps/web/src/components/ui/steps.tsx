@@ -21,7 +21,10 @@ interface StepsProps {
 
 function Steps({ steps, currentStep, onStepClick, className }: StepsProps) {
   return (
-    <nav aria-label="Progress" className={className}>
+    <nav
+      aria-label="Progress"
+      className={cn(className, 'mx-auto max-w-4xl overflow-y-auto')}
+    >
       <div className="w-full overflow-x-auto">
         <ol className="flex min-w-max items-center gap-2 px-2">
           {steps.map((step, index) => {
