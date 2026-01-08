@@ -10,12 +10,7 @@ import {
   JoinTable,
 } from 'typeorm';
 import { Solution } from './solution.entity';
-
-enum ProblemType {
-  SINARIO = 'sinario',
-  UNIT = 'unit',
-  CHEETSHEET = 'cheetsheet',
-}
+import { ProblemType } from '../problems/types/problem-type.enum';
 
 @Entity('problem')
 export class Problem {
