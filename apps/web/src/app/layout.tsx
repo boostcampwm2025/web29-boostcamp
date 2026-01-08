@@ -32,10 +32,12 @@ export default function RootLayout({
         )}
       >
         <header className="mx-4 grid h-16 grid-cols-[200px_1fr] items-center justify-between px-4">
-          <div>LOGO</div>
+          <Button variant="link" asChild>
+            <Link href="/">LOGO</Link>
+          </Button>
 
           <div className="flex gap-4 justify-self-end">
-            <Button asChild variant="ghost">
+            <Button asChild variant="outline">
               <Link href="/problems">문제</Link>
             </Button>
             <Button asChild>

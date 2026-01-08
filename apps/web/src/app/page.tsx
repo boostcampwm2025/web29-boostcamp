@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import AwsDiagram from '@/components/AwsDiagram'
+import AwsDiagram from '@/components/aws-diagram'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
