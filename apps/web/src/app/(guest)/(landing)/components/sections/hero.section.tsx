@@ -1,13 +1,14 @@
 import Link from 'next/link'
 
 import AwsDiagram from '@/components/aws-diagram'
+import { AppSquareIcon } from '@/components/icons/app-square.icon'
 import { Button } from '@/components/ui/button'
 
 export const HeroSection = () => {
   return (
     <section className="grid grid-cols-1 gap-8 py-16 lg:grid-cols-2 lg:items-center">
       <div>
-        <div className="bg-primary h-[80px] w-[80px]"></div>
+        <AppSquareIcon width={100} height={100} />
         <p className="mt-8 text-3xl font-bold">AWS를 실전처럼 학습하세요</p>
         <p className="text-muted-foreground mt-6 text-lg">
           실제 AWS 환경을 시뮬레이션하여 클라우드 인프라를 직접 구축하고

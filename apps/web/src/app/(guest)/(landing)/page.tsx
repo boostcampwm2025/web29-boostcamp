@@ -6,7 +6,7 @@ import {
 
 export default function LandingPage() {
   return (
-    <main className="bg-background mx-auto max-w-[1440px] px-4">
+    <main className="bg-background mx-auto max-w-[var(--screen-xl)] px-4">
       <HeroSection />
       <ValuePropositionSection />
       <HowItWorksSection />
