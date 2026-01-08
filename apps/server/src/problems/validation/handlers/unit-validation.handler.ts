@@ -1,10 +1,11 @@
 import { ValidationHandler } from './validation.handler';
 import { SubmitResponseDto } from 'src/problems/dto/submit-response.dto';
 import { ConfigDto } from 'src/problems/dto/submit-request.dto';
+import { ProblemType } from 'src/problems/types/problem-type.enum';
 
 export class UnitValidationHandler implements ValidationHandler {
-  support(problemType: string): boolean {
-    return problemType === 'unit';
+  support(problemType: ProblemType): boolean {
+    return problemType === ProblemType.UNIT;
   }
 
   validate(submitConfig: ConfigDto, problemData: any): SubmitResponseDto {

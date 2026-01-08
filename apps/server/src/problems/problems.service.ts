@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { SubmitRequestDto } from './dto/submit-request.dto';
 import { SubmitResponseDto } from './dto/submit-response.dto';
 import { ValidationService } from './validation/validation.service';
+import { ProblemType } from './types/problem-type.enum';
 
 @Injectable()
 export class ProblemsService {
@@ -10,7 +11,7 @@ export class ProblemsService {
   submit(problemId: number, body: SubmitRequestDto): SubmitResponseDto {
     // MOCK 문제 데이터
     const problemData = {
-      problemType: 'unit',
+      problemType: ProblemType.UNIT,
       answer: '1234',
     };
 
