@@ -31,7 +31,7 @@ export default function RootLayout({
         )}
       >
         <Header />
-        <main className="pt-18">{children}</main>
+        <main className="h-full min-h-[calc(100vh)] pt-18">{children}</main>
         <Footer />
       </body>
     </html>
