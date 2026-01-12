@@ -61,7 +61,7 @@ COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 COPY apps/server/package.json ./apps/server/
 
 # Install production dependencies only
-RUN pnpm install --frozen-lockfile --prod
+RUN pnpm install --frozen-lockfile --prod --ignore-scripts
 
 # Copy built files from build stage
 COPY --from=build /app/apps/server/dist ./apps/server/dist
