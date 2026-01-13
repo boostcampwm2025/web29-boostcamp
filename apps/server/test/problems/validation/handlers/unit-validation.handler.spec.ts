@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UnitValidationHandler } from '../../../../src/problems/validation/handlers/unit-validation.handler';
+import { ProblemType } from '../../../../src/problems/types/problem-type.enum';
 
 describe('UnitValidationHandler', () => {
   let handler: UnitValidationHandler;
@@ -107,7 +108,7 @@ describe('UnitValidationHandler', () => {
             { id: '2', cidrBlock: 'B' },
           ],
         },
-        problemType: 'unit',
+        problemType: ProblemType.UNIT,
       };
       const result = handler.validate(submitRequestDto, problemData);
       expect(result.result).toBe('PASS');
@@ -129,7 +130,7 @@ describe('UnitValidationHandler', () => {
             { id: '2', cidrBlock: 'C' },
           ],
         },
-        problemType: 'unit',
+        problemType: ProblemType.UNIT,
       };
       const result = handler.validate(submitRequestDto, problemData);
       expect(result.result).toBe('FAIL');

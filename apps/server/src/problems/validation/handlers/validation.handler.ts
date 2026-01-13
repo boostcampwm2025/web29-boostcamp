@@ -7,7 +7,7 @@ import { ProblemType } from 'src/problems/types/problem-type.enum';
 
 export type ProblemData = {
   solution: SubmitConfig;
-  problemType: string;
+  problemType: ProblemType;
 };
 
 export interface ValidationHandler {
