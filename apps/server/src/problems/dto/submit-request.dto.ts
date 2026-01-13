@@ -22,7 +22,7 @@ export class NetworkTask {
   protocol: unknown;
 }
 
-export class NetworkTestRequestDto {
+export class ScenarioSubmitRequestDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => NetworkTask)
