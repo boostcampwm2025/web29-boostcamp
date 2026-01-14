@@ -8,5 +8,5 @@ export type UnitProblem = {
   id: number
   title: string
   description: string
-  tags: string[]
+  tags?: string[]
 }

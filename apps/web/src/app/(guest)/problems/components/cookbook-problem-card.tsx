@@ -16,12 +16,17 @@ import {
 } from '@/components/ui/card'
 import { UnitProblem } from '@/types/problem.type'
 
-export const UnitProblemCard = ({
+interface CookbookProblemCardProps extends UnitProblem {
+  children: React.ReactNode
+}
+
+export const CookbookProblemCard = ({
   id,
   title,
   description,
   tags,
-}: UnitProblem) => {
+  children,
+}: CookbookProblemCardProps) => {
   const router = useRouter()
 
   const handleCardClick = () => {
@@ -33,7 +38,7 @@ export const UnitProblemCard = ({
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <div className="flex gap-1">
-          {tags.slice(0, 3).map((tag) => (
+          {tags?.slice(0, 5).map((tag) => (
             <Badge key={tag} variant={'secondary'} className="rounded-xl">
               <TagIcon className="h-4 w-4" />
               {tag}
@@ -42,14 +47,16 @@ export const UnitProblemCard = ({
         </div>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="space-y-2">
         <CardDescription>{description}</CardDescription>
+
+        <div className="grid grid-cols-3 gap-4">{children}</div>
       </CardContent>
 
       <CardFooter>
         <Button
           className="w-full font-semibold"
-          variant={'ghost'}
+          variant={'outline'}
           onClick={handleCardClick}
         >
           <PlayIcon className="mr-1" />

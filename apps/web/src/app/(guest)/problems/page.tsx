@@ -1,11 +1,34 @@
+import { CookbookProblemCard } from './components/cookbook-problem-card'
 import { ProblemTypeTab } from './components/problem-type-tab'
-import { UnitProblemCard } from './components/unit-problem-card'
+import {
+  CompactUnitProblemCard,
+  UnitProblemCard,
+} from './components/unit-problem'
 
 const fakeUnitProblem = {
   id: 1,
   title: 'VPC 서브넷 구성',
   description: 'Public 서브넷에 EC2 인스턴스를 배치하세요',
   tags: ['VPC', 'EC2', 'Subnet', 'Networking'],
+}
+
+const fakeCookbookProblem = {
+  id: 2,
+  title: 'VPC 서브넷 구성',
+  description: 'Public 서브넷에 EC2 인스턴스를 배치하세요',
+  tags: ['VPC', 'EC2', 'Subnet', 'Networking'],
+  problems: [
+    {
+      id: 1,
+      title: 'VPC 서브넷 구성',
+      description: 'Public 서브넷에 EC2 인스턴스를 배치하세요',
+    },
+    {
+      id: 3,
+      title: '보안 그룹 설정',
+      description: 'EC2 인스턴스에 대한 보안 그룹을 설정하세요',
+    },
+  ],
 }
 
 export default function ProblemsPage() {
@@ -21,8 +44,16 @@ export default function ProblemsPage() {
 
       <ProblemTypeTab />
 
-      <section className="grid grid-cols-3 gap-4 pt-4">
-        <UnitProblemCard {...fakeUnitProblem} />
+      <section className="pt-4">
+        <CookbookProblemCard {...fakeCookbookProblem}>
+          {fakeCookbookProblem.problems.map((problem, index) => (
+            <CompactUnitProblemCard
+              key={problem.id}
+              step={index + 1}
+              {...problem}
+            />
+          ))}
+        </CookbookProblemCard>
       </section>
     </div>
   )
