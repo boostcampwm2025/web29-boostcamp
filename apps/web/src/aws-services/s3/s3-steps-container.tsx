@@ -1,6 +1,6 @@
 'use client'
 
-import S3BucketCreate from './s3-bucket-create'
+import S3BucketCreate from './s3-bucket-create/s3-bucket-create'
 import S3BucketDetail from './s3-bucket-detail'
 import S3BucketList from './s3-bucket-list'
 import S3FileUpload from './s3-file-upload'
