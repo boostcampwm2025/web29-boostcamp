@@ -50,9 +50,6 @@ export class SchemaV31768285856362 implements MigrationInterface {
       `ALTER TABLE \`problem\` ADD \`required_fields\` json NOT NULL`,
     );
     await queryRunner.query(
-      `ALTER TABLE \`problem\` ADD \`tags\` json NOT NULL`,
-    );
-    await queryRunner.query(
       `ALTER TABLE \`solution\` ADD \`answer_config\` json NOT NULL`,
     );
     await queryRunner.query(
@@ -60,14 +57,25 @@ export class SchemaV31768285856362 implements MigrationInterface {
     );
 
     // ==============================================
-    // 5. cookbook, cookbook_problem 테이블 생성
+    // 5. Tag 테이블 생성
+    // ==============================================
+    await queryRunner.query(
+      `CREATE TABLE \`tag\` (
+        \`id\` int NOT NULL AUTO_INCREMENT,
+        \`name\` varchar(20) NOT NULL,
+        PRIMARY KEY (\`id\`),
+        UNIQUE KEY \`UQ_tag_name\` (\`name\`)
+      ) ENGINE=InnoDB`,
+    );
+
+    // ==============================================
+    // 6. cookbook, cookbook_problem 테이블 생성
     // ==============================================
     await queryRunner.query(
       `CREATE TABLE \`cookbook\` (
         \`id\` int NOT NULL AUTO_INCREMENT,
         \`title\` varchar(255) NOT NULL,
         \`description\` text NOT NULL,
-        \`tags\` json NOT NULL,
         PRIMARY KEY (\`id\`)
       ) ENGINE=InnoDB`,
     );
@@ -82,7 +90,26 @@ export class SchemaV31768285856362 implements MigrationInterface {
     );
 
     // ==============================================
-    // 6. FK 생성
+    // 7. problem_tag, cookbook_tag 중간 테이블 생성
+    // ==============================================
+    await queryRunner.query(
+      `CREATE TABLE \`problem_tag\` (
+        \`problem_id\` int NOT NULL,
+        \`tag_id\` int NOT NULL,
+        PRIMARY KEY (\`problem_id\`, \`tag_id\`)
+      ) ENGINE=InnoDB`,
+    );
+
+    await queryRunner.query(
+      `CREATE TABLE \`cookbook_tag\` (
+        \`cookbook_id\` int NOT NULL,
+        \`tag_id\` int NOT NULL,
+        PRIMARY KEY (\`cookbook_id\`, \`tag_id\`)
+      ) ENGINE=InnoDB`,
+    );
+
+    // ==============================================
+    // 8. FK 생성
     // ==============================================
     await queryRunner.query(
       `ALTER TABLE \`cookbook_problem\`
@@ -97,23 +124,65 @@ export class SchemaV31768285856362 implements MigrationInterface {
        FOREIGN KEY (\`problem_id\`) REFERENCES \`problem\`(\`id\`)
        ON DELETE CASCADE`,
     );
+
+    await queryRunner.query(
+      `ALTER TABLE \`problem_tag\`
+       ADD CONSTRAINT \`FK_problem_tag_problem\`
+       FOREIGN KEY (\`problem_id\`) REFERENCES \`problem\`(\`id\`)
+       ON DELETE CASCADE`,
+    );
+
+    await queryRunner.query(
+      `ALTER TABLE \`problem_tag\`
+       ADD CONSTRAINT \`FK_problem_tag_tag\`
+       FOREIGN KEY (\`tag_id\`) REFERENCES \`tag\`(\`id\`)
+       ON DELETE CASCADE`,
+    );
+
+    await queryRunner.query(
+      `ALTER TABLE \`cookbook_tag\`
+       ADD CONSTRAINT \`FK_cookbook_tag_cookbook\`
+       FOREIGN KEY (\`cookbook_id\`) REFERENCES \`cookbook\`(\`id\`)
+       ON DELETE CASCADE`,
+    );
+
+    await queryRunner.query(
+      `ALTER TABLE \`cookbook_tag\`
+       ADD CONSTRAINT \`FK_cookbook_tag_tag\`
+       FOREIGN KEY (\`tag_id\`) REFERENCES \`tag\`(\`id\`)
+       ON DELETE CASCADE`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     // Rollback V3 changes
+    await queryRunner.query(
+      `ALTER TABLE \`cookbook_tag\` DROP FOREIGN KEY \`FK_cookbook_tag_tag\``,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`cookbook_tag\` DROP FOREIGN KEY \`FK_cookbook_tag_cookbook\``,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`problem_tag\` DROP FOREIGN KEY \`FK_problem_tag_tag\``,
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`problem_tag\` DROP FOREIGN KEY \`FK_problem_tag_problem\``,
+    );
     await queryRunner.query(
       `ALTER TABLE \`cookbook_problem\` DROP FOREIGN KEY \`FK_cookbook_problem_problem\``,
     );
     await queryRunner.query(
       `ALTER TABLE \`cookbook_problem\` DROP FOREIGN KEY \`FK_cookbook_problem_cookbook\``,
     );
+    await queryRunner.query(`DROP TABLE \`cookbook_tag\``);
+    await queryRunner.query(`DROP TABLE \`problem_tag\``);
     await queryRunner.query(`DROP TABLE \`cookbook_problem\``);
     await queryRunner.query(`DROP TABLE \`cookbook\``);
+    await queryRunner.query(`DROP TABLE \`tag\``);
     await queryRunner.query(`ALTER TABLE \`user\` DROP COLUMN \`password\``);
     await queryRunner.query(
       `ALTER TABLE \`solution\` DROP COLUMN \`answer_config\``,
     );
-    await queryRunner.query(`ALTER TABLE \`problem\` DROP COLUMN \`tags\``);
     await queryRunner.query(
       `ALTER TABLE \`problem\` DROP COLUMN \`required_fields\``,
     );
