@@ -2,6 +2,11 @@ import { IsObject, ValidateNested, IsOptional, IsArray } from 'class-validator';
 import { Type } from 'class-transformer';
 import * as ServiceConfigType from '../types/service-config-type.enum';
 
+export class NetworkTask {
+  source: unknown;
+  destination: unknown;
+  protocol: unknown;
+}
 // 서비스별 키-설정 값
 export class SubmitConfig {
   @IsOptional()
@@ -37,8 +42,3 @@ export class SubmitRequestDto {
 }
 
 // TODO: NetworkTask 구체화하기
-export class NetworkTask {
-  source: unknown;
-  destination: unknown;
-  protocol: unknown;
-}
