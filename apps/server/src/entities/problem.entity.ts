@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { Solution } from './solution.entity';
 import { ProblemType } from '../problems/types/problem-type.enum';
+import { Tag } from './tag.entity';
 
 @Entity('problem')
 export class Problem {
@@ -31,8 +32,13 @@ export class Problem {
     fixed_options?: Record<string, any>;
   }>;
 
-  @Column({ type: 'json' })
-  tags: string[];
+  @ManyToMany(() => Tag, (tag) => tag.problems)
+  @JoinTable({
+    name: 'problem_tag',
+    joinColumn: { name: 'problem_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'tag_id', referencedColumnName: 'id' },
+  })
+  tags: Tag[];
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
