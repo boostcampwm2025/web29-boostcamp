@@ -25,6 +25,7 @@ import { ProblemsModule } from './problems/problems.module';
         entities: [__dirname + '/**/*.entity.{.ts,.js}'],
         synchronize: false,
         logging: true,
+        charset: 'utf8mb4',
       }),
     }),
     ProblemsModule,

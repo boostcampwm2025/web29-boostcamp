@@ -13,4 +13,5 @@ export default new DataSource({
   migrations: ['dist/migrations/*.js'],
   synchronize: false,
   logging: true,
+  charset: 'utf8mb4',
 });
