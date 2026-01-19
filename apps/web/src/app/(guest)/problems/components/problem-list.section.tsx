@@ -1,57 +1,56 @@
-'use client'
-
-import { useProblem } from '../provider'
 import { CookbookCard } from './cookbook-card'
 import { CompactUnitCard, UnitCard } from './unit'
 
+import React from 'react'
+
 import { cn } from '@/lib/utils'
-import { ProblemType } from '@/types/problem.type'
+import { CookbookProblem, ProblemType, UnitProblem } from '@/types/problem.type'
 
-const fakeUnitProblem = {
-  id: 1,
-  title: 'VPC 서브넷 구성',
-  description: 'Public 서브넷에 EC2 인스턴스를 배치하세요',
-  tags: ['VPC', 'EC2', 'Subnet', 'Networking'],
+interface ProblemListSectionProps {
+  currentType: ProblemType
+  problems: UnitProblem[] | CookbookProblem[]
 }
 
-const fakeCookbookProblem = {
-  id: 2,
-  title: 'VPC 서브넷 구성',
-  description: 'Public 서브넷에 EC2 인스턴스를 배치하세요',
-  tags: ['VPC', 'EC2', 'Subnet', 'Networking'],
-  problems: [
-    {
-      id: 1,
-      title: 'VPC 서브넷 구성',
-      description: 'Public 서브넷에 EC2 인스턴스를 배치하세요',
-    },
-    {
-      id: 3,
-      title: '보안 그룹 설정',
-      description: 'EC2 인스턴스에 대한 보안 그룹을 설정하세요',
-    },
-  ],
-}
-
-export const ProblemListSection = () => {
-  const { currentTab } = useProblem()
-
+export const ProblemListSection = ({
+  currentType,
+  problems,
+}: ProblemListSectionProps) => {
   return (
     <section
       className={cn(
-        currentTab === ProblemType.UNIT && 'grid grid-cols-3 gap-4',
-        'pt-6',
+        currentType === ProblemType.UNIT && 'grid-cols-3',
+        'grid gap-4',
       )}
     >
-      {currentTab === ProblemType.UNIT ? (
-        <UnitCard {...fakeUnitProblem} />
+      {currentType === ProblemType.UNIT ? (
+        <UnitProblemList data={problems as UnitProblem[]} />
       ) : (
-        <CookbookCard {...fakeCookbookProblem}>
-          {fakeCookbookProblem.problems.map((problem, index) => (
+        <CookbookProblemList data={problems as CookbookProblem[]} />
+      )}
+    </section>
+  )
+}
+
+const UnitProblemList = ({ data }: { data: UnitProblem[] }) => {
+  return (
+    <React.Fragment>
+      {data.map((problem) => (
+        <UnitCard key={problem.id} {...problem} />
+      ))}
+    </React.Fragment>
+  )
+}
+
+const CookbookProblemList = ({ data }: { data: CookbookProblem[] }) => {
+  return (
+    <React.Fragment>
+      {data.map((cookbook) => (
+        <CookbookCard key={cookbook.id} {...cookbook}>
+          {cookbook.problems.map((problem, index) => (
             <CompactUnitCard key={problem.id} step={index + 1} {...problem} />
           ))}
         </CookbookCard>
-      )}
-    </section>
+      ))}
+    </React.Fragment>
   )
 }
