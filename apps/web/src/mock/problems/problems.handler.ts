@@ -1,7 +1,7 @@
 import { HttpResponse, http } from 'msw'
 
 export const problemsHandlers = [
-  http.get('/api/problems', ({ request }) => {
+  http.get(`/api/problems`, ({ request }) => {
     const url = new URL(request.url)
     const type = url.searchParams.get('type')
 

@@ -1,19 +1,20 @@
-'use client'
-
 import { CookbookCard } from './cookbook-card'
 import { CompactUnitCard, UnitCard } from './unit'
 
 import React from 'react'
 
-import { useSearchParams } from 'next/navigation'
-
 import { cn } from '@/lib/utils'
 import { CookbookProblem, ProblemType, UnitProblem } from '@/types/problem.type'
 
-export const ProblemListSection = () => {
-  const searchParams = useSearchParams()
-  const currentType = searchParams.get('type') as string
+interface ProblemListSectionProps {
+  currentType: ProblemType
+  problems: UnitProblem[] | CookbookProblem[]
+}
 
+export const ProblemListSection = ({
+  currentType,
+  problems,
+}: ProblemListSectionProps) => {
   return (
     <section
       className={cn(
@@ -21,11 +22,11 @@ export const ProblemListSection = () => {
         'grid gap-4',
       )}
     >
-      {/* {currentType === ProblemType.UNIT ? (
+      {currentType === ProblemType.UNIT ? (
         <UnitProblemList data={problems as UnitProblem[]} />
       ) : (
         <CookbookProblemList data={problems as CookbookProblem[]} />
-      )} */}
+      )}
     </section>
   )
 }
