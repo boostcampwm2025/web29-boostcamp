@@ -143,8 +143,8 @@ export class UnitValidationHandler implements ProblemValidationHandler {
         onlyInSolution,
         serviceKey,
       );
-      if (serviceMissingFeedback) {
-        feedbacks.push(serviceMissingFeedback as FeedbackDto);
+      if (serviceMissingFeedback.length > 0) {
+        feedbacks.push(...serviceMissingFeedback);
       }
 
       for (const submittedConfig of onlyInAnswer) {
@@ -164,8 +164,8 @@ export class UnitValidationHandler implements ProblemValidationHandler {
           matchedSolutionConfig,
           serviceKey,
         );
-        if (fieldMissingFeedback) {
-          feedbacks.push(fieldMissingFeedback as FeedbackDto);
+        if (fieldMissingFeedback.length > 0) {
+          feedbacks.push(...fieldMissingFeedback);
         }
 
         // 만약 더 많다면 -> 불필요한 필드 피드백
@@ -174,8 +174,8 @@ export class UnitValidationHandler implements ProblemValidationHandler {
           matchedSolutionConfig,
           serviceKey,
         );
-        if (unnecessaryFieldFeedback) {
-          feedbacks.push(unnecessaryFieldFeedback as FeedbackDto);
+        if (unnecessaryFieldFeedback.length > 0) {
+          feedbacks.push(...unnecessaryFieldFeedback);
         }
         // 값이 다르다면 -> 올바르지 않은 값 피드백
         const incorrectValueFeedback = this.generateIncorrectValueFeedback(
@@ -183,8 +183,8 @@ export class UnitValidationHandler implements ProblemValidationHandler {
           matchedSolutionConfig,
           serviceKey,
         );
-        if (incorrectValueFeedback) {
-          feedbacks.push(incorrectValueFeedback as FeedbackDto);
+        if (incorrectValueFeedback.length > 0) {
+          feedbacks.push(...incorrectValueFeedback);
         }
       }
     }
@@ -195,89 +195,98 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     onlyInAnswer: ServiceConfigTypes[],
     onlyInSolution: ServiceConfigTypes[],
     serviceKey: string,
-  ) {
+  ): FeedbackDto[] {
     const missingServicesCount = onlyInSolution.length - onlyInAnswer.length;
+    const feedbacks: FeedbackDto[] = [];
     if (missingServicesCount > 0) {
-      return {
-        field: serviceKey,
+      feedbacks.push({
+        serviceType: serviceKey,
         code: UnitProblemFeedbackType.SERVICE_MISSING,
         message: feedbackMessages[UnitProblemFeedbackType.SERVICE_MISSING](
           serviceKey,
           `${missingServicesCount}개의 서비스 설정이 누락되었습니다.`,
         ),
-      };
-    } else {
-      return null;
+      });
     }
+    return feedbacks;
   }
 
   private generateFieldMissingFeedback(
     submittedConfig: ServiceConfigTypes,
     solutionConfig: ServiceConfigTypes,
     serviceKey: string,
-  ) {
+  ): FeedbackDto[] {
     const submittedKeys = Object.keys(submittedConfig);
     const solutionKeys = Object.keys(solutionConfig);
     const missingFields = solutionKeys.filter(
       (key) => !submittedKeys.includes(key),
     );
+    const feedbacks: FeedbackDto[] = [];
 
     if (
       missingFields.length > 0 &&
       solutionKeys.length > submittedKeys.length
     ) {
-      return {
-        field: serviceKey,
-        code: UnitProblemFeedbackType.FIELD_MISSING,
-        message: feedbackMessages[UnitProblemFeedbackType.FIELD_MISSING](
-          serviceKey,
-          missingFields.join(', '),
-        ),
-      };
-    } else {
-      return null;
+      for (const field of missingFields) {
+        feedbacks.push({
+          serviceType: serviceKey,
+          service: submittedConfig['name'],
+          field: field,
+          code: UnitProblemFeedbackType.FIELD_MISSING,
+          message: feedbackMessages[UnitProblemFeedbackType.FIELD_MISSING](
+            serviceKey,
+            field,
+          ),
+        });
+      }
     }
+    return feedbacks;
   }
 
   private generateUnnecessaryFieldFeedback(
     submittedConfig: ServiceConfigTypes,
     solutionConfig: ServiceConfigTypes,
     serviceKey: string,
-  ) {
+  ): FeedbackDto[] {
     const submittedKeys = Object.keys(submittedConfig);
 
     const solutionKeys = Object.keys(solutionConfig);
     const unnecessaryFields = submittedKeys.filter(
       (key) => !solutionKeys.includes(key),
     );
+    const feedbacks: FeedbackDto[] = [];
     if (
       unnecessaryFields.length > 0 &&
       submittedKeys.length > solutionKeys.length
     ) {
-      return {
-        field: serviceKey,
-        code: UnitProblemFeedbackType.UNNECESSARY,
-        message: feedbackMessages[UnitProblemFeedbackType.UNNECESSARY](
-          serviceKey,
-          unnecessaryFields.join(', '),
-        ),
-      };
-    } else {
-      return null;
+      for (const field of unnecessaryFields) {
+        feedbacks.push({
+          serviceType: serviceKey,
+          service: submittedConfig['name'],
+          field: field,
+          code: UnitProblemFeedbackType.UNNECESSARY,
+          message: feedbackMessages[UnitProblemFeedbackType.UNNECESSARY](
+            serviceKey,
+            field,
+          ),
+        });
+      }
     }
+    return feedbacks;
   }
 
   private generateIncorrectValueFeedback(
     submittedConfig: ServiceConfigTypes,
     solutionConfig: ServiceConfigTypes,
     serviceKey: string,
-  ) {
+  ): FeedbackDto[] {
     const incorrectFields: string[] = [];
     const submittedKeys = Object.keys(submittedConfig);
     const solutionKeys = Object.keys(solutionConfig);
     const commonKeys = submittedKeys.filter((key) =>
       solutionKeys.includes(key),
     );
+    const feedbacks: FeedbackDto[] = [];
     for (const key of commonKeys) {
       if (!this.isDeepEqual(submittedConfig[key], solutionConfig[key])) {
         incorrectFields.push(key);
@@ -285,17 +294,20 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     }
 
     if (incorrectFields.length > 0) {
-      return {
-        field: serviceKey,
-        code: UnitProblemFeedbackType.INCORRECT,
-        message: feedbackMessages[UnitProblemFeedbackType.INCORRECT](
-          serviceKey,
-          incorrectFields.join(', '),
-        ),
-      };
-    } else {
-      return null;
+      for (const field of incorrectFields) {
+        feedbacks.push({
+          serviceType: serviceKey,
+          service: submittedConfig['name'],
+          field: field,
+          code: UnitProblemFeedbackType.INCORRECT,
+          message: feedbackMessages[UnitProblemFeedbackType.INCORRECT](
+            serviceKey,
+            field,
+          ),
+        });
+      }
     }
+    return feedbacks;
   }
 
   private findServiceByName(

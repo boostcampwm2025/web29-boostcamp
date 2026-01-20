@@ -197,15 +197,27 @@ describe('UnitValidationHandler', () => {
       expect(result.feedback.length).toBeGreaterThan(0);
       expect(result.feedback).toEqual([
         {
-          field: 'vpc',
+          serviceType: 'vpc',
+          service: 'vpc-2',
+          field: 'cidrBlock',
           code: UnitProblemFeedbackType.INCORRECT,
           message: '제출한 vpc 설정에 올바르지 않은 값이 있습니다: cidrBlock',
         },
         {
-          field: 'vpc',
+          serviceType: 'vpc',
+          service: 'vpc-1',
+          field: 'cidrBlock',
           code: VPCServiceFeedbackType.VPC_CIDR_OVERLAP,
           message:
             'VPC vpc-1와 VPC vpc-2의 CIDR 블록이 겹칩니다. (10.0.0.0/16 , 10.0.1.0/16)',
+        },
+        {
+          serviceType: 'vpc',
+          service: 'vpc-2',
+          field: 'cidrBlock',
+          code: VPCServiceFeedbackType.VPC_CIDR_OVERLAP,
+          message:
+            'VPC vpc-2와 VPC vpc-1의 CIDR 블록이 겹칩니다. (10.0.1.0/16 , 10.0.0.0/16)',
         },
       ]);
     });
@@ -248,7 +260,7 @@ describe('UnitValidationHandler', () => {
       const feedbacks = handler['generateFeedbackMessage'](validateResult);
       expect(feedbacks).toEqual([
         {
-          field: 'vpc',
+          serviceType: 'vpc',
           code: UnitProblemFeedbackType.SERVICE_MISSING,
           message:
             '제출한 vpc 설정에 누락된 서비스가 있습니다: 1개의 서비스 설정이 누락되었습니다.',
@@ -267,7 +279,9 @@ describe('UnitValidationHandler', () => {
       const feedbacks = handler['generateFeedbackMessage'](validateResult);
       expect(feedbacks).toEqual([
         {
-          field: 'vpc',
+          serviceType: 'vpc',
+          service: 'vpc-1',
+          field: 'region',
           code: UnitProblemFeedbackType.FIELD_MISSING,
           message: '제출한 vpc 설정에 누락된 필드가 있습니다: region',
         },
@@ -285,7 +299,9 @@ describe('UnitValidationHandler', () => {
       const feedbacks = handler['generateFeedbackMessage'](validateResult);
       expect(feedbacks).toEqual([
         {
-          field: 'vpc',
+          serviceType: 'vpc',
+          service: 'vpc-1',
+          field: 'region',
           code: UnitProblemFeedbackType.UNNECESSARY,
           message: '제출한 vpc 설정에 불필요한 필드가 있습니다: region',
         },
@@ -312,7 +328,9 @@ describe('UnitValidationHandler', () => {
       const feedbacks = handler['generateFeedbackMessage'](validateResult);
       expect(feedbacks).toEqual([
         {
-          field: 'vpc',
+          serviceType: 'vpc',
+          service: 'vpc-1',
+          field: 'cidrBlock',
           code: UnitProblemFeedbackType.INCORRECT,
           message: '제출한 vpc 설정에 올바르지 않은 값이 있습니다: cidrBlock',
         },
@@ -342,7 +360,9 @@ describe('UnitValidationHandler', () => {
       const feedbacks = handler['generateFeedbackMessage'](validateResult);
       expect(feedbacks).toEqual([
         {
-          field: 'vpc',
+          serviceType: 'vpc',
+          service: 'vpc-1',
+          field: 'nested',
           code: UnitProblemFeedbackType.INCORRECT,
           message: '제출한 vpc 설정에 올바르지 않은 값이 있습니다: nested',
         },
@@ -362,12 +382,16 @@ describe('UnitValidationHandler', () => {
       const feedbacks = handler['generateFeedbackMessage'](validateResult);
       expect(feedbacks).toEqual([
         {
-          field: 'vpc',
+          serviceType: 'vpc',
+          service: 'vpc-1',
+          field: 'cidrBlock',
           code: UnitProblemFeedbackType.INCORRECT,
           message: '제출한 vpc 설정에 올바르지 않은 값이 있습니다: cidrBlock',
         },
         {
-          field: 'subnet',
+          serviceType: 'subnet',
+          service: 'subnet-1',
+          field: 'cidrBlock',
           code: UnitProblemFeedbackType.INCORRECT,
           message:
             '제출한 subnet 설정에 올바르지 않은 값이 있습니다: cidrBlock',
@@ -388,18 +412,22 @@ describe('UnitValidationHandler', () => {
       const feedbacks = handler['generateFeedbackMessage'](validateResult);
       expect(feedbacks).toEqual([
         {
-          field: 'vpc',
+          serviceType: 'vpc',
           code: UnitProblemFeedbackType.SERVICE_MISSING,
           message:
             '제출한 vpc 설정에 누락된 서비스가 있습니다: 1개의 서비스 설정이 누락되었습니다.',
         },
         {
-          field: 'vpc',
+          serviceType: 'vpc',
+          service: 'vpc-1',
+          field: 'region',
           code: UnitProblemFeedbackType.FIELD_MISSING,
           message: '제출한 vpc 설정에 누락된 필드가 있습니다: region',
         },
         {
-          field: 'vpc',
+          serviceType: 'vpc',
+          service: 'vpc-1',
+          field: 'cidrBlock',
           code: UnitProblemFeedbackType.INCORRECT,
           message: '제출한 vpc 설정에 올바르지 않은 값이 있습니다: cidrBlock',
         },
