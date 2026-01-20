@@ -8,13 +8,14 @@ import {
   SearchBarSection,
   SelectionInfoSection,
 } from './sections'
-import type {
-  CloudFrontListWithSetValueSectionProps,
-  Distribution,
-} from './types'
 
 import React, { useState } from 'react'
 import { useWatch } from 'react-hook-form'
+
+import type {
+  CloudFrontListWithSetValueSectionProps,
+  Distribution,
+} from '@/types/aws-services/cloudfront/distribution-list'
 
 // 샘플 배포 데이터
 const SAMPLE_DISTRIBUTIONS: Distribution[] = [

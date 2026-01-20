@@ -1,10 +1,10 @@
-import type { CloudFrontListSectionProps } from '../types'
 import { RefreshCw, Search } from 'lucide-react'
 
 import { Controller } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import type { CloudFrontListSectionProps } from '@/types/aws-services/cloudfront/distribution-list'
 
 interface SearchBarSectionProps extends CloudFrontListSectionProps {
   onRefresh?: () => void

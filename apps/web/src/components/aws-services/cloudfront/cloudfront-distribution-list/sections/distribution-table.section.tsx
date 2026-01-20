@@ -1,4 +1,3 @@
-import type { Distribution } from '../types'
 import { CheckCircle2, Clock, Globe, XCircle } from 'lucide-react'
 
 import { Checkbox } from '@/components/ui/checkbox'
@@ -10,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import type { Distribution } from '@/types/aws-services/cloudfront/distribution-list'
 
 interface DistributionTableSectionProps {
   distributions: Distribution[]
