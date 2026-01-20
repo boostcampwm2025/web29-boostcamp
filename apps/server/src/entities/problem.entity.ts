@@ -27,6 +27,9 @@ export class Problem {
   @Column({ type: 'text', nullable: false })
   description: string;
 
+  @Column({ type: 'text', nullable: true })
+  desc_detail: string;
+
   @Column({ type: 'json', nullable: false })
   required_fields: TServiceConfigMap[];
 
