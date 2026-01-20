@@ -1,4 +1,3 @@
-import type { Bucket, S3ListWithSetValueSectionProps } from '../types'
 import { Lock, LockOpen } from 'lucide-react'
 
 import { useMemo } from 'react'
@@ -13,6 +12,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import type {
+  Bucket,
+  S3ListWithSetValueSectionProps,
+} from '@/types/aws-services/s3/bucket-list'
 
 interface BucketTableSectionProps extends S3ListWithSetValueSectionProps {
   onBucketClick: (bucketName: string) => void

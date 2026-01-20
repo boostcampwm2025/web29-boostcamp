@@ -1,10 +1,10 @@
-import type { S3ListSectionProps } from '../types'
 import { RefreshCw, Search } from 'lucide-react'
 
 import { Controller } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import type { S3ListSectionProps } from '@/types/aws-services/s3/bucket-list'
 
 interface SearchBarSectionProps extends S3ListSectionProps {
   onRefresh: () => void

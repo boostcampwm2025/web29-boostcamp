@@ -1,7 +1,10 @@
-import type { Bucket, S3ListSectionProps } from '../types'
-
 import { useMemo } from 'react'
 import { useWatch } from 'react-hook-form'
+
+import type {
+  Bucket,
+  S3ListSectionProps,
+} from '@/types/aws-services/s3/bucket-list'
 
 export const FooterInfoSection = ({ control, config }: S3ListSectionProps) => {
   const buckets = useWatch({ control, name: 'buckets' })

@@ -8,10 +8,14 @@ import {
   SearchBarSection,
   SelectionInfoSection,
 } from './sections'
-import type { Bucket, S3ListWithSetValueSectionProps } from './types'
 
 import { useMemo } from 'react'
 import { useWatch } from 'react-hook-form'
+
+import type {
+  Bucket,
+  S3ListWithSetValueSectionProps,
+} from '@/types/aws-services/s3/bucket-list'
 
 interface S3BucketListProps extends S3ListWithSetValueSectionProps {
   onCreateBucket: () => void

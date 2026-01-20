@@ -1,6 +1,5 @@
-import type { S3ListSectionProps } from '../types'
-
 import { Button } from '@/components/ui/button'
+import type { S3ListSectionProps } from '@/types/aws-services/s3/bucket-list'
 
 interface HeaderSectionProps extends S3ListSectionProps {
   onCreateBucket: () => void
