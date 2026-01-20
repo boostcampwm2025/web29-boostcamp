@@ -1,10 +1,10 @@
 'use client'
 
-import { PlayIcon, TagIcon } from 'lucide-react'
+import { ProblemTagBadge } from '../problem-tag-badge'
+import { PlayIcon } from 'lucide-react'
 
 import { useRouter } from 'next/navigation'
 
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -24,21 +24,18 @@ export const UnitCard = ({ id, title, description, tags }: UnitProblem) => {
   }
 
   return (
-    <Card>
+    <Card className="duration-300 hover:scale-105">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle className="text-lg">{title}</CardTitle>
         <div className="flex gap-1">
           {tags?.slice(0, 3).map((tag) => (
-            <Badge key={tag} variant={'secondary'} className="rounded-xl">
-              <TagIcon className="h-4 w-4" />
-              {tag}
-            </Badge>
+            <ProblemTagBadge key={tag} tag={tag} />
           ))}
         </div>
       </CardHeader>
 
       <CardContent>
-        <CardDescription>{description}</CardDescription>
+        <CardDescription className="text-base">{description}</CardDescription>
       </CardContent>
 
       <CardFooter>
