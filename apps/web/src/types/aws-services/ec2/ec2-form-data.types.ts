@@ -18,6 +18,12 @@ export interface EC2InstanceFormData {
   keyPair: {
     keyName: string
   }
+  networkSetting: {
+    autoAssignPublicIp: boolean
+    allowSSH: boolean
+    allowHTTPS: boolean
+    allowHTTP: boolean
+  }
   storage: {
     size: number
     volumeType: string
