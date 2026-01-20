@@ -1,5 +1,6 @@
 'use client'
 
+import type { CloudFrontCacheWithSetValueSectionProps } from '../../../../types/aws-services/cloudfront/cache-behavior'
 import {
   CachePolicySection,
   CompressionSection,
@@ -7,7 +8,6 @@ import {
   HttpMethodsSection,
   ViewerProtocolSection,
 } from './sections'
-import type { CloudFrontCacheWithSetValueSectionProps } from './types'
 
 import { Separator } from '@/components/ui/separator'
 

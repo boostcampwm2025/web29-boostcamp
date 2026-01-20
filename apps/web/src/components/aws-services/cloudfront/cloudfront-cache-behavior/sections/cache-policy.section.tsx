@@ -1,5 +1,3 @@
-import type { CloudFrontCacheSectionProps } from '../types'
-
 import { Controller, useWatch } from 'react-hook-form'
 
 import { SectionContainer } from '@/components/section-container'
@@ -13,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import type { CloudFrontCacheSectionProps } from '@/types/aws-services/cloudfront/cache-behavior'
 
 export function CachePolicySection({ control }: CloudFrontCacheSectionProps) {
   const cachePolicy = useWatch({ control, name: 'cachePolicy' })

@@ -1,5 +1,3 @@
-import CloudFrontCacheBehavior from '../cloudfront/cloudfront-cache-behavior/cloudfront-cache-behavior'
-import { CLOUDFRONT_CACHE_BEHAVIOR_SECTIONS } from '../cloudfront/cloudfront-cache-behavior/constants'
 import CloudFrontDistributionList from '../cloudfront/cloudfront-distribution-list/cloudfront-distribution-list'
 import { CLOUDFRONT_DISTRIBUTION_LIST_SECTIONS } from '../cloudfront/cloudfront-distribution-list/constants'
 import CloudFrontDistributionSettings from '../cloudfront/cloudfront-distribution-settings/cloudfront-distribution-settings'
@@ -11,10 +9,12 @@ import { CLOUDFRONT_WEBSITE_SETTINGS_SECTIONS } from '../cloudfront/cloudfront-w
 
 import { ComponentType } from 'react'
 
+import CloudFrontCacheBehavior from '@/components/aws-services/cloudfront/cloudfront-cache-behavior/cloudfront-cache-behavior'
 import S3BucketCreate from '@/components/aws-services/s3/s3-bucket-create/s3-bucket-create'
 import S3BucketDetail from '@/components/aws-services/s3/s3-bucket-detail/s3-bucket-detail'
 import S3BucketList from '@/components/aws-services/s3/s3-bucket-list/s3-bucket-list'
 import S3FileUpload from '@/components/aws-services/s3/s3-file-upload/s3-file-upload'
+import { CLOUDFRONT_CACHE_BEHAVIOR_SECTIONS } from '@/types/aws-services/cloudfront/cache-behavior/constants'
 import { S3_BUCKET_CREATE_SECTIONS } from '@/types/aws-services/s3/bucket-create/'
 import { S3_BUCKET_DETAIL_SECTIONS } from '@/types/aws-services/s3/bucket-detail/'
 import { S3_BUCKET_LIST_SECTIONS } from '@/types/aws-services/s3/bucket-list/'

@@ -1,4 +1,3 @@
-import type { CloudFrontCacheSectionProps } from '../types'
 import { Info } from 'lucide-react'
 
 import { Controller } from 'react-hook-form'
@@ -18,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import type { CloudFrontCacheSectionProps } from '@/types/aws-services/cloudfront/cache-behavior'
 
 export function FunctionAssociationsSection({
   control,
