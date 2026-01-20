@@ -1,23 +1,30 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UnitValidationHandler } from '../../../../src/problems/validation/handlers/unit-validation.handler';
 import { ProblemType } from '../../../../src/problems/types/problem-type.enum';
-import { UnitProblemFeedbackType } from '../../../../src/problems/types/unit-problem-feedback-types';
+import {
+  UnitProblemFeedbackType,
+  VPCServiceFeedbackType,
+} from '../../../../src/problems/types/unit-problem-feedback-types';
+import { FieldValidationHandler } from '../../../../src/problems/validation/handlers/field-validation.handler';
 
 describe('UnitValidationHandler', () => {
   let handler: UnitValidationHandler;
+  let fieldHandler: FieldValidationHandler;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UnitValidationHandler],
+      providers: [UnitValidationHandler, FieldValidationHandler],
     }).compile();
 
     handler = module.get<UnitValidationHandler>(UnitValidationHandler);
+    fieldHandler = module.get<FieldValidationHandler>(FieldValidationHandler);
   });
 
   afterEach(() => {});
 
   it('정의되어야 한다.', () => {
     expect(handler).toBeDefined();
+    expect(fieldHandler).toBeDefined();
   });
 
   describe('isDeepEqual 메서드', () => {
@@ -97,16 +104,16 @@ describe('UnitValidationHandler', () => {
       const submitRequestDto = {
         submitConfig: {
           vpc: [
-            { name: 'vpc-1', id: '1', cidrBlock: 'A' },
-            { name: 'vpc-2', id: '2', cidrBlock: 'B' },
+            { name: 'vpc-1', id: '1', cidrBlock: '10.0.0.0/16' },
+            { name: 'vpc-2', id: '2', cidrBlock: '10.1.0.0/16' },
           ],
         },
       };
       const problemData = {
         solution: {
           vpc: [
-            { name: 'vpc-1', id: '1', cidrBlock: 'A' },
-            { name: 'vpc-2', id: '2', cidrBlock: 'B' },
+            { name: 'vpc-1', id: '1', cidrBlock: '10.0.0.0/16' },
+            { name: 'vpc-2', id: '2', cidrBlock: '10.1.0.0/16' },
           ],
         },
         problemType: ProblemType.UNIT,
@@ -114,22 +121,23 @@ describe('UnitValidationHandler', () => {
       const result = handler.validate(submitRequestDto, problemData);
       expect(result.result).toBe('PASS');
       expect(result.feedback.length).toBe(0);
+      expect(result.feedback).toEqual([]);
     });
 
     it('정답과 일치하지 않는 설정에 대해 FAIL과 피드백을 반환해야 한다.', () => {
       const submitRequestDto = {
         submitConfig: {
           vpc: [
-            { name: 'vpc-1', id: '1', cidrBlock: 'A' },
-            { name: 'vpc-2', id: '2', cidrBlock: 'B' },
+            { name: 'vpc-1', id: '1', cidrBlock: '10.0.0.0/16' },
+            { name: 'vpc-2', id: '2', cidrBlock: '10.0.1.0/16' },
           ],
         },
       };
       const problemData = {
         solution: {
           vpc: [
-            { name: 'vpc-1', id: '1', cidrBlock: 'A' },
-            { name: 'vpc-2', id: '2', cidrBlock: 'C' },
+            { name: 'vpc-1', id: '1', cidrBlock: '10.0.0.0/16' },
+            { name: 'vpc-2', id: '2', cidrBlock: '10.1.0.0/16' },
           ],
         },
         problemType: ProblemType.UNIT,
@@ -142,6 +150,12 @@ describe('UnitValidationHandler', () => {
           field: 'vpc',
           code: UnitProblemFeedbackType.INCORRECT,
           message: '제출한 vpc 설정에 올바르지 않은 값이 있습니다: cidrBlock',
+        },
+        {
+          field: 'vpc',
+          code: VPCServiceFeedbackType.VPC_CIDR_OVERLAP,
+          message:
+            'VPC vpc-1와 VPC vpc-2의 CIDR 블록이 겹칩니다. (10.0.0.0/16 , 10.0.1.0/16)',
         },
       ]);
     });
