@@ -1,4 +1,3 @@
-import type { CloudFrontSettingsSectionProps } from '../types'
 import { Info } from 'lucide-react'
 
 import { Controller } from 'react-hook-form'
@@ -6,6 +5,7 @@ import { Controller } from 'react-hook-form'
 import { SectionContainer } from '@/components/section-container'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import type { CloudFrontSettingsSectionProps } from '@/types/aws-services/cloudfront/distribution-settings'
 
 export function PriceClassSection({ control }: CloudFrontSettingsSectionProps) {
   return (

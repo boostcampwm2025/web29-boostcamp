@@ -1,4 +1,3 @@
-import type { CloudFrontSettingsWithSetValueSectionProps } from '../types'
 import { AlertCircle } from 'lucide-react'
 
 import { useFieldArray } from 'react-hook-form'
@@ -12,6 +11,7 @@ import {
 } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import type { CloudFrontSettingsWithSetValueSectionProps } from '@/types/aws-services/cloudfront/distribution-settings'
 
 export function CnameSection({
   control,

@@ -7,9 +7,9 @@ import {
   PriceClassSection,
   SslTlsSection,
 } from './sections'
-import type { CloudFrontSettingsWithSetValueSectionProps } from './types'
 
 import { Separator } from '@/components/ui/separator'
+import type { CloudFrontSettingsWithSetValueSectionProps } from '@/types/aws-services/cloudfront/distribution-settings'
 
 export default function CloudFrontDistributionSettings({
   control,

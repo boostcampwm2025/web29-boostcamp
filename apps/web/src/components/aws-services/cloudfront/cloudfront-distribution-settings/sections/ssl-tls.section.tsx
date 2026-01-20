@@ -1,5 +1,3 @@
-import type { CloudFrontSettingsSectionProps } from '../types'
-
 import { Controller, useWatch } from 'react-hook-form'
 
 import { SectionContainer } from '@/components/section-container'
@@ -19,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import type { CloudFrontSettingsSectionProps } from '@/types/aws-services/cloudfront/distribution-settings'
 
 export function SslTlsSection({ control }: CloudFrontSettingsSectionProps) {
   const sslCertificate = useWatch({ control, name: 'sslCertificate' })
