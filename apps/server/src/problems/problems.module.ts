@@ -4,6 +4,7 @@ import { ProblemsService } from './problems.service';
 import { ValidationService } from './validation/validation.service';
 import { HandlerResolver } from './validation/handler-resolver';
 import { UnitValidationHandler } from './validation/handlers/unit-validation.handler';
+import { FieldValidationHandler } from './validation/handlers/field-validation.handler';
 
 @Module({
   controllers: [ProblemsController],
@@ -12,6 +13,7 @@ import { UnitValidationHandler } from './validation/handlers/unit-validation.han
     ValidationService,
     HandlerResolver,
     UnitValidationHandler,
+    FieldValidationHandler,
   ],
 })
 export class ProblemsModule {}
