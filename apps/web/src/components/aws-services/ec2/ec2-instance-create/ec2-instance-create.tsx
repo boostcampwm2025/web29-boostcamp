@@ -1,6 +1,13 @@
 'use client'
 
-import { Ami, InstanceType, KeyPair, NameTag, NetworkSetting } from './sections'
+import {
+  Ami,
+  InstanceType,
+  KeyPair,
+  NameTag,
+  NetworkSetting,
+  Storage,
+} from './sections'
 
 import { useForm } from 'react-hook-form'
 
@@ -71,6 +78,13 @@ export default function EC2InstanceCreate({
       {config.networkSetting && (
         <>
           <NetworkSetting control={control} config={config} />
+          <Separator />
+        </>
+      )}
+
+      {config.storage && (
+        <>
+          <Storage control={control} config={config} />
           <Separator />
         </>
       )}
