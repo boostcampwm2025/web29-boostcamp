@@ -33,7 +33,7 @@ export default function RootLayout({
       >
         <MSWProvider>
           <Header />
-          <main className="h-full min-h-[calc(100vh)] pt-18">{children}</main>
+          <main className="h-full min-h-[calc(100vh)] py-20">{children}</main>
           <Footer />
         </MSWProvider>
       </body>

@@ -25,6 +25,8 @@ export async function seedCookbooks(dataSource: DataSource): Promise<void> {
   const cookbook = await cookbookRepository.save({
     title: 'AWS VPC 네트워킹 기초',
     description:
+      'AWS에서 VPC를 생성하고 퍼블릭 서브넷을 구성하는 방법을 단계별로 안내합니다',
+    desc_detail:
       'AWS에서 VPC를 생성하고 퍼블릭 서브넷을 구성하여 인터넷과 통신할 수 있는 네트워크 환경을 만드는 과정을 학습합니다. VPC 생성부터 라우팅 테이블 설정까지 단계별로 진행하며, 각 구성 요소의 역할과 관계를 이해합니다.',
     tags: tags,
   });

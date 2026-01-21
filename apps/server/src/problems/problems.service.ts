@@ -91,8 +91,9 @@ export class ProblemsService {
       id: problem.id,
       problem_type: problem.problem_type,
       title: problem.title,
-      required_fields: problem.required_fields,
       description: problem.description,
+      desc_detail: problem.desc_detail,
+      required_fields: problem.required_fields,
       tags: problem.tags.map((tag) => tag.name),
     };
   }
@@ -103,10 +104,10 @@ export class ProblemsService {
       problemType: ProblemType.UNIT,
       solution: {},
     };
-    // problemId로 문제 데이터를 조회하는 로직 추후 구현 필요
+
+    // TODO: problemId로 문제 데이터를 조회하는 로직 추후 구현 필요
 
     const result = this.validationService.validate(body, problemData);
-
     return result;
   }
 }
