@@ -21,6 +21,16 @@ import { S3ScenarioHandler } from './unit-service-specific-validation/unit-s3-sc
 import { SgScenarioHandler } from './unit-service-specific-validation/unit-sg-scenario.handler';
 import { NetworkScenarioHandler } from './unit-service-specific-validation/unit-network-scenario.handler';
 
+function hasCidrBlock(
+  config: ServiceConfigTypes,
+): config is VPCConfig | SubnetConfig {
+  return 'cidrBlock' in config;
+}
+
+function hasName(config: unknown): config is { name: string } {
+  return config !== null && typeof config === 'object' && 'name' in config;
+}
+
 @Injectable()
 export class UnitValidationHandler implements ProblemValidationHandler {
   constructor(
@@ -70,9 +80,7 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     }
 
     // 3. 피드백 생성 (Generation)
-    const feedbacks = this.generateFeedbacks(
-      mismatchedConfigs as UnitProblemValidateResult,
-    );
+    const feedbacks = this.generateFeedbacks(mismatchedConfigs);
 
     // 4. 필드 단위 심층 검증 (Deep Validation)
     const fieldFeedbacks =
@@ -175,15 +183,13 @@ export class UnitValidationHandler implements ProblemValidationHandler {
   }
 
   private generateFeedbacks(
-    validationInfo: UnitProblemValidateResult,
+    validationInfo: Partial<UnitProblemValidateResult>,
   ): FeedbackDto[] {
     const feedbacks: FeedbackDto[] = [];
-    const serviceKeys = Object.keys(
-      validationInfo,
-    ) as (keyof UnitProblemValidateResult)[];
 
-    for (const serviceKey of serviceKeys) {
-      const { onlyInAnswer, onlyInSolution } = validationInfo[serviceKey]!;
+    for (const [serviceKey, entry] of Object.entries(validationInfo)) {
+      if (!entry) continue;
+      const { onlyInAnswer, onlyInSolution } = entry;
 
       // 1. 서비스 누락 (Service Missing)
       feedbacks.push(
@@ -202,6 +208,7 @@ export class UnitValidationHandler implements ProblemValidationHandler {
       }
 
       for (const submittedConfig of onlyInAnswer) {
+        if (!hasName(submittedConfig)) continue;
         const matchedSolution = solutionMap.get(submittedConfig.name);
         if (!matchedSolution) continue;
 
@@ -266,11 +273,13 @@ export class UnitValidationHandler implements ProblemValidationHandler {
 
     if (solutionKeys.length <= submittedKeys.length) return [];
 
+    const serviceName = hasName(submitted) ? submitted.name : undefined;
+
     return solutionKeys
       .filter((key) => !submittedKeys.includes(key))
       .map((field) => ({
         serviceType: serviceKey,
-        service: submitted['name'],
+        service: serviceName,
         field,
         code: UnitProblemFeedbackType.FIELD_MISSING,
         message: feedbackMessages[UnitProblemFeedbackType.FIELD_MISSING](
@@ -290,11 +299,13 @@ export class UnitValidationHandler implements ProblemValidationHandler {
 
     if (submittedKeys.length <= solutionKeys.length) return [];
 
+    const serviceName = hasName(submitted) ? submitted.name : undefined;
+
     return submittedKeys
       .filter((key) => !solutionKeys.includes(key))
       .map((field) => ({
         serviceType: serviceKey,
-        service: submitted['name'],
+        service: serviceName,
         field,
         code: UnitProblemFeedbackType.UNNECESSARY,
         message: feedbackMessages[UnitProblemFeedbackType.UNNECESSARY](
@@ -319,9 +330,14 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     const isNetworkResource = serviceKey === 'vpc' || serviceKey === 'subnet';
 
     for (const key of commonKeys) {
-      if (isNetworkResource && key === 'cidrBlock') {
-        const subCidr = submitted[key] as string;
-        const solCidr = solution[key] as string;
+      if (
+        isNetworkResource &&
+        key === 'cidrBlock' &&
+        hasCidrBlock(submitted) &&
+        hasCidrBlock(solution)
+      ) {
+        const subCidr = submitted.cidrBlock;
+        const solCidr = solution.cidrBlock;
 
         if (solCidr === 'DONT_CARE' || containsCidr(solCidr, subCidr)) {
           continue;
@@ -333,9 +349,11 @@ export class UnitValidationHandler implements ProblemValidationHandler {
       }
     }
 
+    const serviceName = hasName(submitted) ? submitted.name : undefined;
+
     return incorrectFields.map((field) => ({
       serviceType: serviceKey,
-      service: submitted['name'],
+      service: serviceName,
       field,
       code: UnitProblemFeedbackType.INCORRECT,
       message: feedbackMessages[UnitProblemFeedbackType.INCORRECT](
