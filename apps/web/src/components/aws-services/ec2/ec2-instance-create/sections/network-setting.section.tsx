@@ -1,4 +1,4 @@
-import { Info } from 'lucide-react'
+import { AlertTriangle, Info } from 'lucide-react'
 
 import { Controller } from 'react-hook-form'
 
@@ -139,11 +139,14 @@ export function NetworkSetting({ control }: EC2SectionProps) {
 
         {/* 경고 메시지 */}
         <div className="bg-primary/10 border-primary/20 rounded-md border p-3">
-          <p className="text-primary text-sm">
-            ⚠️ 0.0.0.0/0 규칙은 모든 IP 주소에서 인스턴스에 액세스하도록
-            허용합니다. 보안 그룹 설정 후 실제 서비스를 접근할 수 있는 IP
-            주소로만 제한하는 것이 좋습니다.
-          </p>
+          <div className="flex items-start gap-2">
+            <AlertTriangle className="text-primary mt-0.5 h-4 w-4 shrink-0" />
+            <p className="text-primary text-sm">
+              0.0.0.0/0 규칙은 모든 IP 주소에서 인스턴스에 액세스하도록
+              허용합니다. 보안 그룹 설정 후 실제 서비스를 접근할 수 있는 IP
+              주소로만 제한하는 것이 좋습니다.
+            </p>
+          </div>
         </div>
       </div>
     </SectionContainer>
