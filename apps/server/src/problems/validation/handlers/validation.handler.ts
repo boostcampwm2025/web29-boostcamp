@@ -1,14 +1,28 @@
 import {
   SubmitRequestDto,
   SubmitConfig,
-} from 'src/problems/dto/submit-request.dto';
-import { SubmitResponseDto } from 'src/problems/dto/submit-response.dto';
-import { ProblemType } from 'src/problems/types/problem-type.enum';
-import { FeedbackDto } from 'src/problems/dto/submit-response.dto';
+} from '@/problems/dto/submit-request.dto';
+import { SubmitResponseDto } from '@/problems/dto/submit-response.dto';
+import { ProblemType } from '@/problems/types/problem-type.enum';
+import { FeedbackDto } from '@/problems/dto/submit-response.dto';
+import {
+  Ec2Requirements,
+  S3Requirements,
+  SgRequirements,
+  NetworkRequirements,
+} from '@/problems/types/requirements-types';
+
+export type Requirements = {
+  ec2?: Ec2Requirements;
+  s3?: S3Requirements;
+  securityGroup?: SgRequirements;
+  network?: NetworkRequirements;
+};
 
 export type ProblemData = {
   solution: SubmitConfig;
   problemType: ProblemType;
+  requirements?: Requirements;
 };
 
 export interface ProblemValidationHandler {
