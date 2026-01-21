@@ -51,12 +51,12 @@ export const ProblemTypeTab = () => {
             value={tab.type}
             className={cn(
               'h-10 rounded-none bg-transparent',
-              'data-[state=active]:text-primary text-foreground/60 data-[state=active]:bg-transparent',
+              'data-[state=active]:text-primary text-foreground/60 text-base data-[state=active]:bg-transparent',
               'data-[state=active]:border-primary border-b',
             )}
             onClick={() => handleTabChange(tab.type)}
           >
-            <tab.icon className="mr-2 inline-block h-4 w-4" />
+            <tab.icon className="mr-2 inline-block h-5 w-5" />
             {tab.label}
           </TabsTrigger>
         ))}

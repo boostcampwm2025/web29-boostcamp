@@ -1,9 +1,11 @@
 'use client'
 
 import { awsNodeTypes } from './diagram'
-import type { AwsGroupNodeData } from './diagram/nodes/aws-group-node'
-import type { AwsResourceNodeData } from './diagram/nodes/aws-resource-node'
-import type { AwsServiceNodeData } from './diagram/nodes/aws-service-node'
+import type {
+  AwsGroupNodeData,
+  AwsResourceNodeData,
+  AwsServiceNodeData,
+} from './diagram'
 
 import {
   Background,

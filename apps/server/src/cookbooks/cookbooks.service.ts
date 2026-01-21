@@ -27,6 +27,7 @@ export class CookbooksService {
       id: cookbook.id,
       title: cookbook.title,
       description: cookbook.description,
+      desc_detail: cookbook.desc_detail,
       tags: cookbook.tags.map((tag) => tag.name),
       problems: cookbook.cookbook_problems
         .sort((a, b) => a.order_number - b.order_number)
