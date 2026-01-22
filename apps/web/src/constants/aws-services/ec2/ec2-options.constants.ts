@@ -3,36 +3,43 @@ export const AMI_OPTIONS = [
     value: 'amazon-linux',
     label: 'Amazon Linux',
     description: 'AWS에 최적화된 Linux 배포판',
+    icon: '/icons/aws/ami/aws-linux.svg',
   },
   {
     value: 'ubuntu',
     label: 'Ubuntu',
     description: '가장 인기 있는 Linux 배포판',
+    icon: '/icons/aws/ami/ubuntu.svg',
   },
   {
     value: 'windows',
     label: 'Windows',
     description: 'Microsoft Windows Server',
+    icon: '/icons/aws/ami/windows.svg',
   },
   {
     value: 'mac-os',
     label: 'macOS',
     description: 'Apple macOS',
+    icon: '/icons/aws/ami/mac-os.svg',
   },
   {
     value: 'red-hat',
     label: 'Red Hat',
     description: 'Red Hat Enterprise Linux',
+    icon: '/icons/aws/ami/red-hat.svg',
   },
   {
     value: 'suse-linux',
     label: 'SUSE Linux',
     description: 'SUSE Linux Enterprise',
+    icon: '/icons/aws/ami/suse-linux.svg',
   },
   {
     value: 'debian',
     label: 'Debian',
     description: 'Debian GNU/Linux',
+    icon: '/icons/aws/ami/debian.svg',
   },
 ] as const
 

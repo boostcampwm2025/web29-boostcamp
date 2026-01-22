@@ -1,5 +1,7 @@
 import { Controller, useWatch } from 'react-hook-form'
 
+import Image from 'next/image'
+
 import { TooltipBox } from '@/components/aws-services/common/tooltip-box'
 import { SectionContainer } from '@/components/section-container'
 import { Label } from '@/components/ui/label'
@@ -47,6 +49,12 @@ export function Ami({ control }: EC2SectionProps) {
                     htmlFor={ami.value}
                     className="bg-card hover:bg-accent peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-primary flex h-20 cursor-pointer flex-col items-center justify-center rounded-lg border-2 p-4 transition-all peer-data-[state=checked]:ring-1"
                   >
+                    <Image
+                      src={ami.icon}
+                      alt={ami.label}
+                      width={30}
+                      height={30}
+                    />
                     <span className="text-center text-sm font-medium">
                       {ami.label}
                     </span>
