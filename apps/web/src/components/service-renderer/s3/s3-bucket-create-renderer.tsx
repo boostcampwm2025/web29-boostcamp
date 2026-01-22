@@ -13,6 +13,7 @@ import { type Edge, useEdgesState, useNodesState } from '@xyflow/react'
 
 interface S3BucketCreateRendererProps {
   config: Record<string, boolean>
+  children: React.ReactNode
 }
 
 const defaultValues: S3BucketFormData = {
@@ -44,6 +45,7 @@ const initialEdges: Edge[] = []
 
 export function S3BucketCreateRenderer({
   config,
+  children,
 }: S3BucketCreateRendererProps) {
   const { control, setValue, watch } = useForm<S3BucketFormData>({
     defaultValues,
@@ -83,7 +85,8 @@ export function S3BucketCreateRenderer({
         />
       </div>
       <div className="w-1/3">
-        <AwsDiagram nodes={nodes} edges={edges} />
+        {children}
+        {/* <AwsDiagram nodes={nodes} edges={edges} /> */}
       </div>
     </div>
   )
