@@ -11,6 +11,9 @@ interface RequiredField {
 }
 
 export interface ProblemData {
+  title: string
+  description: string
+  tags: string[]
   serviceMappers: IServiceMapper[]
   diagram: DiagramData
 }
@@ -44,5 +47,11 @@ export async function getProblemData(id: string): Promise<ProblemData> {
   // const diagram: DiagramData = response.diagram_template ?? mockDiagramData
   const diagram: DiagramData = mockDiagramData
 
-  return { serviceMappers, diagram }
+  return {
+    title: response.title ?? '문제',
+    description: response.description ?? '',
+    tags: response.tags ?? [],
+    serviceMappers,
+    diagram,
+  }
 }
