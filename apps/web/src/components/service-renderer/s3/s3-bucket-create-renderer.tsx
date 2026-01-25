@@ -1,23 +1,29 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { FormData } from '../types'
+import { CheckCircle2, RotateCcw, X } from 'lucide-react'
 
-import AwsDiagram, { type AwsNode } from '@/components/aws-diagram'
+import { SubmitHandler, useForm } from 'react-hook-form'
+
 import S3BucketCreate from '@/components/aws-services/s3/s3-bucket-create/s3-bucket-create'
-import type {
-  S3BucketCreateConfig,
-  S3BucketFormData,
-} from '@/types/aws-services/s3/bucket-create'
-import { type Edge, useEdgesState, useNodesState } from '@xyflow/react'
+import { flattenObject } from '@/components/aws-services/utils/flattenObject'
+import { Button } from '@/components/ui/button'
+import type { S3BucketFormData } from '@/types/aws-services/s3/bucket-create'
+import {
+  ServiceConfig,
+  ServiceConfigItem,
+  ServiceType,
+} from '@/types/submitConfig.types'
 
-interface S3BucketCreateRendererProps {
+interface RendererProps {
   config: Record<string, boolean>
-  children: React.ReactNode
+  onAdd: (type: ServiceType, data: ServiceConfig) => void
+  createdItems: ServiceConfigItem<ServiceConfig>[]
+  onRemove: (id: string) => void
 }
 
 const defaultValues: S3BucketFormData = {
-  general: { bucketName: '', region: 'ap-northeast-2' },
+  general: { name: '', region: 'ap-northeast-2' },
   ownership: { aclEnabled: 'disabled' },
   blockPublicAccess: {
     blockAll: true,
@@ -26,68 +32,81 @@ const defaultValues: S3BucketFormData = {
     blockPublicPolicy: true,
     restrictPublicBuckets: true,
   },
-  versioning: { enabled: false },
-  encryption: { type: 'sse-s3' },
-  advancedSettings: { objectLockEnabled: false },
-  tags: [],
+  // versioning: { versioningEnabled: false },
+  // encryption: { type: 'sse-s3' },
+  // advancedSettings: { objectLockEnabled: false },
+  // tags: [],
 }
-
-const initialNodes: AwsNode[] = [
-  {
-    id: 's3-bucket',
-    type: 'awsService',
-    position: { x: 100, y: 100 },
-    data: { label: 'S3 Bucket', icon: 's3' },
-  },
-]
-
-const initialEdges: Edge[] = []
 
 export function S3BucketCreateRenderer({
   config,
-  children,
-}: S3BucketCreateRendererProps) {
-  const { control, setValue, watch } = useForm<S3BucketFormData>({
-    defaultValues,
+  onAdd,
+  createdItems,
+  onRemove,
+}: RendererProps) {
+  const { control, handleSubmit, setValue, reset } = useForm<S3BucketFormData>({
+    mode: 'onChange',
+    defaultValues: defaultValues,
   })
-  const [nodes, setNodes] = useNodesState<AwsNode>(initialNodes)
-  const [edges] = useEdgesState<Edge>(initialEdges)
 
-  // Form → Diagram 동기화
-  useEffect(() => {
-    const subscription = watch((value, { name }) => {
-      if (name === 'general.bucketName') {
-        setNodes((currentNodes) =>
-          currentNodes.map((node) =>
-            node.id === 's3-bucket'
-              ? {
-                  ...node,
-                  data: {
-                    ...node.data,
-                    label: value.general?.bucketName || 'S3 Bucket',
-                  },
-                }
-              : node,
-          ),
-        )
-      }
-    })
-    return () => subscription.unsubscribe()
-  }, [watch, setNodes])
+  const onSubmit: SubmitHandler<S3BucketFormData> = (data) => {
+    const flattendData = flattenObject(data as Record<string, unknown>)
+    onAdd('s3', flattendData)
+    reset(defaultValues)
+  }
 
   return (
-    <div className="flex gap-6">
-      <div className="flex-1">
+    <div className="space-y-6">
+      {/* 1. 입력 폼 영역 */}
+      <div>
         <S3BucketCreate
           control={control}
-          config={config as S3BucketCreateConfig}
+          config={config}
           setValue={setValue}
+          onSubmit={handleSubmit(onSubmit)}
         />
       </div>
-      <div className="w-1/3">
-        {children}
-        {/* <AwsDiagram nodes={nodes} edges={edges} /> */}
-      </div>
+
+      {/* 2. 생성된 리소스 목록 */}
+      {/* 생성된 리소스를 다시 되돌리고 싶을 때...! */}
+      {createdItems.length > 0 && (
+        <div className="animate-in fade-in slide-in-from-top-2 border-t pt-4 duration-300">
+          <div className="mb-3 flex items-center justify-between">
+            <h4 className="text-muted-foreground flex items-center gap-2 text-sm font-semibold">
+              <CheckCircle2 className="h-4 w-4 text-green-500" />
+              생성 완료된 버킷 ({createdItems.length})
+            </h4>
+          </div>
+
+          <div className="grid gap-3">
+            {createdItems.map((item) => (
+              <div
+                key={item.id}
+                className="bg-muted/20 hover:bg-muted/40 flex items-center justify-between rounded-lg border p-3 transition-colors"
+              >
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-sm font-medium">
+                    {item.data.name || '이름 없음'}
+                  </span>
+                  <span className="text-muted-foreground text-[10px] tracking-wider uppercase">
+                    ID: {item.id.slice(0, 8)}
+                  </span>
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/20 h-8"
+                  onClick={() => onRemove(item.id)}
+                >
+                  <RotateCcw className="mr-1.5 h-3 w-3" />
+                  롤백
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

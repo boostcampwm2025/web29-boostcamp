@@ -11,6 +11,7 @@ import {
   S3BucketListRenderer,
   S3FileUploadRenderer,
 } from './s3'
+import { FormData } from './types'
 
 import type { ComponentType } from 'react'
 
@@ -23,13 +24,23 @@ import { S3_BUCKET_CREATE_SECTIONS } from '@/types/aws-services/s3/bucket-create
 import { S3_BUCKET_DETAIL_SECTIONS } from '@/types/aws-services/s3/bucket-detail'
 import { S3_BUCKET_LIST_SECTIONS } from '@/types/aws-services/s3/bucket-list'
 import { S3_FILE_UPLOAD_SECTIONS } from '@/types/aws-services/s3/file-upload'
+import { ServiceConfigItem, ServiceType } from '@/types/submitConfig.types'
+import { ServiceConfig } from '@/types/submitConfig.types'
+
+export interface CommonRendererProps {
+  config: Record<string, boolean> // 필수
+  onAdd: (type: ServiceType, data: ServiceConfig) => void
+  createdItems: ServiceConfigItem<ServiceConfig>[]
+  onRemove: (id: string) => void
+}
 
 export interface RendererPage {
-  renderer: ComponentType<{ config: Record<string, boolean> }>
+  // 제네릭을 사용하지 않고 공통 Props 타입 사용
+  renderer: ComponentType<CommonRendererProps>
   sections: readonly string[]
 }
 
-const S3: Record<string, RendererPage> = {
+const s3: Record<string, RendererPage> = {
   'bucket-create': {
     renderer: S3BucketCreateRenderer,
     sections: S3_BUCKET_CREATE_SECTIONS,
@@ -48,7 +59,7 @@ const S3: Record<string, RendererPage> = {
   },
 }
 
-const CloudFront: Record<string, RendererPage> = {
+const cloudfront: Record<string, RendererPage> = {
   'distribution-list': {
     renderer: CloudFrontDistributionListRenderer,
     sections: CLOUDFRONT_DISTRIBUTION_LIST_SECTIONS,
@@ -72,6 +83,6 @@ const CloudFront: Record<string, RendererPage> = {
 }
 
 export const RENDERER_REGISTRY = {
-  S3,
-  CloudFront,
+  s3,
+  cloudfront,
 }

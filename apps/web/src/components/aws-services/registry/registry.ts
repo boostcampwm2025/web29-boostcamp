@@ -25,7 +25,7 @@ export interface ServicePage {
   sections: readonly string[]
 }
 
-const S3: Record<string, ServicePage> = {
+const s3: Record<string, ServicePage> = {
   'bucket-create': {
     component: S3BucketCreate,
     sections: S3_BUCKET_CREATE_SECTIONS,
@@ -44,7 +44,7 @@ const S3: Record<string, ServicePage> = {
   },
 }
 
-const CloudFront: Record<string, ServicePage> = {
+const cloudFront: Record<string, ServicePage> = {
   'distribution-list': {
     component: CloudFrontDistributionList,
     sections: CLOUDFRONT_DISTRIBUTION_LIST_SECTIONS,
@@ -68,6 +68,6 @@ const CloudFront: Record<string, ServicePage> = {
 }
 
 export const AWS_SERVICE_REGISTRY = {
-  S3,
-  CloudFront,
+  s3,
+  cloudFront,
 }
