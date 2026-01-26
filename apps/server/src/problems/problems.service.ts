@@ -31,7 +31,7 @@ export class ProblemsService {
 
   private async findUnitProblems(): Promise<UnitProblemItemResponseDto[]> {
     const units = await this.problemRepository.find({
-      where: { problem_type: ProblemType.UNIT },
+      where: { problemType: ProblemType.UNIT },
       relations: ['tags'],
     });
 
@@ -47,7 +47,7 @@ export class ProblemsService {
     CookbookProblemItemResponseDto[]
   > {
     const cookbooks = await this.cookbookRepository.find({
-      relations: ['tags', 'cookbook_problems', 'cookbook_problems.problem'],
+      relations: ['tags', 'cookbookProblems', 'cookbookProblems.problem'],
     });
 
     return cookbooks.map((cookbook) => ({
@@ -55,8 +55,8 @@ export class ProblemsService {
       title: cookbook.title,
       description: cookbook.description,
       tags: cookbook.tags?.map((tag) => tag.name) ?? [],
-      problems: cookbook.cookbook_problems
-        .sort((a, b) => a.order_number - b.order_number)
+      problems: cookbook.cookbookProblems
+        .sort((a, b) => a.orderNumber - b.orderNumber)
         .map((cp) => ({
           id: cp.problem.id,
           title: cp.problem.title,
@@ -93,11 +93,11 @@ export class ProblemsService {
 
     return {
       id: problem.id,
-      problem_type: problem.problem_type,
+      problemType: problem.problemType,
       title: problem.title,
       description: problem.description,
-      desc_detail: problem.desc_detail,
-      required_fields: problem.required_fields,
+      descDetail: problem.descDetail,
+      requiredFields: problem.requiredFields,
       tags: problem.tags.map((tag) => tag.name),
     };
   }
@@ -128,8 +128,8 @@ export class ProblemsService {
     }
 
     const problemData = {
-      problemType: problemEntity.problem_type,
-      solution: problemEntity.solution.answer_config,
+      problemType: problemEntity.problemType,
+      solution: problemEntity.solution.answerConfig,
     };
 
     const result = this.validationService.validate(body, problemData);

@@ -5,6 +5,7 @@ import CloudFrontDistributionList from '@/components/aws-services/cloudfront/clo
 import CloudFrontDistributionSettings from '@/components/aws-services/cloudfront/cloudfront-distribution-settings/cloudfront-distribution-settings'
 import CloudFrontOriginSettings from '@/components/aws-services/cloudfront/cloudfront-origin-settings/cloudfront-origin-settings'
 import CloudFrontWebsiteSettings from '@/components/aws-services/cloudfront/cloudfront-website-settings/cloudfront-website-settings'
+import EC2InstanceCreate from '@/components/aws-services/ec2/ec2-instance-create/ec2-instance-create'
 import S3BucketCreate from '@/components/aws-services/s3/s3-bucket-create/s3-bucket-create'
 import S3BucketDetail from '@/components/aws-services/s3/s3-bucket-detail/s3-bucket-detail'
 import S3BucketList from '@/components/aws-services/s3/s3-bucket-list/s3-bucket-list'
@@ -14,6 +15,7 @@ import { CLOUDFRONT_DISTRIBUTION_LIST_SECTIONS } from '@/types/aws-services/clou
 import { CLOUDFRONT_DISTRIBUTION_SETTINGS_SECTIONS } from '@/types/aws-services/cloudfront/distribution-settings/constants'
 import { CLOUDFRONT_ORIGIN_SETTINGS_SECTIONS } from '@/types/aws-services/cloudfront/origin-settings/constants'
 import { CLOUDFRONT_WEBSITE_SETTINGS_SECTIONS } from '@/types/aws-services/cloudfront/website-settings/constants'
+import { EC2_INSTANCE_CREATE_SECTIONS } from '@/types/aws-services/ec2/instance-create/constants'
 import { S3_BUCKET_CREATE_SECTIONS } from '@/types/aws-services/s3/bucket-create/'
 import { S3_BUCKET_DETAIL_SECTIONS } from '@/types/aws-services/s3/bucket-detail/'
 import { S3_BUCKET_LIST_SECTIONS } from '@/types/aws-services/s3/bucket-list/'
@@ -25,49 +27,57 @@ export interface ServicePage {
   sections: readonly string[]
 }
 
-const s3: Record<string, ServicePage> = {
-  'bucket-create': {
+const S3: Record<string, ServicePage> = {
+  bucketCreate: {
     component: S3BucketCreate,
     sections: S3_BUCKET_CREATE_SECTIONS,
   },
-  'bucket-list': {
+  bucketList: {
     component: S3BucketList,
     sections: S3_BUCKET_LIST_SECTIONS,
   },
-  'bucket-detail': {
+  bucketDetail: {
     component: S3BucketDetail,
     sections: S3_BUCKET_DETAIL_SECTIONS,
   },
-  'file-upload': {
+  fileUpload: {
     component: S3FileUpload,
     sections: S3_FILE_UPLOAD_SECTIONS,
   },
 }
 
-const cloudFront: Record<string, ServicePage> = {
-  'distribution-list': {
+const CloudFront: Record<string, ServicePage> = {
+  distributionList: {
     component: CloudFrontDistributionList,
     sections: CLOUDFRONT_DISTRIBUTION_LIST_SECTIONS,
   },
-  'origin-settings': {
+  originSettings: {
     component: CloudFrontOriginSettings,
     sections: CLOUDFRONT_ORIGIN_SETTINGS_SECTIONS,
   },
-  'distribution-settings': {
+  distributionSettings: {
     component: CloudFrontDistributionSettings,
     sections: CLOUDFRONT_DISTRIBUTION_SETTINGS_SECTIONS,
   },
-  'cache-behavior': {
+  cacheBehavior: {
     component: CloudFrontCacheBehavior,
     sections: CLOUDFRONT_CACHE_BEHAVIOR_SECTIONS,
   },
-  'website-settings': {
+  websiteSettings: {
     component: CloudFrontWebsiteSettings,
     sections: CLOUDFRONT_WEBSITE_SETTINGS_SECTIONS,
   },
 }
 
+const EC2: Record<string, ServicePage> = {
+  instanceCreate: {
+    component: EC2InstanceCreate,
+    sections: EC2_INSTANCE_CREATE_SECTIONS,
+  },
+}
+
 export const AWS_SERVICE_REGISTRY = {
-  s3,
-  cloudFront,
+  s3: S3,
+  cloudFront: CloudFront,
+  ec2: EC2,
 }
