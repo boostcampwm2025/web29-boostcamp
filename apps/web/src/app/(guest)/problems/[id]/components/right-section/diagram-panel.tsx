@@ -31,6 +31,14 @@ export function DiagramPanel() {
         nodeTypes={awsNodeTypes}
         onNodesChange={onNodesChange}
         fitView
+        fitViewOptions={{ padding: 0.2 }}
+        zoomOnScroll={true}
+        panOnDrag={true}
+        zoomOnPinch={true}
+        zoomOnDoubleClick={true}
+        nodesDraggable={false}
+        nodesConnectable={false}
+        elementsSelectable={true}
         proOptions={{ hideAttribution: true }}
       >
         <Background />
