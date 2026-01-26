@@ -12,7 +12,7 @@ import {
 import { useForm } from 'react-hook-form'
 
 import { Separator } from '@/components/ui/separator'
-import { EC2_INSTANCE_CREATE_SECTIONS } from '@/constants/aws-services/ec2'
+import { EC2_INSTANCE_CREATE_SECTIONS } from '@/types/aws-services/ec2/instance-create'
 import type { EC2InstanceFormData } from '@/types/aws-services/ec2/instance-create'
 
 interface EC2InstanceCreateProps {
