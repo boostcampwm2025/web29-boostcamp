@@ -12,58 +12,69 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
   });
 
   if (problems.length < 5) {
-    throw new Error('Not enough problems found. Please seed problems first.');
+    console.log('Not enough problems found. Skipping solution seeding.');
+    return;
   }
 
   const solutions = [
     {
-      problem: problems[0], // 충분히 넓은 VPC 네트워크 만들기
-      answer_config: {
-        vpc: {
-          cidr_block: '10.0.0.0/16',
+      problem: problems[0], // 로그 저장용 S3 버킷 생성
+      answerConfig: {
+        s3: {
+          bucketName: 'my-log-bucket',
         },
       },
     },
     {
-      problem: problems[1], // VPC 안에 포함되는 Subnet 생성하기
-      answer_config: {
-        subnet: {
-          vpc_id: '@vpc',
-          cidr_block: '10.0.1.0/24',
+      problem: problems[1], // S3 버킷 버전 관리 활성화
+      answerConfig: {
+        s3: {
+          versioning: {
+            status: 'Enabled',
+          },
         },
       },
     },
     {
-      problem: problems[2], // 퍼블릭 서브넷 생성하기
-      answer_config: {
-        subnet: {
-          vpc_id: '@vpc',
-          cidr_block: '10.0.2.0/24',
-          map_public_ip_on_launch: true,
+      problem: problems[2], // CloudFront 원본 설정
+      answerConfig: {
+        cloudFront: {
+          originDomain: {
+            domainName: 'my-bucket.s3.amazonaws.com',
+          },
+          originAccessControl: {
+            signingBehavior: 'always',
+          },
         },
       },
     },
     {
-      problem: problems[3], // Internet Gateway 연결하기
-      answer_config: {
-        internet_gateway: {
-          vpc_id: '@vpc',
+      problem: problems[3], // 웹 서버용 EC2 인스턴스 생성
+      answerConfig: {
+        ec2: {
+          instanceType: {
+            type: 't2.micro',
+          },
+          images: {
+            // 실제 검증 시에는 AMI ID가 리전에 따라 다르므로 주의해야 하지만, 여기선 예시값으로 둡니다.
+            ami: 'ami-0230bd60aa48260c6',
+          },
         },
       },
     },
     {
-      problem: problems[4], // 라우팅 테이블 설정하기
-      answer_config: {
-        route_table: {
-          vpc_id: '@vpc',
+      problem: problems[4], // 정적 웹사이트 글로벌 배포 (S3 + CloudFront)
+      answerConfig: {
+        s3: {
+          bucketName: 'my-global-site',
         },
-        route: {
-          destination_cidr_block: '0.0.0.0/0',
-          gateway_id: '@internet_gateway',
-        },
-        route_table_association: {
-          subnet_id: '@subnet',
-          route_table_id: '@route_table',
+        cloudFront: {
+          originDomain: {
+            domainName: 'my-global-site.s3.amazonaws.com',
+          },
+          originAccessControl: {
+            signingBehavior: 'always',
+          },
         },
       },
     },
