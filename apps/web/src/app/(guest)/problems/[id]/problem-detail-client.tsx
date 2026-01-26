@@ -48,20 +48,18 @@ export default function ProblemDetailClient({
       initialEdges={diagramData.edges}
     >
       <div className="grid grid-cols-[1fr,400px] gap-6">
-        {/* 왼쪽: 스크롤 영역 */}
-        <div className="space-y-6 overflow-y-auto">
+        <section className="space-y-6 overflow-y-auto">
           <ProblemHeader title={title} description={description} tags={tags} />
           <ProblemFormContent problemData={problemData} />
-        </div>
+        </section>
 
-        {/* 오른쪽: 스티키 영역 */}
-        <div className="relative h-full">
-          <div className="sticky top-24 space-y-4">
+        <section className="relative h-full">
+          <div className="w-full overflow-y-auto">
             <SubmitButton />
             <DiagramPanel />
             <FeedbackPanel />
           </div>
-        </div>
+        </section>
       </div>
     </ProblemFormProvider>
   )

@@ -125,7 +125,7 @@ export function ProblemFormProvider<T extends FieldValues>({
         ...data,
         type,
         name: id,
-        region: data.region || 'us-east-1',
+        region: data._type === 's3' ? data.region : 'us-east-1',
       })
     },
     [submitConfig, addAwsResource],

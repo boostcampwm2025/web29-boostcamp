@@ -1,63 +1,90 @@
 'use client'
 
-import { S3BucketCreateAdapter } from '@/components/aws-services/adapters'
+import { CheckCircle2, RotateCcw } from 'lucide-react'
+
 import { createServiceKey } from '@/components/aws-services/registry/form-defaults-factory'
 import {
   type IServiceMapper,
   serviceMapper,
 } from '@/components/aws-services/utils/serviceMapper'
-import type { S3BucketCreateConfig } from '@/types/aws-services/s3/bucket-create'
+import { Button } from '@/components/ui/button'
+import { useProblemForm } from '@/contexts/problem-form-context'
+import type { ServiceConfig, ServiceType } from '@/types/submitConfig.types'
 
 interface ProblemFormContentProps {
   problemData: IServiceMapper[]
 }
 
-// 어댑터가 존재하는 서비스/태스크 조합을 정의
-const ADAPTER_ENABLED_SERVICES: Record<string, Record<string, boolean>> = {
-  s3: {
-    'bucket-create': true,
-  },
-}
-
-// 어댑터 컴포넌트 매퍼
-const getAdapterComponent = (
-  serviceName: string,
-  serviceTask: string,
-  config: Record<string, boolean>,
-) => {
-  if (serviceName === 's3' && serviceTask === 'bucket-create') {
-    return <S3BucketCreateAdapter config={config as S3BucketCreateConfig} />
+function getServiceType(serviceName: string): ServiceType {
+  const serviceTypeMap: Record<string, ServiceType> = {
+    s3: 's3',
+    cloudFront: 'cloudFront',
+    ec2: 'ec2',
   }
-  return null
+  return serviceTypeMap[serviceName] || 's3'
 }
 
 export function ProblemFormContent({ problemData }: ProblemFormContentProps) {
+  const { handleAddItem, submitConfig, handleRemoveItem } = useProblemForm()
+
   return (
     <>
       {problemData.map((mapper, index) => {
-        const { config } = serviceMapper(mapper)
+        const { Component, config } = serviceMapper(mapper)
         const formKey = createServiceKey(mapper.serviceName, mapper.serviceTask)
+        const serviceType = getServiceType(mapper.serviceName)
+        const createdItems = submitConfig[serviceType] || []
 
-        // 어댑터가 활성화된 서비스인지 확인
-        const adapterEnabled =
-          ADAPTER_ENABLED_SERVICES[mapper.serviceName]?.[mapper.serviceTask]
+        return (
+          <div key={`${formKey}-${index}`} className="space-y-6">
+            <Component
+              config={config}
+              onSubmit={(data: ServiceConfig) =>
+                handleAddItem(serviceType, data)
+              }
+            />
 
-        if (adapterEnabled) {
-          // 어댑터 사용 (로컬 폼 관리, 리소스 목록 표시)
-          return (
-            <div key={`${formKey}-${index}`}>
-              {getAdapterComponent(
-                mapper.serviceName,
-                mapper.serviceTask,
-                config,
-              )}
-            </div>
-          )
-        }
+            {/* 생성된 리소스 목록 */}
+            {createdItems.length > 0 && (
+              <div className="animate-in fade-in slide-in-from-top-2 mx-auto max-w-4xl border-t p-6 pt-4 duration-300">
+                <div className="mb-3 flex items-center justify-between">
+                  <h4 className="text-muted-foreground flex items-center gap-2 text-sm font-semibold">
+                    <CheckCircle2 className="h-4 w-4 text-green-500" />
+                    생성 완료된 리소스 ({createdItems.length})
+                  </h4>
+                </div>
 
-        // 기존 방식 유지 (어댑터 미지원 서비스)
-        // 향후 다른 서비스 어댑터 추가 시 확장 가능
-        return null
+                <div className="grid gap-3">
+                  {createdItems.map((item) => (
+                    <div
+                      key={item.id}
+                      className="bg-muted/20 hover:bg-muted/40 flex items-center justify-between rounded-lg border p-3 transition-colors"
+                    >
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-sm font-medium">
+                          {item.data.name || '이름 없음'}
+                        </span>
+                        <span className="text-muted-foreground text-[10px] tracking-wider uppercase">
+                          ID: {item.id.slice(0, 8)}
+                        </span>
+                      </div>
+
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/20 h-8"
+                        onClick={() => handleRemoveItem(serviceType, item.id)}
+                      >
+                        <RotateCcw className="mr-1.5 h-3 w-3" />
+                        롤백
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )
       })}
     </>
   )
