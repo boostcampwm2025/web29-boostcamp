@@ -38,7 +38,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
       title: '로그 저장용 S3 버킷 생성',
       description: '애플리케이션 로그를 저장하기 위한 S3 버킷을 생성하세요.',
       descDetail:
-        'S3는 높은 가용성과 내구성을 제공하는 객체 스토리지 서비스입니다. 로그 데이터를 안전하게 보관하기 위해 기본 설정으로 버킷을 생성해 봅니다. 버킷 이름은 전역적으로 고유해야 합니다.',
+        'S3는 높은 가용성과 내구성을 제공하는 객체 스토리지 서비스입니다. 로그 데이터를 안전하게 보관하기 위해 기본 설정으로 버킷을 생성해 봅니다. 버킷 이름은 전역적으로 고유해야 합니다. 버킷 이름은 my-log-bucket으로 설정해주세요.',
       requiredFields: [
         {
           serviceName: 's3',
