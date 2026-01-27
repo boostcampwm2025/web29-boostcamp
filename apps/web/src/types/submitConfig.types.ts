@@ -1,6 +1,15 @@
-import type { CloudFrontSubmitConfig } from './aws-services/cloudfront/cloudfront-submit-config.types'
-import type { EC2SubmitConfig } from './aws-services/ec2/ec2-submit-config.types'
-import type { S3SubmitConfig } from './aws-services/s3/bucket-create'
+import type {
+  CloudFrontServerPayload,
+  CloudFrontSubmitConfig,
+} from './aws-services/cloudfront/cloudfront-submit-config.types'
+import type {
+  EC2ServerPayload,
+  EC2SubmitConfig,
+} from './aws-services/ec2/ec2-submit-config.types'
+import type {
+  S3ServerPayload,
+  S3SubmitConfig,
+} from './aws-services/s3/bucket-create'
 
 export type ServiceType = 's3' | 'cloudFront' | 'ec2'
 
@@ -23,11 +32,17 @@ export interface GlobalSubmitConfig {
   ec2?: ServiceConfigItem<EC2SubmitConfig>[]
 }
 
+// 서버 제출용 payload 유니온
+export type ServerPayload =
+  | S3ServerPayload
+  | CloudFrontServerPayload
+  | EC2ServerPayload
+
 // 최종 제출
 export interface FinalSubmitConfig {
   submitConfig: {
-    s3?: ServiceConfigItem<S3SubmitConfig>[]
-    cloudFront?: ServiceConfigItem<CloudFrontSubmitConfig>[]
-    ec2?: ServiceConfigItem<EC2SubmitConfig>[]
+    s3?: S3ServerPayload[]
+    cloudFront?: CloudFrontServerPayload[]
+    ec2?: EC2ServerPayload[]
   }
 }
