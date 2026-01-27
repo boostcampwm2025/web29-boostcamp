@@ -20,6 +20,7 @@ import {
 import { LAYOUT_CONFIG, useAwsDiagramLogic } from '@/hooks/diagram'
 import type { FeedbackDetail } from '@/types/feedback.type'
 import type {
+  FinalSubmitConfig,
   GlobalSubmitConfig,
   ServiceConfig,
   ServiceConfigItem,
@@ -144,7 +145,7 @@ export function ProblemFormProvider<T extends FieldValues>({
 
   // 제출 핸들러
   const submitProblem = useCallback(async () => {
-    const finalConfig = {
+    const finalConfig: FinalSubmitConfig = {
       submitConfig: Object.fromEntries(
         Object.entries(submitConfig).map(([serviceKey, items]) => [
           serviceKey,
