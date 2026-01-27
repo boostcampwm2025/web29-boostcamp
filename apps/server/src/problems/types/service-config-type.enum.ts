@@ -224,6 +224,44 @@ export class NACLConfig {
   entries: NACLRule[];
 }
 
+export class CloudFrontConfig {
+  @IsString()
+  id: string;
+
+  @IsString()
+  name: string;
+
+  // === Origin Settings === //
+  @IsEnum(['s3', 'custom'])
+  @IsOptional()
+  originType?: 's3' | 'custom';
+
+  // S3 Origin (originType === 's3' 일 때 사용)
+  @IsString()
+  @IsOptional()
+  selectedBucket?: string; // 선택한 S3 버킷 이름
+
+  // Custom Origin (originType === 'custom' 일 때 사용)
+  @IsString()
+  @IsOptional()
+  customDomain?: string; // 직접 입력한 도메인
+
+  @IsString()
+  @IsOptional()
+  originPath?: string;
+
+  @IsEnum(['oac', 'oai', 'public'])
+  @IsOptional()
+  accessControl?: 'oac' | 'oai' | 'public';
+
+  // OAC (accessControl === 'oac' 일 때 사용)
+  @IsString()
+  @IsOptional()
+  oacName?: string;
+
+  // +) custom-headers 나중에 //
+}
+
 export type ServiceConfigTypes =
   | EC2Config
   | VPCConfig
@@ -231,4 +269,5 @@ export type ServiceConfigTypes =
   | RouteTableConfig
   | SecurityGroupsConfig
   | S3Config
-  | InternetGatewayConfig;
+  | InternetGatewayConfig
+  | CloudFrontConfig;
