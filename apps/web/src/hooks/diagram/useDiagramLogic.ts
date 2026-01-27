@@ -1,6 +1,5 @@
 import { recalculateTree } from './nodesBuilding'
 import {
-  type ConfigType,
   GLOBAL_SERVICE_TYPES,
   LAYOUT_CONFIG,
   REGION_CHILDS_TYPES,
@@ -8,8 +7,10 @@ import {
 
 import { useCallback } from 'react'
 
+import type { ServiceConfig } from '@/types/submitConfig.types'
 import type { Edge, Node } from '@xyflow/react'
 
+// TODO: ServiceConfig, ServiceType에 vpc, subnet 등도 추가 필요. 지금 타입 경고
 export function useAwsDiagramLogic(
   _nodes: Node[],
   setNodes: React.Dispatch<React.SetStateAction<Node[]>>,
@@ -21,7 +22,7 @@ export function useAwsDiagramLogic(
 
   const ensureHierarchy = useCallback(
     (
-      payload: ConfigType,
+      payload: ServiceConfig,
       currentNodes: Node[],
     ): { nodes: Node[]; parentId: string | undefined } => {
       const newNodes = [...currentNodes]
@@ -29,7 +30,7 @@ export function useAwsDiagramLogic(
 
       // Global Service
       // 만약 글로벌 서비스면 만약에 글로벌 네트워크가 아직 생성이 안되었다면 생성
-      if (GLOBAL_SERVICE_TYPES.includes(payload.type)) {
+      if (GLOBAL_SERVICE_TYPES.includes(payload._type)) {
         if (!nodeExists(LAYOUT_CONFIG.GLOBAL_ID, newNodes)) {
           newNodes.push({
             id: LAYOUT_CONFIG.GLOBAL_ID,
@@ -62,7 +63,7 @@ export function useAwsDiagramLogic(
         // 만약 추가된 서비스가 region의 바로 아래 붙는 타입이라면 region 노드가 있는지 확인하고, 없으면 생성
         if (
           !nodeExists(regionId, newNodes) &&
-          REGION_CHILDS_TYPES.includes(payload.type)
+          REGION_CHILDS_TYPES.includes(payload._type)
         ) {
           newNodes.push({
             id: regionId,
@@ -86,12 +87,12 @@ export function useAwsDiagramLogic(
         }
 
         // 2. 부모 결정 로직
-        if (payload.type === 'vpc') {
+        if (payload._type === 'vpc') {
           parentId = regionId
-        } else if (payload.type === 's3' || payload.type === 'rds') {
+        } else if (payload._type === 's3' || payload._type === 'rds') {
           // S3 등은 리전 바로 아래
           parentId = regionId
-        } else if (payload.type === 'subnet') {
+        } else if (payload._type === 'subnet') {
           // Subnet은 VPC 아래 (VPC ID 체크)
           if (!('vpcId' in payload)) {
             throw new Error('Subnet payload must include vpcId.')
@@ -118,7 +119,11 @@ export function useAwsDiagramLogic(
   )
 
   const handleChildStealing = useCallback(
-    (targetNode: Node, payload: ConfigType, currentNodes: Node[]): Node[] => {
+    (
+      targetNode: Node,
+      payload: ServiceConfig,
+      currentNodes: Node[],
+    ): Node[] => {
       let updatedNodes = [...currentNodes]
 
       if ('groupId' in payload && payload.groupId) {
@@ -160,7 +165,7 @@ export function useAwsDiagramLogic(
   )
 
   const addAwsResource = useCallback(
-    (payload: ConfigType) => {
+    (payload: ServiceConfig) => {
       setNodes((prevNodes) => {
         try {
           // 1. 부모 계층 확인 및 생성
@@ -173,26 +178,26 @@ export function useAwsDiagramLogic(
           const newNode: Node = {
             id: payload.name,
             type:
-              payload.type === 'vpc' || payload.type === 'subnet'
+              payload._type === 'vpc' || payload._type === 'subnet'
                 ? 'awsGroup'
                 : 'awsService',
             parentId: parentId,
             extent: 'parent',
             position: { x: LAYOUT_CONFIG.PADDING, y: LAYOUT_CONFIG.PADDING }, // 초기엔 왼쪽 위 배치
             data: {
-              type: payload.type,
+              type: payload._type,
               label: payload.name,
-              icon: payload.type,
+              icon: payload._type,
               width:
-                payload.type === 'vpc'
+                payload._type === 'vpc'
                   ? 400
-                  : payload.type === 'subnet'
+                  : payload._type === 'subnet'
                     ? 300
                     : 80,
               height:
-                payload.type === 'vpc'
+                payload._type === 'vpc'
                   ? 300
-                  : payload.type === 'subnet'
+                  : payload._type === 'subnet'
                     ? 200
                     : 80,
             },

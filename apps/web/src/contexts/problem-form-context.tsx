@@ -7,7 +7,9 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import {
@@ -18,6 +20,7 @@ import {
 } from 'react-hook-form'
 
 import { LAYOUT_CONFIG, useAwsDiagramLogic } from '@/hooks/diagram'
+import { useBuildDefaultNodes } from '@/lib/buildIntialNodes'
 import type { FeedbackDetail } from '@/types/feedback.type'
 import type {
   GlobalSubmitConfig,
@@ -55,6 +58,7 @@ interface ProblemFormProviderProps<
   initialFeedback?: FeedbackDetail[]
   initialNodes?: Node[]
   initialEdges?: Edge[]
+  defaultConfigs?: GlobalSubmitConfig
 }
 
 // 기본 aws-cloud 루트 노드
@@ -80,6 +84,7 @@ export function ProblemFormProvider<T extends FieldValues>({
   initialFeedback = [],
   initialNodes = [DEFAULT_ROOT_NODE],
   initialEdges = [],
+  defaultConfigs = {},
 }: ProblemFormProviderProps<T>) {
   const methods = useForm<T>({ defaultValues })
   const {
@@ -88,11 +93,33 @@ export function ProblemFormProvider<T extends FieldValues>({
   const [feedback, setFeedback] = useState<FeedbackDetail[]>(initialFeedback)
 
   // 리소스 구성 상태
-  const [submitConfig, setSubmitConfig] = useState<GlobalSubmitConfig>({})
+  const [submitConfig, setSubmitConfig] =
+    useState<GlobalSubmitConfig>(defaultConfigs)
 
   // 다이어그램 상태
   const [nodes, setNodes] = useState<Node[]>(initialNodes)
   const [edges, setEdges] = useState<Edge[]>(initialEdges)
+
+  // 노드 초기화
+  const { buildInitialNodes } = useBuildDefaultNodes(
+    nodes,
+    defaultConfigs,
+    setNodes,
+    setEdges,
+  )
+
+  const isInitialized = useRef(false)
+
+  useEffect(() => {
+    // 이미 초기화되었거나 defaultConfigs가 없으면 실행하지 않음
+    if (isInitialized.current || !defaultConfigs) return
+
+    // 초기 노드 빌드 실행
+    buildInitialNodes(defaultConfigs)
+
+    // 초기화 완료 표시
+    isInitialized.current = true
+  }, [])
 
   // 다이어그램 로직 훅
   const { addAwsResource } = useAwsDiagramLogic(nodes, setNodes, setEdges)

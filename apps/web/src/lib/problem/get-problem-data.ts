@@ -1,4 +1,7 @@
+import { addDefaultConfigs } from '../addDefaultConfigs'
+
 import { IServiceMapper } from '@/components/aws-services/utils/serviceMapper'
+import { GlobalSubmitConfig, ServiceConfig } from '@/types/submitConfig.types'
 
 /*
   2026-01-26 17:02
@@ -10,7 +13,7 @@ interface RequiredField {
   serviceName: string
   serviceTask: string
   serviceSections: string[]
-  // fixed_options?: Record<string, string>
+  fixedOptions?: ServiceConfig
 }
 
 export interface ProblemData {
@@ -20,6 +23,7 @@ export interface ProblemData {
   descDetail: string
   tags: string[]
   serviceMappers: IServiceMapper[]
+  defaultConfigs: GlobalSubmitConfig
 }
 
 export async function getProblemData(id: string): Promise<ProblemData> {
@@ -47,8 +51,10 @@ export async function getProblemData(id: string): Promise<ProblemData> {
     }),
   )
 
-  // Backend에서 diagram_template 반환 시 아래 코드로 대체
-  // const diagram: DiagramData = response.diagram_template ?? mockDiagramData
+  const fixedOptions: ServiceConfig[] = response.requiredFields.flatMap(
+    (field: RequiredField) => field.fixedOptions,
+  )
+  const defaultConfigs: GlobalSubmitConfig = addDefaultConfigs(fixedOptions)
 
   return {
     problemType: response.problemType,
@@ -57,5 +63,6 @@ export async function getProblemData(id: string): Promise<ProblemData> {
     descDetail: response.descDetail,
     tags: response.tags ?? [],
     serviceMappers,
+    defaultConfigs,
   }
 }

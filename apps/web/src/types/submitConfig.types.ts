@@ -2,12 +2,16 @@ import type { CloudFrontSubmitConfig } from './aws-services/cloudfront/cloudfron
 import type { EC2SubmitConfig } from './aws-services/ec2/ec2-submit-config.types'
 import type { S3SubmitConfig } from './aws-services/s3/bucket-create'
 
-export type ServiceType = 's3' | 'cloudFront' | 'ec2'
+export type ServiceType = 's3' | 'cloudFront' | 'ec2' | 'vpc' | 'subnet'
 
+// 일단 임시로 vpc, subnet 타입도 추가
 export type ServiceConfig =
   | S3SubmitConfig
   | CloudFrontSubmitConfig
   | EC2SubmitConfig
+  | { _type: 'vpc'; id: string; name: string }
+  | { _type: 'subnet'; id: string; name: string; vpcId: string }
+  | { _type: 'rds'; id: string; name: string; subnetId: string }
 
 // 개별 서비스 데이터 (ID를 포함해 식별 가능하게 함)
 export interface ServiceConfigItem<T> {
