@@ -1,5 +1,6 @@
 'use client'
 
+import { ServiceTitle } from '../../common/service-title'
 import {
   CnameSection,
   GeneralConfigSection,
@@ -46,6 +47,8 @@ export default function CloudFrontDistributionSettings({
 
   const distributionName = watch('distributionName') || ''
 
+  const isDisabled = distributionName.length === 0
+
   const handleFormSubmit = handleSubmit((data) => {
     const uniqueId = crypto.randomUUID()
     const submitData: CloudFrontSubmitConfig = {
@@ -67,23 +70,15 @@ export default function CloudFrontDistributionSettings({
   })
 
   return (
-    <form
-      onSubmit={handleFormSubmit}
-      className="mx-auto max-w-4xl space-y-6 p-6"
-    >
-      {/* Header */}
-      <div className="space-y-2">
-        <h2 className="text-3xl font-bold">배포 설정</h2>
-        <p className="text-muted-foreground">
-          CloudFront 배포의 기본 설정을 구성하세요
-        </p>
-      </div>
-
-      <div className="flex justify-end px-6">
-        <Button type="submit" disabled={distributionName.length === 0}>
-          {buttonText}
-        </Button>
-      </div>
+    <form onSubmit={handleFormSubmit} className="w-full space-y-4 p-8">
+      <ServiceTitle
+        title="배포 설정"
+        description="CloudFront 배포의 기본 설정을 구성하세요"
+        button={{
+          isDisabled,
+          buttonText,
+        }}
+      />
 
       {config.generalConfig && (
         <GeneralConfigSection control={control} config={config} />

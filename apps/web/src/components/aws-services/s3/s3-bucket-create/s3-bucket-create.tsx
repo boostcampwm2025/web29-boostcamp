@@ -1,5 +1,6 @@
 'use client'
 
+import { ServiceTitle } from '../../common/service-title'
 import {
   AdvancedSettings,
   BlockPublicAccess,
@@ -55,6 +56,8 @@ export default function S3BucketCreate({
 
   const bucketName = watch('general.name') || ''
 
+  const isDisabled = bucketName.length === 0
+
   const handleFormSubmit = handleSubmit((data) => {
     const flattenedData = flattenObject(
       data as Record<string, unknown>,
@@ -64,22 +67,16 @@ export default function S3BucketCreate({
   })
 
   return (
-    <form
-      onSubmit={handleFormSubmit}
-      className="mx-auto max-w-4xl space-y-6 p-6"
-    >
-      {/* Header Section */}
-      <div className="flex items-center justify-between">
-        <div className="space-y-2">
-          <h2 className="text-3xl font-bold">버킷 생성</h2>
-          <p className="text-muted-foreground">S3 버킷 설정을 구성하세요</p>
-        </div>
-      </div>
-      <div className="flex justify-end px-6">
-        <Button type="submit" disabled={bucketName.length === 0}>
-          {buttonText}
-        </Button>
-      </div>
+    <form onSubmit={handleFormSubmit} className="w-full space-y-4 p-8">
+      <ServiceTitle
+        title="S3 버킷 생성"
+        description="새로운 S3 버킷을 생성합니다"
+        button={{
+          isDisabled,
+          buttonText,
+        }}
+      />
+
       {/* Section 1: bucket create region */}
       {config.general && (
         <GeneralConfiguration control={control} config={config} />

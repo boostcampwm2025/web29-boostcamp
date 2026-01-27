@@ -1,5 +1,6 @@
 'use client'
 
+import { ServiceTitle } from '../../common/service-title'
 import {
   Ami,
   InstanceType,
@@ -50,6 +51,8 @@ export default function EC2InstanceCreate({
 
   const instanceName = watch('nameTag.name') || ''
 
+  const isDisabled = instanceName.length === 0
+
   const handleFormSubmit = handleSubmit((data) => {
     const uniqueId = crypto.randomUUID()
     const submitData: EC2SubmitConfig = {
@@ -71,22 +74,15 @@ export default function EC2InstanceCreate({
   })
 
   return (
-    <form
-      onSubmit={handleFormSubmit}
-      className="mx-auto max-w-4xl space-y-6 p-6"
-    >
-      <div className="space-y-2">
-        <h2 className="text-3xl font-bold">인스턴스 시작</h2>
-        <p className="text-muted-foreground">
-          Amazon EC2 인스턴스를 생성하고 구성하세요
-        </p>
-      </div>
-
-      <div className="flex justify-end px-6">
-        <Button type="submit" disabled={instanceName.length === 0}>
-          {buttonText}
-        </Button>
-      </div>
+    <form onSubmit={handleFormSubmit} className="w-full space-y-4 p-8">
+      <ServiceTitle
+        title="인스턴스 시작"
+        description="Amazon EC2 인스턴스를 생성하고 구성하세요"
+        button={{
+          isDisabled,
+          buttonText,
+        }}
+      />
 
       {config.nameTag && <NameTag control={control} config={config} />}
 

@@ -1,5 +1,6 @@
 'use client'
 
+import { ServiceTitle } from '../../common/service-title'
 import {
   CachePolicySection,
   CompressionSection,
@@ -62,21 +63,15 @@ export default function CloudFrontCacheBehavior({
   })
 
   return (
-    <form
-      onSubmit={handleFormSubmit}
-      className="mx-auto max-w-4xl space-y-6 p-6"
-    >
-      {/* Header */}
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold">캐시 및 동작 설정</h1>
-        <p className="text-muted-foreground">
-          CloudFront 캐시 정책과 뷰어 액세스 제어를 구성하세요
-        </p>
-      </div>
-
-      <div className="flex justify-end px-6">
-        <Button type="submit">{buttonText}</Button>
-      </div>
+    <form onSubmit={handleFormSubmit} className="w-full space-y-4 p-8">
+      <ServiceTitle
+        title="캐시 및 동작 설정"
+        description="CloudFront 캐시 정책과 뷰어 액세스 제어를 구성하세요"
+        button={{
+          isDisabled: false,
+          buttonText,
+        }}
+      />
 
       {config.viewerProtocol && (
         <ViewerProtocolSection control={control} config={config} />

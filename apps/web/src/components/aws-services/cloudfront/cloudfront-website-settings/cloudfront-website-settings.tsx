@@ -1,5 +1,6 @@
 'use client'
 
+import { ServiceTitle } from '../../common/service-title'
 import {
   CustomErrorPagesSection,
   DefaultRootObjectSection,
@@ -63,21 +64,15 @@ export default function CloudFrontWebsiteSettings({
   })
 
   return (
-    <form
-      onSubmit={handleFormSubmit}
-      className="mx-auto max-w-4xl space-y-6 p-6"
-    >
-      {/* Header */}
-      <div className="space-y-2">
-        <h2 className="text-3xl font-bold">일반 설정 편집</h2>
-        <p className="text-muted-foreground">
-          Default Root Object 및 기타 웹사이트 설정을 구성하세요
-        </p>
-      </div>
-
-      <div className="flex justify-end px-6">
-        <Button type="submit">{buttonText}</Button>
-      </div>
+    <form onSubmit={handleFormSubmit} className="w-full space-y-4 p-8">
+      <ServiceTitle
+        title="일반 설정 편집"
+        description="Default Root Object 및 기타 웹사이트 설정을 구성하세요"
+        button={{
+          isDisabled: false,
+          buttonText,
+        }}
+      />
 
       {config.defaultRootObject && (
         <DefaultRootObjectSection control={control} config={config} />
