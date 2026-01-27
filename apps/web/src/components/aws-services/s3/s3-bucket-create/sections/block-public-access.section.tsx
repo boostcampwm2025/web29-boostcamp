@@ -1,5 +1,8 @@
+'use client'
+
 import { AlertCircle } from 'lucide-react'
 
+import { useEffect } from 'react'
 import { Controller, useWatch } from 'react-hook-form'
 
 import { SectionContainer } from '@/components/section-container'
@@ -12,6 +15,30 @@ export const BlockPublicAccess = ({
   setValue,
 }: S3WithSetValuesSectionProps) => {
   const blockAll = useWatch({ control, name: 'blockPublicAccess.blockAll' })
+  const blockValues = useWatch({
+    control,
+    name: 'blockPublicAccess',
+  })
+
+  useEffect(() => {
+    if (!blockValues) return
+
+    const allChecked =
+      blockValues.blockPublicAcls &&
+      blockValues.ignorePublicAcls &&
+      blockValues.blockPublicPolicy &&
+      blockValues.restrictPublicBuckets
+
+    setValue('blockPublicAccess.blockAll', allChecked, {
+      shouldDirty: true,
+      shouldTouch: false,
+    })
+  }, [
+    blockValues?.blockPublicAcls,
+    blockValues?.ignorePublicAcls,
+    blockValues?.blockPublicPolicy,
+    blockValues?.restrictPublicBuckets,
+  ])
 
   return (
     <SectionContainer
@@ -35,13 +62,23 @@ export const BlockPublicAccess = ({
                 checked={field.value}
                 onCheckedChange={(checked) => {
                   field.onChange(checked)
-                  // When blockAll is true, auto-set all individual fields
-                  if (checked) {
-                    setValue('blockPublicAccess.blockPublicAcls', true)
-                    setValue('blockPublicAccess.ignorePublicAcls', true)
-                    setValue('blockPublicAccess.blockPublicPolicy', true)
-                    setValue('blockPublicAccess.restrictPublicBuckets', true)
-                  }
+
+                  setValue('blockPublicAccess.blockPublicAcls', !!checked, {
+                    shouldDirty: true,
+                  })
+                  setValue('blockPublicAccess.ignorePublicAcls', !!checked, {
+                    shouldDirty: true,
+                  })
+                  setValue('blockPublicAccess.blockPublicPolicy', !!checked, {
+                    shouldDirty: true,
+                  })
+                  setValue(
+                    'blockPublicAccess.restrictPublicBuckets',
+                    !!checked,
+                    {
+                      shouldDirty: true,
+                    },
+                  )
                 }}
               />
             )}
