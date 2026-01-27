@@ -4,10 +4,10 @@ import { SubmitButton } from './submit-button'
 
 export const ProblemRightSection = () => {
   return (
-    <section className="relative h-full">
-      <div className="w-full overflow-y-auto">
-        <SubmitButton />
+    <section className="w-full">
+      <div className="flex flex-col gap-4">
         <DiagramPanel />
+        <SubmitButton />
         <FeedbackPanel />
       </div>
     </section>
