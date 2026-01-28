@@ -6,7 +6,6 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
   const solutionRepository = dataSource.getRepository(Solution);
   const problemRepository = dataSource.getRepository(Problem);
 
-  // 문제들을 title 순서로 가져오기
   const problems = await problemRepository.find({
     order: { id: 'ASC' },
   });
@@ -16,14 +15,82 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
     return;
   }
 
+  // Common DONT_CARE Templates
+  const s3DontCareConfig = {
+    id: 'DONT_CARE',
+    name: 'DONT_CARE',
+    region: 'DONT_CARE',
+    aclEnabled: 'DONT_CARE',
+    ownershipModel: 'DONT_CARE',
+    blockAll: 'DONT_CARE',
+    blockPublicAcls: 'DONT_CARE',
+    ignorePublicAcls: 'DONT_CARE',
+    blockPublicPolicy: 'DONT_CARE',
+    restrictPublicBuckets: 'DONT_CARE',
+    encryptionType: 'DONT_CARE',
+    versioningEnabled: 'DONT_CARE',
+    tags: 'DONT_CARE',
+  };
+
+  const ec2DontCareConfig = {
+    id: 'DONT_CARE',
+    name: 'DONT_CARE',
+    vpcName: 'DONT_CARE',
+    subnetName: 'DONT_CARE',
+    osType: 'DONT_CARE',
+    instanceType: 'DONT_CARE',
+    keyName: 'DONT_CARE',
+    autoAssignPublicIp: 'DONT_CARE',
+    allowSSH: 'DONT_CARE',
+    allowHTTPS: 'DONT_CARE',
+    allowHTTP: 'DONT_CARE',
+    storageSize: 'DONT_CARE',
+    volumeType: 'DONT_CARE',
+  };
+
+  const cloudFrontDontCareConfig = {
+    id: 'DONT_CARE',
+    name: 'DONT_CARE',
+    originType: 'DONT_CARE',
+    selectedBucket: 'DONT_CARE',
+    customDomain: 'DONT_CARE',
+    originPath: 'DONT_CARE',
+    accessControl: 'DONT_CARE',
+    oacName: 'DONT_CARE',
+    distributionName: 'DONT_CARE',
+    description: 'DONT_CARE',
+    enabled: 'DONT_CARE',
+    priceClass: 'DONT_CARE',
+    cnames: 'DONT_CARE',
+    sslCertificate: 'DONT_CARE',
+    acmCertificateArn: 'DONT_CARE',
+    minTlsVersion: 'DONT_CARE',
+    ipv6Enabled: 'DONT_CARE',
+    viewerProtocolPolicy: 'DONT_CARE',
+    allowedMethods: 'DONT_CARE',
+    cachePolicy: 'DONT_CARE',
+    managedPolicyName: 'DONT_CARE',
+    customTTL: 'DONT_CARE',
+    compressionEnabled: 'DONT_CARE',
+    viewerRequestFunction: 'DONT_CARE',
+    viewerResponseFunction: 'DONT_CARE',
+    defaultRootObject: 'DONT_CARE',
+    errorResponses: 'DONT_CARE',
+    loggingEnabled: 'DONT_CARE',
+    loggingBucket: 'DONT_CARE',
+    logPrefix: 'DONT_CARE',
+    wafEnabled: 'DONT_CARE',
+    webAclId: 'DONT_CARE',
+  };
+
   const solutions = [
     {
       problem: problems[0], // 로그 저장용 S3 버킷 생성
       answerConfig: {
         s3: [
           {
-            name: 'my-log-bucket',
-            region: 'DONT_CARE',
+            ...s3DontCareConfig,
+            name: 'my-log-bucket', // 필수 조건
           },
         ],
       },
@@ -33,9 +100,8 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         s3: [
           {
-            name: 'DONT_CARE',
-            region: 'DONT_CARE',
-            versioningEnabled: true,
+            ...s3DontCareConfig,
+            versioningEnabled: true, // 필수 조건
           },
         ],
       },
@@ -45,13 +111,9 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         cloudFront: [
           {
-            // 현재 타입 정의가 없음
-            // originDomain: {
-            //   domainName: 'my-bucket.s3.amazonaws.com',
-            // },
-            // originAccessControl: {
-            //   signingBehavior: 'always',
-            // },
+            ...cloudFrontDontCareConfig,
+            originType: 's3',
+            // originDomain 관련 필드는 현재 프론트 DTO와 매칭 필요 (임시로 DONT_CARE 유지)
           },
         ],
       },
@@ -61,19 +123,8 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         ec2: [
           {
-            id: 'DONT_CARE',
-            name: 'DONT_CARE',
-            vpcName: 'DONT_CARE',
-            subnetName: 'DONT_CARE',
-            osType: 'DONT_CARE',
-            instanceType: 't2.micro',
-            keyName: 'DONT_CARE',
-            autoAssignPublicIp: 'DONT_CARE',
-            allowSSH: 'DONT_CARE',
-            allowHTTPS: 'DONT_CARE',
-            allowHTTP: 'DONT_CARE',
-            storageSize: 'DONT_CARE',
-            volumeType: 'DONT_CARE',
+            ...ec2DontCareConfig,
+            instanceType: 't2.micro', // 필수 조건
           },
         ],
       },
@@ -83,29 +134,34 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         s3: [
           {
-            name: 'DONT_CARE',
-            region: 'DONT_CARE',
+            ...s3DontCareConfig,
+            name: 'my-global-site', // 문제의 필수 조건
           },
         ],
         cloudFront: [
-          // 타입 정의 후 추가
+          {
+            ...cloudFrontDontCareConfig,
+            originType: 's3',
+          },
         ],
       },
     },
     {
-      problem: problems[5], // S3 버킷 생성하기
+      problem: problems[5], // S3 버킷 생성하기 (Unit)
       answerConfig: {
         s3: [
           {
-            id: 'my-first-bucket',
-            name: 'my-first-bucket',
-            region: 'ap-northeast-2',
-            aclEnabled: 'disabled',
-            blockAll: true,
-            blockPublicAcls: true,
-            ignorePublicAcls: true,
-            blockPublicPolicy: true,
-            restrictPublicBuckets: true,
+            ...s3DontCareConfig, // 특별한 조건 없음 (기본 생성)
+          },
+        ],
+      },
+    },
+    {
+      problem: problems[6], // EC2 인스턴스 생성하기 (Unit)
+      answerConfig: {
+        ec2: [
+          {
+            ...ec2DontCareConfig, // 특별한 조건 없음 (기본 생성)
           },
         ],
       },
@@ -113,6 +169,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
   ];
 
   for (const solutionData of solutions) {
+    if (!solutionData.problem) continue; // 문제 데이터가 없으면 스킵
     await solutionRepository.save(solutionData);
   }
 
