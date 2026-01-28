@@ -4,7 +4,7 @@ export function addDefaultConfigs(
   fixedOptions?: ServiceConfig[],
 ): GlobalSubmitConfig {
   const defaultConfigs: GlobalSubmitConfig = {}
-  if (fixedOptions) {
+  if (fixedOptions instanceof Array && fixedOptions[0] !== undefined) {
     for (const options of fixedOptions) {
       switch (options._type) {
         case 's3':
