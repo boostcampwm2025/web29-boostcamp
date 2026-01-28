@@ -17,6 +17,7 @@ const getServiceType = (serviceName: string): ServiceType => {
     ec2: 'ec2',
     vpc: 'vpc',
     subnet: 'subnet',
+    routeTable: 'routeTable',
   }
   return serviceTypeMap[serviceName] || 's3'
 }
