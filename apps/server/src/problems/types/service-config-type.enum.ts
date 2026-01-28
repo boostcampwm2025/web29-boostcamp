@@ -18,6 +18,12 @@ export class EC2Config {
   @IsString()
   name: string;
 
+  @IsString()
+  vpcName: string;
+
+  @IsString()
+  subnetName: string;
+
   @IsEnum([
     'amazon-linux',
     'mac-os',
