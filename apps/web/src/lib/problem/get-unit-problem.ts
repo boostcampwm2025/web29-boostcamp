@@ -1,4 +1,4 @@
-import { addDefaultConfigs } from '../addDefaultConfigs'
+import { addDefaultConfigs } from '../add-default-configs'
 
 import { IServiceMapper } from '@/components/aws-services/utils/serviceMapper'
 import { GlobalSubmitConfig, ServiceConfig } from '@/types/submitConfig.types'
@@ -26,7 +26,7 @@ export interface ProblemData {
   defaultConfigs: GlobalSubmitConfig
 }
 
-export async function getProblemData(id: string): Promise<ProblemData> {
+export async function getUnitProblemDataById(id: string): Promise<ProblemData> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3001'
 
   if (!baseUrl) {

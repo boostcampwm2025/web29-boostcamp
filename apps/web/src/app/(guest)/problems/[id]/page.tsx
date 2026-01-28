@@ -1,6 +1,6 @@
 import ProblemDetailClient from './problem-detail-client'
 
-import { getProblemData } from '@/lib/problem/get-problem-data'
+import { getUnitProblemDataById } from '@/lib/problem'
 
 interface ProblemDetailPageProps {
   params: Promise<{
@@ -19,7 +19,7 @@ export default async function ProblemDetailPage({
   const { type } = await searchParams
 
   const { title, description, tags, serviceMappers, defaultConfigs } =
-    await getProblemData(id)
+    await getUnitProblemDataById(id)
 
   const mockFeedbackMessages = [
     {
