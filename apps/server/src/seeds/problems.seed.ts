@@ -248,6 +248,65 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
         },
       ],
     },
+    {
+      problemType: ProblemType.UNIT,
+      title: 'EC2 보안 그룹 HTTP 포트 열기',
+      description:
+        '웹 서버 접근을 위해 보안 그룹에 HTTP(80) 포트를 열어주세요.',
+      descDetail: `보안 그룹은 EC2 인스턴스의 가상 방화벽 역할을 합니다.
+웹 서버를 외부에서 접근하려면 HTTP(80) 포트를 인바운드 규칙에 추가해야 합니다.
+
+전제 조건:
+- VPC가 이미 존재: default-vpc
+- EC2 인스턴스가 이미 존재: web-server
+
+학습 목표:
+1. 보안 그룹의 역할 이해
+2. 인바운드 규칙 추가 방법
+3. 포트와 소스 IP 설정`,
+      requiredFields: [
+        {
+          serviceName: 'ec2',
+          serviceTask: 'securityGroupCreate',
+          serviceSections: ['basicInfo', 'inboundRules'],
+          fixedOptions: [
+            {
+              _type: 'vpc',
+              id: 'default-vpc',
+              name: 'default-vpc',
+            },
+          ],
+        },
+      ],
+      solution: {
+        answerConfig: {
+          securityGroups: [
+            {
+              name: 'web-server-sg',
+              vpcId: 'default-vpc',
+              vpcName: 'default-vpc',
+              ipPermissions: [
+                {
+                  ipProtocol: 'tcp',
+                  fromPort: '80',
+                  toPort: '80',
+                  cidrIp: '0.0.0.0/0',
+                  isInbound: true,
+                },
+              ],
+            },
+          ],
+        },
+      },
+      requirements: {
+        securityGroup: {
+          'web-server-sg': {
+            requireOpenPorts: [80],
+          },
+        },
+      },
+      tags: [tagMap.get('Security')!, tagMap.get('EC2')!],
+    },
   ];
 
   for (const problemData of problems) {
