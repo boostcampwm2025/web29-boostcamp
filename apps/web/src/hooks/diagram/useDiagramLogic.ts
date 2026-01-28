@@ -4,6 +4,7 @@ import {
   LAYOUT_CONFIG,
   REGION_CHILDS_TYPES,
 } from './types'
+import { TYPE_ICONS_MAP } from './types'
 
 import { useCallback } from 'react'
 
@@ -187,7 +188,7 @@ export function useAwsDiagramLogic(
             data: {
               type: payload._type,
               label: payload.name,
-              icon: payload._type,
+              icon: TYPE_ICONS_MAP[payload._type] || payload._type,
               width:
                 payload._type === 'vpc'
                   ? 400
