@@ -15,7 +15,6 @@ jobs:
   build-web:
     name: Build and Push Web Image
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
