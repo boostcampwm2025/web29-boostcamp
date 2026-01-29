@@ -179,6 +179,9 @@ export function useAwsDiagramLogic(
           if (payload._type === 'routeTable') {
             return prevNodes
           }
+          if (payload._type === 'internetGateway' && !payload.vpcId) {
+            return prevNodes
+          }
 
           // 2. 새 노드 생성
           const newNode: Node = {
