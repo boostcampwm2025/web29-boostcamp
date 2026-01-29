@@ -54,27 +54,27 @@ export class Ec2ScenarioHandler {
 
       // 2. EC2_PUBLIC_IP_MISSING
       if (req.requirePublicIp) {
-        // publicIpAddress가 있는지 확인
-        if (!instance.publicIpAddress) {
+        // autoAssignPublicIp 설정 확인
+        if (!instance.autoAssignPublicIp) {
           feedbacks.push({
             serviceType: 'ec2',
             service: ec2Name,
-            field: 'publicIpAddress',
+            field: 'autoAssignPublicIp',
             code: EC2FeedbackScenarios.EC2_PUBLIC_IP_MISSING,
             message: `EC2 인스턴스 ${ec2Name}에 퍼블릭 IP 자동 할당 설정이 누락되었습니다.`,
           });
         }
       }
 
-      // 3. EC2_WRONG_AMI
-      if (req.expectedAmi) {
-        if (instance.ami !== req.expectedAmi) {
+      // 3. EC2_WRONG_OS_TYPE
+      if (req.expectedOsType) {
+        if (instance.osType !== req.expectedOsType) {
           feedbacks.push({
             serviceType: 'ec2',
             service: ec2Name,
-            field: 'ami',
-            code: EC2FeedbackScenarios.EC2_WRONG_AMI,
-            message: `EC2 인스턴스 ${ec2Name}의 AMI가 올바르지 않습니다. (현재: ${instance.ami}, 요구: ${req.expectedAmi})`,
+            field: 'osType',
+            code: EC2FeedbackScenarios.EC2_WRONG_OS_TYPE,
+            message: `EC2 인스턴스 ${ec2Name}의 OS 이미지가 올바르지 않습니다. (현재: ${instance.osType}, 요구: ${req.expectedOsType})`,
           });
         }
       }

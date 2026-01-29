@@ -7,6 +7,7 @@ interface ProblemLeftSectionProps {
   type: string
   title: string
   description: string
+  descDetail: string
   tags: string[]
   problemData: IServiceMapper[]
 }
@@ -14,7 +15,7 @@ interface ProblemLeftSectionProps {
 export const ProblemLeftSection = ({
   type,
   title,
-  description,
+  descDetail,
   tags,
   problemData,
 }: ProblemLeftSectionProps) => {
@@ -23,7 +24,7 @@ export const ProblemLeftSection = ({
       <ProblemHeader
         type={type}
         title={title}
-        description={description}
+        description={descDetail}
         tags={tags}
       />
       <ProblemFormContent problemData={problemData} />

@@ -35,7 +35,7 @@ export interface Ec2Requirements {
     [ec2Name: string]: {
       expectedSubnet?: string;
       requirePublicIp?: boolean;
-      expectedAmi?: string;
+      expectedOsType?: string;
       expectedInstanceType?: string;
     };
   };

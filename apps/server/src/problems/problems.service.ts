@@ -105,14 +105,6 @@ export class ProblemsService {
     problemId: number,
     body: SubmitRequestDto,
   ): Promise<SubmitResponseDto> {
-    // MOCK 문제 데이터
-    // const problemData = {
-    //   problemType: ProblemType.UNIT,
-    //   solution: {},
-    // };
-
-    // TODO: problemId로 문제 데이터를 조회하는 로직 추후 구현 필요
-
     const problemEntity = await this.problemRepository.findOne({
       where: { id: problemId },
       relations: {

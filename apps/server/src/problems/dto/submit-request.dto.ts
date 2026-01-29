@@ -43,6 +43,12 @@ export class SubmitConfig {
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
+  @Type(() => ServiceConfigType.CloudFrontConfig)
+  cloudFront?: ServiceConfigType.CloudFrontConfig[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
   @Type(() => ServiceConfigType.InternetGatewayConfig)
   internetGateway?: ServiceConfigType.InternetGatewayConfig[];
 
