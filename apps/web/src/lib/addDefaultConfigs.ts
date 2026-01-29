@@ -59,6 +59,16 @@ export function addDefaultConfigs(
             isReady: true,
           })
           break
+
+        case 'internetGateway':
+          if (!defaultConfigs.internetGateway)
+            defaultConfigs.internetGateway = []
+          defaultConfigs.internetGateway.push({
+            id: options.id || '',
+            data: options,
+            isReady: true,
+          })
+          break
       }
     }
   }

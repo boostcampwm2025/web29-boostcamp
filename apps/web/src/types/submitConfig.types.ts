@@ -6,6 +6,7 @@ import type {
   EC2ServerPayload,
   EC2SubmitConfig,
 } from './aws-services/ec2/ec2-submit-config.types'
+import { InternetGatewaySubmitConfig } from './aws-services/internet-gateway/internet-gateway.types'
 import { RouteTableSubmitConfig } from './aws-services/route-table/route-table.types'
 import type {
   S3ServerPayload,
@@ -22,6 +23,7 @@ export type ServiceType =
   | 'subnet'
   | 'routeTable'
   | 'rds'
+  | 'internetGateway'
 
 // 일단 임시로 vpc, subnet 타입도 추가
 export type ServiceConfig =
@@ -31,6 +33,7 @@ export type ServiceConfig =
   | VpcSubmitConfig
   | SubnetSubmitConfig
   | RouteTableSubmitConfig
+  | InternetGatewaySubmitConfig
   | { _type: 'rds'; id: string; name: string; subnetId: string }
 
 // 개별 서비스 데이터 (ID를 포함해 식별 가능하게 함)
@@ -48,6 +51,7 @@ export interface GlobalSubmitConfig {
   vpc?: ServiceConfigItem<VpcSubmitConfig>[]
   subnet?: ServiceConfigItem<SubnetSubmitConfig>[]
   routeTable?: ServiceConfigItem<RouteTableSubmitConfig>[]
+  internetGateway?: ServiceConfigItem<InternetGatewaySubmitConfig>[]
 }
 
 // 서버 제출용 payload 유니온
@@ -58,6 +62,7 @@ export type ServerPayload =
   | VpcSubmitConfig
   | SubnetSubmitConfig
   | RouteTableSubmitConfig
+  | InternetGatewaySubmitConfig
 
 // 최종 제출
 export interface FinalSubmitConfig {
@@ -68,5 +73,6 @@ export interface FinalSubmitConfig {
     vpc?: VpcSubmitConfig[]
     subnet?: SubnetSubmitConfig[]
     routeTable?: RouteTableSubmitConfig[]
+    internetGateway?: InternetGatewaySubmitConfig[]
   }
 }

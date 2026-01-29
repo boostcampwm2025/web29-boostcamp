@@ -1,3 +1,5 @@
+import InternetGatewayAttach from '../internet-gateway/internet-gateway-attach/internet-gateway-attach'
+import InternetGatewayCreate from '../internet-gateway/internet-gateway-create/internet-gateway-create'
 import RouteTableCreate from '../route-table/route-table-create/route-table-create'
 import RouteTableEdit from '../route-table/route-table-edit/route-table-edit'
 import SubnetCreate from '../subnet/subnet-create'
@@ -27,6 +29,10 @@ import { CLOUDFRONT_ORIGIN_SETTINGS_SECTIONS } from '@/types/aws-services/cloudf
 import type { CloudFrontWebsiteFormData } from '@/types/aws-services/cloudfront/website-settings'
 import { CLOUDFRONT_WEBSITE_SETTINGS_SECTIONS } from '@/types/aws-services/cloudfront/website-settings/constants'
 import { EC2_INSTANCE_CREATE_SECTIONS } from '@/types/aws-services/ec2/instance-create'
+import {
+  INTERNET_GATEWAY_ATTACH_SECTIONS,
+  INTERNET_GATEWAY_CREATE_SECTIONS,
+} from '@/types/aws-services/internet-gateway/constants'
 import {
   ROUTE_TABLE_CREATE_SECTIONS,
   ROUTE_TABLE_EDIT_SECTIONS,
@@ -216,6 +222,24 @@ const RouteTable: Record<string, ServicePage> = {
   },
 }
 
+const InternetGateway: Record<string, ServicePage> = {
+  internetGatewayCreate: {
+    component: InternetGatewayCreate,
+    sections: INTERNET_GATEWAY_CREATE_SECTIONS,
+    defaultValues: {
+      nameTag: '',
+      tags: [],
+    },
+  },
+  internetGatewayAttach: {
+    component: InternetGatewayAttach,
+    sections: INTERNET_GATEWAY_ATTACH_SECTIONS,
+    defaultValues: {
+      vpcId: '',
+    },
+  },
+}
+
 export const AWS_SERVICE_REGISTRY = {
   s3: S3,
   cloudFront: CloudFront,
@@ -223,4 +247,5 @@ export const AWS_SERVICE_REGISTRY = {
   vpc: VPC,
   subnet: Subnet,
   routeTable: RouteTable,
+  internetGateway: InternetGateway,
 }
