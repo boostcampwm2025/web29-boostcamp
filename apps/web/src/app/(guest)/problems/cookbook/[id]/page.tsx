@@ -28,14 +28,6 @@ export default async function CookbookProblemPage({
   const nextUnitId =
     currentIndex < units.length - 1 ? units[currentIndex + 1].id : undefined
 
-  const mockFeedbackMessages = [
-    {
-      service: 'mockservice',
-      field: 'mockfield',
-      message: 'mockMessage',
-    },
-  ]
-
   return (
     <CookbookProblemClient
       unitId={currentUnitId}
@@ -45,7 +37,6 @@ export default async function CookbookProblemPage({
       tags={tags}
       problemData={serviceMappers}
       defaultConfigs={defaultConfigs}
-      initialFeedback={mockFeedbackMessages}
       units={units}
       nextUnitId={nextUnitId}
     />

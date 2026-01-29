@@ -30,7 +30,7 @@ export const FeedbackDetailCard = ({
         <CardContent className="pt-2">
           <ul className="list-disc pl-4 text-sm leading-6">
             {messages.map((msg, index) => (
-              <li key={index}>{msg}</li>
+              <li key={`${msg}-${index}`}>{msg}</li>
             ))}
           </ul>
         </CardContent>

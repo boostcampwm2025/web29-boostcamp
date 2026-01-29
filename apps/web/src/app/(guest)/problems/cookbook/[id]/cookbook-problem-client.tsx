@@ -11,7 +11,6 @@ import { useRouter } from 'next/navigation'
 import { mergeServiceDefaultValues } from '@/components/aws-services/registry/form-defaults-factory'
 import type { IServiceMapper } from '@/components/aws-services/utils/serviceMapper'
 import { ProblemFormProvider } from '@/contexts/problem-form-context'
-import { FeedbackDetail } from '@/types/feedback.type'
 import { GlobalSubmitConfig } from '@/types/submitConfig.types'
 
 interface CookbookProblemClientProps {
@@ -21,7 +20,6 @@ interface CookbookProblemClientProps {
   description: string
   tags: string[]
   problemData: IServiceMapper[]
-  initialFeedback: FeedbackDetail[]
   defaultConfigs: GlobalSubmitConfig
   units: { id: string; title: string }[]
   nextUnitId?: string
@@ -34,7 +32,6 @@ export default function CookbookProblemClient({
   description,
   tags,
   problemData,
-  initialFeedback,
   defaultConfigs,
   units,
   nextUnitId,
@@ -56,7 +53,6 @@ export default function CookbookProblemClient({
       cookbookId={cookbookId}
       problemType="cookbook"
       nextUnitId={nextUnitId}
-      initialFeedback={initialFeedback}
       defaultConfigs={defaultConfigs}
     >
       <ProblemLeftSection problemData={problemData}>

@@ -64,9 +64,9 @@ interface ProblemFormProviderProps<
   cookbookId?: string
   problemType: TProblemType
   nextUnitId?: string
-  initialFeedback?: FeedbackDetail[]
   initialNodes?: Node[]
   initialEdges?: Edge[]
+  initialFeedback?: FeedbackDetail[]
   defaultConfigs?: GlobalSubmitConfig
 }
 
@@ -93,8 +93,8 @@ export function ProblemFormProvider<T extends FieldValues>({
   cookbookId,
   problemType,
   nextUnitId,
-  initialFeedback = [],
   initialNodes = [DEFAULT_ROOT_NODE],
+  initialFeedback = [],
   initialEdges = [],
   defaultConfigs = {},
 }: ProblemFormProviderProps<T>) {
