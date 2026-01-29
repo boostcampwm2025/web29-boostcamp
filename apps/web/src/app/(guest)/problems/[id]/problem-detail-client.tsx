@@ -1,7 +1,7 @@
 'use client'
 
-import { ProblemLeftSection } from './components/left-section'
-import { ProblemRightSection } from './components/right-section'
+import { ProblemLeftSection } from '../components/left-section'
+import { ProblemRightSection } from '../components/right-section'
 
 import { useMemo } from 'react'
 
