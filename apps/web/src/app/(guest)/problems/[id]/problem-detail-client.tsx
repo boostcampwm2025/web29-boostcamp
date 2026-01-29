@@ -13,7 +13,7 @@ import { GlobalSubmitConfig } from '@/types/submitConfig.types'
 
 interface ProblemDetailClientProps {
   type: string
-  problemId: string
+  unitId: string
   title: string
   description: string
   tags: string[]
@@ -24,7 +24,7 @@ interface ProblemDetailClientProps {
 
 export default function ProblemDetailClient({
   type,
-  problemId,
+  unitId,
   title,
   description,
   tags,
@@ -40,7 +40,8 @@ export default function ProblemDetailClient({
   return (
     <ProblemFormProvider
       defaultValues={defaultValues}
-      problemId={problemId}
+      unitId={unitId}
+      problemType="unit"
       initialFeedback={initialFeedback}
       defaultConfigs={defaultConfigs}
     >

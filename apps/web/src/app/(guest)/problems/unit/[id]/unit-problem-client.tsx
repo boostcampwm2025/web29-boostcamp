@@ -40,6 +40,7 @@ export default function UnitProblemClient({
     <ProblemFormProvider
       defaultValues={defaultValues}
       unitId={unitId}
+      problemType="unit"
       initialFeedback={initialFeedback}
       defaultConfigs={defaultConfigs}
     >

@@ -32,7 +32,7 @@ export default async function ProblemDetailPage({
   return (
     <ProblemDetailClient
       type={type!}
-      problemId={id}
+      unitId={id}
       title={title}
       description={description}
       tags={tags}

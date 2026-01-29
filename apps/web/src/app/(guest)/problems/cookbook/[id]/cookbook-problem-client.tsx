@@ -24,6 +24,7 @@ interface CookbookProblemClientProps {
   initialFeedback: FeedbackDetail[]
   defaultConfigs: GlobalSubmitConfig
   units: { id: string; title: string }[]
+  nextUnitId?: string
 }
 
 export default function CookbookProblemClient({
@@ -36,6 +37,7 @@ export default function CookbookProblemClient({
   initialFeedback,
   defaultConfigs,
   units,
+  nextUnitId,
 }: CookbookProblemClientProps) {
   const defaultValues = useMemo(
     () => mergeServiceDefaultValues(problemData),
@@ -52,6 +54,8 @@ export default function CookbookProblemClient({
       defaultValues={defaultValues}
       unitId={unitId}
       cookbookId={cookbookId}
+      problemType="cookbook"
+      nextUnitId={nextUnitId}
       initialFeedback={initialFeedback}
       defaultConfigs={defaultConfigs}
     >

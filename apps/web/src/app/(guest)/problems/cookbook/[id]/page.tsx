@@ -19,8 +19,14 @@ export default async function CookbookProblemPage({
   const { title, description, tags, units } =
     await getCookbookProblemDataById(id)
 
-  const { unitTitle, unitDescription, serviceMappers, defaultConfigs } =
-    await getUnitProblemDataById(units[0].id)
+  const currentUnitId = units[0].id
+  const { serviceMappers, defaultConfigs } =
+    await getUnitProblemDataById(currentUnitId)
+
+  // 현재 unit의 인덱스를 찾아서 다음 unit ID 계산
+  const currentIndex = units.findIndex((u) => u.id === currentUnitId)
+  const nextUnitId =
+    currentIndex < units.length - 1 ? units[currentIndex + 1].id : undefined
 
   const mockFeedbackMessages = [
     {
@@ -32,7 +38,7 @@ export default async function CookbookProblemPage({
 
   return (
     <CookbookProblemClient
-      unitId={units[0].id}
+      unitId={currentUnitId}
       cookbookId={id}
       title={title}
       description={description}
@@ -41,6 +47,7 @@ export default async function CookbookProblemPage({
       defaultConfigs={defaultConfigs}
       initialFeedback={mockFeedbackMessages}
       units={units}
+      nextUnitId={nextUnitId}
     />
   )
 }
