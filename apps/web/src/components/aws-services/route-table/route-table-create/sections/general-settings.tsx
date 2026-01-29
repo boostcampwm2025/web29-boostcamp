@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import type { RouteTableCreateFormData } from '@/types/aws-services/route-table.types'
+import type { RouteTableCreateFormData } from '@/types/aws-services/route-table/route-table.types'
 
 interface GeneralSettingsProps {
   control: Control<RouteTableCreateFormData>
@@ -33,7 +33,7 @@ export function GeneralSettings({ control, vpcs }: GeneralSettingsProps) {
           description="'Name' 키와 사용자가 지정하는 값을 포함하는 태그를 생성합니다."
         >
           <Controller
-            name="nameTag"
+            name="settings.nameTag"
             control={control}
             render={({ field }) => (
               <Input
@@ -51,7 +51,7 @@ export function GeneralSettings({ control, vpcs }: GeneralSettingsProps) {
           description="이 라우팅 테이블에 대해 사용할 VPC입니다."
         >
           <Controller
-            name="vpcId"
+            name="settings.vpcId"
             control={control}
             render={({ field }) => (
               <Select onValueChange={field.onChange} value={field.value}>
