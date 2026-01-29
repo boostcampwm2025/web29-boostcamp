@@ -13,6 +13,7 @@ interface RequiredField {
   serviceName: string
   serviceTask: string
   serviceSections: string[]
+  fixedOptions?: Record<string, string>[]
 }
 
 export interface ProblemData {
@@ -49,7 +50,10 @@ export async function getProblemData(id: string): Promise<ProblemData> {
       inputSections: field.serviceSections,
     }),
   )
-  const fixedOptions: ServiceConfig[] = response?.fixedOptions || []
+  const fixedOptions: ServiceConfig[] =
+    response?.requiredFields?.flatMap(
+      (field: RequiredField) => field.fixedOptions || [],
+    ) || []
   const defaultConfigs: GlobalSubmitConfig = addDefaultConfigs(fixedOptions)
 
   return {

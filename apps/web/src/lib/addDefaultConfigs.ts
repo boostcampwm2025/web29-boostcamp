@@ -1,5 +1,9 @@
 import { GlobalSubmitConfig, ServiceConfig } from '../types/submitConfig.types'
 
+function isDuplicated(arr: ServiceConfig[], item: ServiceConfig) {
+  return arr.some((existingItem) => existingItem.id === item.id)
+}
+
 export function addDefaultConfigs(
   fixedOptions?: ServiceConfig[],
 ): GlobalSubmitConfig {
@@ -9,65 +13,114 @@ export function addDefaultConfigs(
       switch (options._type) {
         case 's3':
           if (!defaultConfigs.s3) defaultConfigs.s3 = []
-          defaultConfigs.s3.push({
-            id: options.id,
-            data: options,
-            isReady: true,
-          })
+          if (
+            !isDuplicated(
+              defaultConfigs.s3.map((item) => item.data),
+              options,
+            )
+          ) {
+            defaultConfigs.s3.push({
+              id: options.id,
+              data: options,
+              isReady: true,
+            })
+          }
           break
 
         case 'cloudFront':
           if (!defaultConfigs.cloudFront) defaultConfigs.cloudFront = []
-          defaultConfigs.cloudFront.push({
-            id: options.id,
-            data: options,
-            isReady: true,
-          })
+          if (
+            !isDuplicated(
+              defaultConfigs.cloudFront.map((item) => item.data),
+              options,
+            )
+          ) {
+            defaultConfigs.cloudFront.push({
+              id: options.id,
+              data: options,
+              isReady: true,
+            })
+          }
           break
 
         case 'ec2':
           if (!defaultConfigs.ec2) defaultConfigs.ec2 = []
-          defaultConfigs.ec2.push({
-            id: options.id,
-            data: options,
-            isReady: true,
-          })
+          if (
+            !isDuplicated(
+              defaultConfigs.ec2.map((item) => item.data),
+              options,
+            )
+          ) {
+            defaultConfigs.ec2.push({
+              id: options.id,
+              data: options,
+              isReady: true,
+            })
+          }
           break
         case 'vpc':
           if (!defaultConfigs.vpc) defaultConfigs.vpc = []
-          defaultConfigs.vpc.push({
-            id: options.id,
-            data: options,
-            isReady: true,
-          })
+          if (
+            !isDuplicated(
+              defaultConfigs.vpc.map((item) => item.data),
+              options,
+            )
+          ) {
+            defaultConfigs.vpc.push({
+              id: options.id,
+              data: options,
+              isReady: true,
+            })
+          }
           break
 
         case 'subnet':
           if (!defaultConfigs.subnet) defaultConfigs.subnet = []
-          defaultConfigs.subnet.push({
-            id: options.id,
-            data: options,
-            isReady: true,
-          })
+          if (
+            !isDuplicated(
+              defaultConfigs.subnet.map((item) => item.data),
+              options,
+            )
+          ) {
+            defaultConfigs.subnet.push({
+              id: options.id,
+              data: options,
+              isReady: true,
+            })
+          }
           break
 
         case 'routeTable':
           if (!defaultConfigs.routeTable) defaultConfigs.routeTable = []
-          defaultConfigs.routeTable.push({
-            id: options.id || '',
-            data: options,
-            isReady: true,
-          })
+          if (
+            !isDuplicated(
+              defaultConfigs.routeTable.map((item) => item.data),
+              options,
+            )
+          ) {
+            defaultConfigs.routeTable.push({
+              id: options.id || '',
+              data: options,
+              isReady: true,
+            })
+          }
           break
 
         case 'internetGateway':
           if (!defaultConfigs.internetGateway)
             defaultConfigs.internetGateway = []
-          defaultConfigs.internetGateway.push({
-            id: options.id || '',
-            data: options,
-            isReady: true,
-          })
+          if (
+            !isDuplicated(
+              defaultConfigs.internetGateway.map((item) => item.data),
+              options,
+            )
+          ) {
+            defaultConfigs.internetGateway.push({
+              id: options.id || '',
+              data: options,
+              isReady: true,
+            })
+          }
           break
       }
     }
