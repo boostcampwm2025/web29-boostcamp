@@ -45,7 +45,6 @@ export const AWS_GROUP_ICONS = {
   publicSubnet: '/icons/aws/groups/public-subnet.svg',
   autoScaling: '/icons/aws/groups/auto-scaling.svg',
   securityGroup: '', // Security Group은 아이콘 없이 빨간 점선 테두리로 표시
-  securityGroups: '', // Security Group은 아이콘 없이 빨간 점선 테두리로 표시
 } as const
 
 // 타입 정의

@@ -40,13 +40,6 @@ export const NODE_TYPE_CONFIG: Record<string, NodeTypeConfig> = {
     borderColor: 'red',
     bgColor: 'red',
   },
-  securityGroups: {
-    nodeType: 'awsGroup',
-    width: 300,
-    height: 200,
-    borderColor: 'red',
-    bgColor: 'red',
-  },
 }
 
 export const DEFAULT_NODE_CONFIG: NodeTypeConfig = {
