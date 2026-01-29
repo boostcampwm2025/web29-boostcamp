@@ -19,12 +19,13 @@ import {
   useForm,
 } from 'react-hook-form'
 
-// import ResultDialog from '@/components/result-dialog'
+import ResultDialog from '@/components/result-dialog'
 import { LAYOUT_CONFIG, useAwsDiagramLogic } from '@/hooks/diagram'
-import useSolutionDialog, { TSolutionStatus } from '@/hooks/useSolutionDialog'
-import { useBuildDefaultNodes } from '@/lib/buildInitialNodes'
+import useSolutionDialog from '@/hooks/useSolutionDialog'
+import { useBuildDefaultNodes } from '@/lib/build-initial-nodes'
 import { submitProblemSolution } from '@/lib/problem/submit-problem'
 import type { FeedbackDetail } from '@/types/feedback.type'
+import type { TProblemType } from '@/types/problem.type'
 import type {
   FinalSubmitConfig,
   GlobalSubmitConfig,
@@ -58,7 +59,10 @@ interface ProblemFormProviderProps<
   T extends FieldValues,
 > extends PropsWithChildren {
   defaultValues: DefaultValues<T>
-  problemId: string
+  unitId: string
+  cookbookId?: string
+  problemType: TProblemType
+  nextUnitId?: string
   initialFeedback?: FeedbackDetail[]
   initialNodes?: Node[]
   initialEdges?: Edge[]
@@ -84,7 +88,10 @@ const DEFAULT_ROOT_NODE: Node = {
 export function ProblemFormProvider<T extends FieldValues>({
   children,
   defaultValues,
-  problemId,
+  unitId,
+  cookbookId,
+  problemType,
+  nextUnitId,
   initialFeedback = [],
   initialNodes = [DEFAULT_ROOT_NODE],
   initialEdges = [],
@@ -194,7 +201,7 @@ export function ProblemFormProvider<T extends FieldValues>({
     }
 
     try {
-      const response = await submitProblemSolution(problemId, finalConfig)
+      const response = await submitProblemSolution(unitId, finalConfig)
       const feedbackDetails: FeedbackDetail[] = (response.feedback || []).map(
         (fb: { service?: string; field?: string; message: string }) => ({
           service: fb.service || '',
@@ -203,6 +210,9 @@ export function ProblemFormProvider<T extends FieldValues>({
         }),
       )
       setFeedback(feedbackDetails)
+
+      // result에 따라 다이얼로그 표시
+      openModal(response.result === 'PASS')
     } catch (error) {
       console.error('제출 실패:', error)
       setFeedback([
@@ -213,7 +223,17 @@ export function ProblemFormProvider<T extends FieldValues>({
         },
       ])
     }
-  }, [problemId, submitConfig])
+  }, [unitId, submitConfig, openModal])
+
+  // Navigation 핸들러 - problemType에 따라 분기
+  const onNavigationConfirm = useCallback(() => {
+    if (problemType === 'unit') {
+      handleNavigation('unit', '')
+    } else if (problemType === 'cookbook') {
+      // cookbook인 경우 nextUnitId가 있으면 같은 cookbook의 다음 unit으로, 없으면 목록으로
+      handleNavigation('cookbook', nextUnitId || cookbookId || '')
+    }
+  }, [problemType, nextUnitId, cookbookId, handleNavigation])
 
   const contextValue = useMemo(
     () => ({
@@ -247,12 +267,12 @@ export function ProblemFormProvider<T extends FieldValues>({
       value={contextValue as ProblemFormContextValue}
     >
       {children}
-      {/* <ResultDialog
+      <ResultDialog
         isOpen={isModalOpen}
         status={status}
         onClose={closeModal}
-        onConfirm={() => handleNavigation()}
-      /> */}
+        onConfirm={onNavigationConfirm}
+      />
     </ProblemFormContext.Provider>
   )
 }

@@ -1,22 +1,17 @@
-import ProblemDetailClient from './problem-detail-client'
+import UnitProblemClient from './unit-problem-client'
 
 import { getUnitProblemDataById } from '@/lib/problem'
 
-interface ProblemDetailPageProps {
+interface UnitProblemPageProps {
   params: Promise<{
     id: string
   }>
-  searchParams: Promise<{
-    type?: string
-  }>
 }
 
-export default async function ProblemDetailPage({
+export default async function UnitProblemPage({
   params,
-  searchParams,
-}: ProblemDetailPageProps) {
+}: UnitProblemPageProps) {
   const { id } = await params
-  const { type } = await searchParams
 
   const { title, description, tags, serviceMappers, defaultConfigs } =
     await getUnitProblemDataById(id)
@@ -30,9 +25,8 @@ export default async function ProblemDetailPage({
   ]
 
   return (
-    <ProblemDetailClient
-      type={type!}
-      problemId={id}
+    <UnitProblemClient
+      unitId={id}
       title={title}
       description={description}
       tags={tags}
