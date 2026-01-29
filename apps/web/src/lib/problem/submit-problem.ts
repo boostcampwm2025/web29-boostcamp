@@ -1,4 +1,10 @@
+import { FeedbackDetail } from '@/types/feedback.type'
 import { FinalSubmitConfig } from '@/types/submitConfig.types'
+
+export interface IResponse {
+  result: 'PASS' | 'FAIL'
+  feedback: FeedbackDetail[]
+}
 
 // 문제 제출
 export async function submitProblemSolution(
@@ -23,5 +29,5 @@ export async function submitProblemSolution(
     throw new Error('문제 제출 실패')
   }
 
-  return res.json()
+  return (await res.json()) as IResponse
 }

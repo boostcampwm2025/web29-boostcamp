@@ -19,8 +19,11 @@ import {
   useForm,
 } from 'react-hook-form'
 
+// import ResultDialog from '@/components/result-dialog'
 import { LAYOUT_CONFIG, useAwsDiagramLogic } from '@/hooks/diagram'
+import useSolutionDialog, { TSolutionStatus } from '@/hooks/useSolutionDialog'
 import { useBuildDefaultNodes } from '@/lib/buildInitialNodes'
+import { submitProblemSolution } from '@/lib/problem/submit-problem'
 import type { FeedbackDetail } from '@/types/feedback.type'
 import type {
   FinalSubmitConfig,
@@ -92,6 +95,8 @@ export function ProblemFormProvider<T extends FieldValues>({
     formState: { isSubmitting },
   } = methods
   const [feedback, setFeedback] = useState<FeedbackDetail[]>(initialFeedback)
+  const { status, openModal, closeModal, handleNavigation, isModalOpen } =
+    useSolutionDialog()
 
   // 리소스 구성 상태
   const [submitConfig, setSubmitConfig] =
@@ -188,15 +193,27 @@ export function ProblemFormProvider<T extends FieldValues>({
       ),
     }
 
-    // TODO: 실제 API 호출로 교체
-    console.log('Submitting config:', finalConfig)
-    void problemId
-
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    // TODO: 기존 feedback 유지 (실제로는 API 응답으로 교체)
-    setFeedback(initialFeedback)
-  }, [problemId, initialFeedback, submitConfig])
+    try {
+      const response = await submitProblemSolution(problemId, finalConfig)
+      const feedbackDetails: FeedbackDetail[] = (response.feedback || []).map(
+        (fb: { service?: string; field?: string; message: string }) => ({
+          service: fb.service || '',
+          field: fb.field || '',
+          message: fb.message,
+        }),
+      )
+      setFeedback(feedbackDetails)
+    } catch (error) {
+      console.error('제출 실패:', error)
+      setFeedback([
+        {
+          service: 'system',
+          field: 'error',
+          message: '제출 중 오류가 발생했습니다. 다시 시도해주세요.',
+        },
+      ])
+    }
+  }, [problemId, submitConfig])
 
   const contextValue = useMemo(
     () => ({
@@ -230,6 +247,12 @@ export function ProblemFormProvider<T extends FieldValues>({
       value={contextValue as ProblemFormContextValue}
     >
       {children}
+      {/* <ResultDialog
+        isOpen={isModalOpen}
+        status={status}
+        onClose={closeModal}
+        onConfirm={() => handleNavigation()}
+      /> */}
     </ProblemFormContext.Provider>
   )
 }
