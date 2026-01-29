@@ -18,6 +18,8 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
     'Compute', // 추가
     'EC2', // 추가
     'Server', // 추가
+    'Networking',
+    'VPC',
   ];
 
   const tags: Tag[] = [];
@@ -205,6 +207,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
           serviceSections: ['defaultRootObject'],
         },
       ],
+      tags: [tagMap.get('Storage')!, tagMap.get('S3')!],
     },
     {
       problemType: ProblemType.UNIT,
@@ -220,6 +223,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
           fixedOptions: [],
         },
       ],
+      tags: [tagMap.get('Networking')!, tagMap.get('VPC')!],
     },
     {
       problemType: ProblemType.UNIT,

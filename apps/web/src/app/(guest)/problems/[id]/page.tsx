@@ -27,14 +27,6 @@ export default async function ProblemDetailPage({
     defaultConfigs,
   } = await getUnitProblemDataById(id)
 
-  const mockFeedbackMessages = [
-    {
-      service: 'mockservice',
-      field: 'mockfield',
-      message: 'mockMessage',
-    },
-  ]
-
   return (
     <ProblemDetailClient
       type={type!}
@@ -45,7 +37,6 @@ export default async function ProblemDetailPage({
       tags={tags}
       problemData={serviceMappers}
       defaultConfigs={defaultConfigs}
-      initialFeedback={mockFeedbackMessages}
     />
   )
 }

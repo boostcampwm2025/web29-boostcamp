@@ -9,17 +9,23 @@ interface CookbookProblemPageProps {
   params: Promise<{
     id: string
   }>
+  searchParams: Promise<{
+    unitId: string
+  }>
 }
 
 export default async function CookbookProblemPage({
   params,
+  searchParams,
 }: CookbookProblemPageProps) {
   const { id } = await params
+  const { unitId } = await searchParams
 
-  const { title, description, tags, units } =
+  const { title, descDetail, tags, units } =
     await getCookbookProblemDataById(id)
 
-  const currentUnitId = units[0].id
+  const currentUnitId =
+    units.find((unit) => unit.id == unitId)?.id || units[0].id
   const { serviceMappers, defaultConfigs } =
     await getUnitProblemDataById(currentUnitId)
 
@@ -28,24 +34,15 @@ export default async function CookbookProblemPage({
   const nextUnitId =
     currentIndex < units.length - 1 ? units[currentIndex + 1].id : undefined
 
-  const mockFeedbackMessages = [
-    {
-      service: 'mockservice',
-      field: 'mockfield',
-      message: 'mockMessage',
-    },
-  ]
-
   return (
     <CookbookProblemClient
       unitId={currentUnitId}
       cookbookId={id}
       title={title}
-      description={description}
+      descDetail={descDetail}
       tags={tags}
       problemData={serviceMappers}
       defaultConfigs={defaultConfigs}
-      initialFeedback={mockFeedbackMessages}
       units={units}
       nextUnitId={nextUnitId}
     />
