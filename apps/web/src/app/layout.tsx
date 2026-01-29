@@ -26,7 +26,7 @@ export default function RootLayout({
     <html lang="ko">
       <body
         className={cn(
-          'bg-background antialiased',
+          'bg-background font-sans antialiased',
           'selection:bg-primary/30 selection:text-foreground',
         )}
       >
