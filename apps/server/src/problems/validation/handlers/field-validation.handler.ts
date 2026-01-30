@@ -380,6 +380,18 @@ export class FieldValidationHandler implements ValidationHandler {
         const targetGateway = route.targetGatewayId;
 
         // 2. CIDR 형식 검사
+        if (!cidr) {
+          // CIDR가 없는 경우 에러 처리
+          feedbacks.push({
+            serviceType: 'routeTable',
+            service: name,
+            field: 'routeTable',
+            code: RouteTableServiceFeedbackType.ROUTE_CIDR_INVALID,
+            message: `라우트 테이블 ${name}의 라우트 대상 CIDR 블록이 누락되었습니다.`,
+          });
+          continue;
+        }
+
         if (!this.validateCIDRBlock(cidr)) {
           feedbacks.push({
             serviceType: 'routeTable',
@@ -390,8 +402,8 @@ export class FieldValidationHandler implements ValidationHandler {
           });
         }
 
-        // 3. 게이트웨이 존재 여부 검사
-        if (targetGateway && !igwIdSet.has(targetGateway)) {
+        // 3. 게이트웨이 존재 여부 검사 (local 제외)
+        if (targetGateway && targetGateway !== 'local' && !igwIdSet.has(targetGateway)) {
           feedbacks.push({
             serviceType: 'routeTable',
             service: name,
