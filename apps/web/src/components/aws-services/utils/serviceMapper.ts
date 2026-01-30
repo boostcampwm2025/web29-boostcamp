@@ -4,12 +4,15 @@ export interface IServiceMapper {
   inputSections: string[]
   serviceName: keyof typeof AWS_SERVICE_REGISTRY
   serviceTask: string
+  label?: string
+  fixedOptions?: any
 }
 
 export const serviceMapper = ({
   serviceName,
   serviceTask,
   inputSections,
+  fixedOptions,
 }: IServiceMapper) => {
   const service = AWS_SERVICE_REGISTRY[serviceName]
   if (!service) {
@@ -25,13 +28,19 @@ export const serviceMapper = ({
   }
 
   const inputSet = new Set(inputSections)
-  const config = inputSections.reduce<Record<string, boolean>>(
+  const baseConfig = inputSections.reduce<Record<string, any>>(
     (acc, section) => {
       acc[section] = inputSet.has(section)
       return acc
     },
     {},
   )
+
+  // fixedOptions 가 배열이 아닌 경우(즉, 폼 설정을 위한 메타데이터인 경우) config 에 병합
+  const config =
+    fixedOptions && !Array.isArray(fixedOptions)
+      ? { ...baseConfig, ...fixedOptions }
+      : baseConfig
 
   return {
     Component: page.component,
