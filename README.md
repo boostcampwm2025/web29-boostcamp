@@ -29,6 +29,8 @@
 
 ### 1. 콘솔형 UI
 
+<img alt="스크린샷 2026-02-01 오후 8 54 52" src="https://github.com/user-attachments/assets/093258c5-b0c6-4f25-8cb9-3f8ec00245ac" />
+
 AWS 실제 콘솔과 유사한 인터페이스로 다양한 클라우드 서비스를 설정할 수 있습니다.
 
 **지원 서비스**
@@ -40,6 +42,8 @@ AWS 실제 콘솔과 유사한 인터페이스로 다양한 클라우드 서비�
 
 ### 2. 실시간 아키텍처 다이어그램
 
+<img alt="스크린샷 2026-02-01 오후 8 51 05" src="https://github.com/user-attachments/assets/b209bef2-681b-4f21-be52-4020daa9dc41" />
+
 사용자의 서비스 설정에 따라 React Flow 기반의 인터랙티브한 아키텍처 다이어그램이 자동 생성됩니다.
 
 **특징**
@@ -49,10 +53,16 @@ AWS 실제 콘솔과 유사한 인터페이스로 다양한 클라우드 서비�
 ### 3. 문제 유형 시스템
 
 #### Unit 문제
+
+<img alt="스크린샷 2026-02-01 오후 8 49 06" src="https://github.com/user-attachments/assets/b3b3bd6b-db51-4e48-9e2c-ed0c5683b224" />
+
 클라우드 서비스 설정을 학습하는 기본 문제입니다.
 - 예: "EC2 인스턴스 생성하기", "S3 버킷 만들기"
 
-#### Cookbook 문제  
+#### Cookbook 문제
+
+<img alt="스크린샷 2026-02-01 오후 8 49 25" src="https://github.com/user-attachments/assets/c188eefe-a5a2-48af-8029-fe349e8e1d3b" />
+
 여러 Unit 문제를 조합한 복합 시나리오 문제입니다.
 - 예: "S3 + CloudFront로 정적 웹사이트 배포하기"
 - 실무 아키텍처 패턴 학습
@@ -245,7 +255,7 @@ Problem (문제)
       Solution (정답)
 ```
 
-상세 스키마는 [데이터베이스 설계](https://github.com/boostcampwm2025/web29-LBD/wiki/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%EC%84%A4%EA%B3%84) 참조
+상세 스키마는 [데이터베이스 설계](https://github.com/boostcampwm2025/web29-LBD/wiki/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%EC%84%A4%EA%B3%84) 에서 확인할 수 있습니다.
 
 <br/>
 
@@ -287,9 +297,9 @@ Problem (문제)
 6. CI 테스트 통과 후 머지
 <br/>
 
-## ☁️ 아키텍처
+## ☁️ 인프라 아키텍처 다이어그램
 
-<!-- 위키에 있는 사진 추가 예정 -->
+<img alt="스크린샷 2026-02-01 오후 7 06 31" src="https://github.com/user-attachments/assets/ad3ad154-6f94-4a34-a0e6-2832216fd114" />
 
 <br/>
 
