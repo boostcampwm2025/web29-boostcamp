@@ -259,9 +259,9 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
         answerConfig: {
           securityGroups: [
             {
-              name: 'web-server-sg',
-              vpcId: 'default-vpc',
-              vpcName: 'default-vpc',
+              name: 'DONT_CARE',
+              vpcId: 'DONT_CARE',
+              vpcName: 'DONT_CARE',
               ipPermissions: [
                 {
                   ipProtocol: 'tcp',
@@ -277,7 +277,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
       },
       requirements: {
         securityGroup: {
-          'web-server-sg': {
+          '*': {
             requireOpenPorts: [80],
           },
         },
@@ -330,7 +330,7 @@ EC2 인스턴스 시작 시 자동으로 nginx 웹서버를 설치하고 실행�
         answerConfig: {
           ec2: [
             {
-              name: 'web-server',
+              name: 'DONT_CARE',
               osType: 'amazon-linux',
               userData: 'DONT_CARE',
             },
@@ -339,7 +339,7 @@ EC2 인스턴스 시작 시 자동으로 nginx 웹서버를 설치하고 실행�
       },
       requirements: {
         ec2: {
-          'web-server': {
+          '*': {
             requireUserData: true,
             userDataMustContain: ['nginx', 'yum install', 'systemctl start'],
           },
