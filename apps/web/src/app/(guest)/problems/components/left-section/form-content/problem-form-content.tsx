@@ -3,7 +3,7 @@
 import { ServiceForm } from './service-form'
 import { ServiceTabs } from './service-tabs'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { type IServiceMapper } from '@/components/aws-services/utils/serviceMapper'
 import { cn } from '@/lib/utils'
@@ -18,6 +18,10 @@ export function ProblemFormContent({ problemData }: ProblemFormContentProps) {
   const handleServiceChange = (serviceName: IServiceMapper['serviceName']) => {
     setCurrService(serviceName)
   }
+
+  useEffect(() => {
+    setCurrService(problemData[0].serviceName)
+  }, [problemData])
 
   return (
     <React.Fragment>
