@@ -8,6 +8,42 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { FeedbackDetail } from '@/types/feedback.type'
 
+type GroupedFeedback = {
+  code: string
+  baseMessage: string // 리소스 이름 제외한 메시지
+  resources: string[] // 해당 리소스 이름들
+}
+
+// 메시지에서 리소스 이름을 제거하여 기본 메시지 추출
+function extractBaseMessage(message: string, service?: string): string {
+  if (!service) return message
+  // "S3 버킷 my-bucket에 ..." → "S3 버킷에 ..."
+  return message.replace(` ${service}`, '')
+}
+
+function groupFeedbacks(feedbacks: FeedbackDetail[]): GroupedFeedback[] {
+  const groups = new Map<string, GroupedFeedback>()
+
+  for (const fb of feedbacks) {
+    const key = fb.code
+
+    if (groups.has(key)) {
+      const group = groups.get(key)!
+      if (fb.service && !group.resources.includes(fb.service)) {
+        group.resources.push(fb.service)
+      }
+    } else {
+      groups.set(key, {
+        code: fb.code,
+        baseMessage: extractBaseMessage(fb.message, fb.service),
+        resources: fb.service ? [fb.service] : [],
+      })
+    }
+  }
+
+  return Array.from(groups.values())
+}
+
 export const FeedbackDetailCard = ({
   feedback,
 }: {
@@ -15,7 +51,7 @@ export const FeedbackDetailCard = ({
 }) => {
   const [visible, setVisible] = useState(false)
 
-  const messages = feedback.map((item) => item.message)
+  const groupedFeedbacks = groupFeedbacks(feedback)
 
   return (
     <Card className="border-primary bg-primary-foreground relative border-2">
@@ -29,8 +65,15 @@ export const FeedbackDetailCard = ({
 
         <CardContent className="pt-2">
           <ul className="list-disc pl-4 text-sm leading-6">
-            {messages.map((msg, index) => (
-              <li key={`${msg}-${index}`}>{msg}</li>
+            {groupedFeedbacks.map((group) => (
+              <li key={group.code}>
+                {group.baseMessage}
+                {group.resources.length > 0 && (
+                  <span className="text-muted-foreground ml-1">
+                    ({group.resources.join(', ')})
+                  </span>
+                )}
+              </li>
             ))}
           </ul>
         </CardContent>
