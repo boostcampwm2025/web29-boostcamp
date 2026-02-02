@@ -216,53 +216,95 @@ export class UnitValidationHandler implements ProblemValidationHandler {
         ),
       );
 
-      const solutionMap = new Map<string, ServiceConfigTypes>();
-      for (const config of onlyInSolution) {
-        if ('name' in config) {
-          solutionMap.set(config.name, config);
+      // 모든 솔루션 name이 DONT_CARE인지 확인
+      const allNamesDontCare = onlyInSolution.every(
+        (config) => 'name' in config && config.name === 'DONT_CARE',
+      );
+
+      if (allNamesDontCare) {
+        // 순서 기반 매칭: 제출된 설정 순서대로 솔루션과 1:1 매칭
+        const minLen = Math.min(onlyInAnswer.length, onlyInSolution.length);
+        for (let i = 0; i < minLen; i++) {
+          const submittedConfig = onlyInAnswer[i];
+          const matchedSolution = onlyInSolution[i];
+
+          // 2. 필드 누락 (Field Missing)
+          feedbacks.push(
+            ...this.createFieldMissingFeedbacks(
+              submittedConfig,
+              matchedSolution,
+              serviceKey,
+            ),
+          );
+
+          // 3. 불필요한 필드 (Unnecessary Field)
+          feedbacks.push(
+            ...this.createUnnecessaryFieldFeedbacks(
+              submittedConfig,
+              matchedSolution,
+              serviceKey,
+            ),
+          );
+
+          // 4. 값 불일치 (Incorrect Value)
+          feedbacks.push(
+            ...this.createIncorrectValueFeedbacks(
+              submittedConfig,
+              matchedSolution,
+              serviceKey,
+            ),
+          );
         }
-      }
-
-      for (const submittedConfig of onlyInAnswer) {
-        if (!hasName(submittedConfig)) continue;
-        const matchedSolution = solutionMap.get(submittedConfig.name);
-
-        if (!matchedSolution) {
-          feedbacks.push({
-            serviceType: serviceKey,
-            service: submittedConfig.name,
-            code: UnitProblemFeedbackType.SERVICE_MISSING,
-            message: '제출한 이름을 다시 한 번 확인해주세요.',
-          });
-          continue;
+      } else {
+        // 기존 name 기반 매칭 (특정 name이 필요한 경우)
+        const solutionMap = new Map<string, ServiceConfigTypes>();
+        for (const config of onlyInSolution) {
+          if ('name' in config) {
+            solutionMap.set(config.name, config);
+          }
         }
 
-        // 2. 필드 누락 (Field Missing)
-        feedbacks.push(
-          ...this.createFieldMissingFeedbacks(
-            submittedConfig,
-            matchedSolution,
-            serviceKey,
-          ),
-        );
+        for (const submittedConfig of onlyInAnswer) {
+          if (!hasName(submittedConfig)) continue;
+          const matchedSolution = solutionMap.get(submittedConfig.name);
 
-        // 3. 불필요한 필드 (Unnecessary Field)
-        feedbacks.push(
-          ...this.createUnnecessaryFieldFeedbacks(
-            submittedConfig,
-            matchedSolution,
-            serviceKey,
-          ),
-        );
+          if (!matchedSolution) {
+            feedbacks.push({
+              serviceType: serviceKey,
+              service: submittedConfig.name,
+              code: UnitProblemFeedbackType.SERVICE_MISSING,
+              message: '제출한 이름을 다시 한 번 확인해주세요.',
+            });
+            continue;
+          }
 
-        // 4. 값 불일치 (Incorrect Value)
-        feedbacks.push(
-          ...this.createIncorrectValueFeedbacks(
-            submittedConfig,
-            matchedSolution,
-            serviceKey,
-          ),
-        );
+          // 2. 필드 누락 (Field Missing)
+          feedbacks.push(
+            ...this.createFieldMissingFeedbacks(
+              submittedConfig,
+              matchedSolution,
+              serviceKey,
+            ),
+          );
+
+          // 3. 불필요한 필드 (Unnecessary Field)
+          feedbacks.push(
+            ...this.createUnnecessaryFieldFeedbacks(
+              submittedConfig,
+              matchedSolution,
+              serviceKey,
+            ),
+          );
+
+          // 4. 값 불일치 (Incorrect Value)
+          feedbacks.push(
+            ...this.createIncorrectValueFeedbacks(
+              submittedConfig,
+              matchedSolution,
+              serviceKey,
+            ),
+          );
+        }
       }
     }
     return feedbacks;
