@@ -90,7 +90,8 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         s3: [
           {
-            ...s3DontCareConfig, // name: 'DONT_CARE' 유지 (이름 자유)
+            ...s3DontCareConfig,
+            name: 'my-log-bucket', // 필수 조건
           },
         ],
       },
@@ -134,7 +135,8 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         s3: [
           {
-            ...s3DontCareConfig, // name: 'DONT_CARE' 유지 (이름 자유)
+            ...s3DontCareConfig,
+            name: 'my-global-site', // 문제의 필수 조건
           },
         ],
         cloudFront: [

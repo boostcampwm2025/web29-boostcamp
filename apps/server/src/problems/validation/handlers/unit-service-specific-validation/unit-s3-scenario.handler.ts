@@ -30,53 +30,47 @@ export class S3ScenarioHandler {
     const buckets = config.s3 || [];
 
     for (const [bucketName, req] of Object.entries(reqs ?? {})) {
-      // '*' 와일드카드: 모든 버킷에 적용
-      const targetBuckets =
-        bucketName === '*'
-          ? buckets
-          : buckets.filter((b) => b.name === bucketName);
+      const bucket = buckets.find((b) => b.name === bucketName);
 
-      for (const bucket of targetBuckets) {
-        const displayName = bucket.name || bucketName;
+      if (!bucket) continue;
 
-        // 1. BUCKET_NOT_ENCRYPTED
-        if (req.requireEncryption) {
-          if (!bucket.encryptionType) {
-            feedbacks.push({
-              serviceType: 's3',
-              service: displayName,
-              field: 'encryptionType',
-              code: S3FeedbackScenarios.BUCKET_NOT_ENCRYPTED,
-              message: `S3 버킷 ${displayName}에 기본 암호화(SSE) 설정이 되어 있지 않습니다.`,
-            });
-          }
+      // 1. BUCKET_NOT_ENCRYPTED
+      if (req.requireEncryption) {
+        if (!bucket.encryptionType) {
+          feedbacks.push({
+            serviceType: 's3',
+            service: bucketName,
+            field: 'encryptionType',
+            code: S3FeedbackScenarios.BUCKET_NOT_ENCRYPTED,
+            message: `S3 버킷 ${bucketName}에 기본 암호화(SSE) 설정이 되어 있지 않습니다.`,
+          });
         }
+      }
 
-        // 2. BUCKET_PUBLIC_ACCESS_BLOCK_MISSING
-        if (req.requirePublicAccessBlock) {
-          // 보통 4가지 차단 옵션(BlockPublicAcls 등)을 모두 켜야 안전하다고 판단
-          if (!bucket.blockAll) {
-            feedbacks.push({
-              serviceType: 's3',
-              service: displayName,
-              field: 'blockAll',
-              code: S3FeedbackScenarios.BUCKET_PUBLIC_ACCESS_BLOCK_MISSING,
-              message: `S3 버킷 ${displayName}에 '퍼블릭 액세스 차단' 설정이 누락되었습니다. 보안을 위해 활성화하세요.`,
-            });
-          }
+      // 2. BUCKET_PUBLIC_ACCESS_BLOCK_MISSING
+      if (req.requirePublicAccessBlock) {
+        // 보통 4가지 차단 옵션(BlockPublicAcls 등)을 모두 켜야 안전하다고 판단
+        if (!bucket.blockAll) {
+          feedbacks.push({
+            serviceType: 's3',
+            service: bucketName,
+            field: 'blockAll',
+            code: S3FeedbackScenarios.BUCKET_PUBLIC_ACCESS_BLOCK_MISSING,
+            message: `S3 버킷 ${bucketName}에 '퍼블릭 액세스 차단' 설정이 누락되었습니다. 보안을 위해 활성화하세요.`,
+          });
         }
+      }
 
-        // 3. BUCKET_VERSIONING_DISABLED
-        if (req.requireVersioning) {
-          if (!bucket.versioningEnabled) {
-            feedbacks.push({
-              serviceType: 's3',
-              service: displayName,
-              field: 'versioningEnabled',
-              code: S3FeedbackScenarios.BUCKET_VERSIONING_DISABLED,
-              message: `S3 버킷 ${displayName}의 버전 관리(Versioning) 기능이 비활성화되어 있습니다.`,
-            });
-          }
+      // 3. BUCKET_VERSIONING_DISABLED
+      if (req.requireVersioning) {
+        if (!bucket.versioningEnabled) {
+          feedbacks.push({
+            serviceType: 's3',
+            service: bucketName,
+            field: 'versioningEnabled',
+            code: S3FeedbackScenarios.BUCKET_VERSIONING_DISABLED,
+            message: `S3 버킷 ${bucketName}의 버전 관리(Versioning) 기능이 비활성화되어 있습니다.`,
+          });
         }
       }
     }
