@@ -39,97 +39,103 @@ export class SgScenarioHandler {
     const sgs = config.securityGroups || [];
     const refinedSgs = sgs.map((sg) => removeUndefined(sg));
     for (const [sgName, req] of Object.entries(reqs ?? {})) {
-      const sg = refinedSgs.find((s) => s.name === sgName);
-      if (!sg) continue;
+      // '*' 와일드카드: 모든 보안 그룹에 적용
+      const targetSgs =
+        sgName === '*'
+          ? refinedSgs
+          : refinedSgs.filter((s) => s.name === sgName);
 
-      const rules = sg.ipPermissions || [];
+      for (const sg of targetSgs) {
+        const displayName = sg.name || sgName;
+        const rules = sg.ipPermissions || [];
 
-      // 1. SG_INBOUND_PORT_CLOSED
-      if (req.requireOpenPorts) {
-        for (const reqPort of req.requireOpenPorts) {
-          // 해당 포트를 포함하는 'Inbound' 규칙이 있는지 확인
-          const isOpen = rules.some((r) => {
+        // 1. SG_INBOUND_PORT_CLOSED
+        if (req.requireOpenPorts) {
+          for (const reqPort of req.requireOpenPorts) {
+            // 해당 포트를 포함하는 'Inbound' 규칙이 있는지 확인
+            const isOpen = rules.some((r) => {
+              if (!r.isInbound) return false;
+
+              const proto = r.ipProtocol;
+              // Protocol '-1', All 이면 통과
+              if (proto === '-1') return true;
+
+              const from = parseInt(r.fromPort, 10);
+              const to = parseInt(r.toPort, 10);
+              return from <= reqPort && to >= reqPort;
+            });
+
+            if (!isOpen) {
+              feedbacks.push({
+                serviceType: 'securityGroup',
+                service: displayName,
+                field: 'ipPermissions',
+                code: SGFeedbackScenarios.SG_INBOUND_PORT_CLOSED,
+                message: `보안 그룹 ${displayName}에 필수 포트(${reqPort})에 대한 인바운드 허용 규칙이 없습니다.`,
+              });
+            }
+          }
+        }
+
+        // 2. SG_SSH_OPEN_TO_WORLD
+        if (req.checkSshOpenToWorld) {
+          const isSshOpen = rules.some((r) => {
             if (!r.isInbound) return false;
 
             const proto = r.ipProtocol;
-            // Protocol '-1', All 이면 통과
-            if (proto === '-1') return true;
-
             const from = parseInt(r.fromPort, 10);
             const to = parseInt(r.toPort, 10);
-            return from <= reqPort && to >= reqPort;
+
+            // SSH 포트(22)를 포함하는지
+            const coversSsh = proto === '-1' || (from <= 22 && to >= 22);
+            // 0.0.0.0/0 인지
+            const isAnywhere = r.cidrIp === '0.0.0.0/0';
+
+            return coversSsh && isAnywhere;
           });
 
-          if (!isOpen) {
+          if (isSshOpen) {
             feedbacks.push({
               serviceType: 'securityGroup',
-              service: sgName,
+              service: displayName,
               field: 'ipPermissions',
-              code: SGFeedbackScenarios.SG_INBOUND_PORT_CLOSED,
-              message: `보안 그룹 ${sgName}에 필수 포트(${reqPort})에 대한 인바운드 허용 규칙이 없습니다.`,
+              code: SGFeedbackScenarios.SG_SSH_OPEN_TO_WORLD,
+              message: `보안 그룹 ${displayName}의 SSH(22) 포트가 모든 IP(0.0.0.0/0)에 개방되어 있습니다. 보안 위험이 있습니다.`,
             });
           }
         }
-      }
 
-      // 2. SG_SSH_OPEN_TO_WORLD
-      if (req.checkSshOpenToWorld) {
-        const isSshOpen = rules.some((r) => {
-          if (!r.isInbound) return false;
+        // 3. SG_WRONG_SOURCE
+        if (req.requireSource) {
+          for (const condition of req.requireSource) {
+            const { port, source } = condition;
 
-          const proto = r.ipProtocol;
-          const from = parseInt(r.fromPort, 10);
-          const to = parseInt(r.toPort, 10);
+            // 해당 포트를 커버하는 Inbound 규칙 찾기
+            const matchingRule = rules.find((r) => {
+              if (!r.isInbound) return false;
 
-          // SSH 포트(22)를 포함하는지
-          const coversSsh = proto === '-1' || (from <= 22 && to >= 22);
-          // 0.0.0.0/0 인지
-          const isAnywhere = r.cidrIp === '0.0.0.0/0';
+              const proto = r.ipProtocol;
+              if (proto === '-1') return true;
 
-          return coversSsh && isAnywhere;
-        });
-
-        if (isSshOpen) {
-          feedbacks.push({
-            serviceType: 'securityGroup',
-            service: sgName,
-            field: 'ipPermissions',
-            code: SGFeedbackScenarios.SG_SSH_OPEN_TO_WORLD,
-            message: `보안 그룹 ${sgName}의 SSH(22) 포트가 모든 IP(0.0.0.0/0)에 개방되어 있습니다. 보안 위험이 있습니다.`,
-          });
-        }
-      }
-
-      // 3. SG_WRONG_SOURCE
-      if (req.requireSource) {
-        for (const condition of req.requireSource) {
-          const { port, source } = condition;
-
-          // 해당 포트를 커버하는 Inbound 규칙 찾기
-          const matchingRule = rules.find((r) => {
-            if (!r.isInbound) return false;
-
-            const proto = r.ipProtocol;
-            if (proto === '-1') return true;
-
-            const from = parseInt(r.fromPort, 10);
-            const to = parseInt(r.toPort, 10);
-            return from <= port && to >= port;
-          });
-
-          if (!matchingRule) {
-            // 포트가 닫혀있는 경우는 위에서 처리하므로 여기선 패스
-            continue;
-          }
-
-          if (matchingRule.cidrIp !== source) {
-            feedbacks.push({
-              serviceType: 'securityGroup',
-              service: sgName,
-              field: 'ipPermissions',
-              code: SGFeedbackScenarios.SG_WRONG_SOURCE,
-              message: `보안 그룹 ${sgName}의 포트 ${port}에 대한 소스 설정이 올바르지 않습니다. (현재: ${matchingRule.cidrIp}, 요구: ${source})`,
+              const from = parseInt(r.fromPort, 10);
+              const to = parseInt(r.toPort, 10);
+              return from <= port && to >= port;
             });
+
+            if (!matchingRule) {
+              // 포트가 닫혀있는 경우는 위에서 처리하므로 여기선 패스
+              continue;
+            }
+
+            if (matchingRule.cidrIp !== source) {
+              feedbacks.push({
+                serviceType: 'securityGroup',
+                service: displayName,
+                field: 'ipPermissions',
+                code: SGFeedbackScenarios.SG_WRONG_SOURCE,
+                message: `보안 그룹 ${displayName}의 포트 ${port}에 대한 소스 설정이 올바르지 않습니다. (현재: ${matchingRule.cidrIp}, 요구: ${source})`,
+              });
+            }
           }
         }
       }
