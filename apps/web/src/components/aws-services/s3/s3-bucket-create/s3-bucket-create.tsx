@@ -14,6 +14,7 @@ import {
 import { useForm } from 'react-hook-form'
 
 import { flattenObject } from '@/components/aws-services/utils/flattenObject'
+import { Button } from '@/components/ui/button'
 import type {
   S3BucketCreateConfig,
   S3BucketFormData,
@@ -42,13 +43,11 @@ const DEFAULT_VALUES: S3BucketFormData = {
 interface S3BucketCreateProps {
   config: S3BucketCreateConfig
   onSubmit: (data: S3SubmitConfig) => void
-  buttonText?: string
 }
 
 export default function S3BucketCreate({
   config,
   onSubmit,
-  buttonText = 'S3 버킷 추가',
 }: S3BucketCreateProps) {
   const { control, handleSubmit, setValue, watch, reset } =
     useForm<S3BucketFormData>({
@@ -71,10 +70,6 @@ export default function S3BucketCreate({
       <ServiceTitle
         title="S3 버킷 생성"
         description="새로운 S3 버킷을 생성합니다"
-        button={{
-          isDisabled,
-          buttonText,
-        }}
       />
 
       {/* Section 1: bucket create region */}
@@ -113,6 +108,12 @@ export default function S3BucketCreate({
       {config.advancedSettings && (
         <AdvancedSettings control={control} config={config} />
       )}
+
+      <div className="flex justify-end pt-4">
+        <Button type="submit" size="lg" disabled={isDisabled}>
+          S3 버킷 추가
+        </Button>
+      </div>
     </form>
   )
 }
