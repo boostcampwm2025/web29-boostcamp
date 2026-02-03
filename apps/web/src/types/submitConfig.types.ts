@@ -53,6 +53,7 @@ export interface ServiceConfigItem<T> {
   id: string // problemData의 mapper ID 등 고유 식별자
   data: T
   isReady: boolean // 폼이 유효하게 작성되었는지 여부
+  isDefault?: boolean // 기본 제공된 구성인지 여부 (삭제 불가)
 }
 
 // 구성 정보

@@ -110,8 +110,25 @@ export function ProblemFormProvider<T extends FieldValues>({
   const { showFeedback } = useActionFeedback()
 
   // 리소스 구성 상태
-  const [submitConfig, setSubmitConfig] =
-    useState<GlobalSubmitConfig>(defaultConfigs)
+  const [submitConfig, setSubmitConfig] = useState<GlobalSubmitConfig>(() => {
+    // defaultConfigs에 있는 모든 항목에 isDefault: true 부여
+    if (!defaultConfigs) return {}
+
+    const markedConfig: Record<string, ServiceConfigItem<ServiceConfig>[]> = {}
+
+    ;(Object.keys(defaultConfigs) as Array<keyof GlobalSubmitConfig>).forEach(
+      (key) => {
+        const items = defaultConfigs[key] as ServiceConfigItem<ServiceConfig>[]
+        if (Array.isArray(items)) {
+          markedConfig[key] = items.map((item) => ({
+            ...item,
+            isDefault: true,
+          }))
+        }
+      },
+    )
+    return markedConfig as unknown as GlobalSubmitConfig
+  })
 
   // 다이어그램 상태
   const [nodes, setNodes] = useState<Node[]>(initialNodes)
@@ -182,6 +199,17 @@ export function ProblemFormProvider<T extends FieldValues>({
   // 리소스 삭제 핸들러
   const handleRemoveItem = useCallback(
     (type: ServiceType, id: string) => {
+      // 1. 먼저 현재 상태에서 아이템 확인
+      const currentList = submitConfig[type] || []
+      const targetItem = currentList.find((item) => item.id === id)
+
+      // 2. 기본 리소스면 삭제 방지 및 조기 리턴
+      if (targetItem?.isDefault) {
+        alert('기본 제공된 리소스는 삭제할 수 없습니다.')
+        return
+      }
+
+      // 3. 실제 삭제 진행
       setSubmitConfig((prev) => ({
         ...prev,
         [type]: (prev[type] || []).filter((item) => item.id !== id),
@@ -196,7 +224,7 @@ export function ProblemFormProvider<T extends FieldValues>({
         type: 'warning',
       })
     },
-    [showFeedback, setNodes, setSubmitConfig],
+    [showFeedback, setNodes, setSubmitConfig, submitConfig],
   )
 
   // 제출 핸들러
@@ -260,7 +288,6 @@ export function ProblemFormProvider<T extends FieldValues>({
       setSubmitConfig,
       handleAddItem,
       handleRemoveItem,
-      nodes,
       nodes,
       edges,
       addAwsResource,
