@@ -43,7 +43,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
         overview:
           'S3는 높은 가용성과 내구성을 제공하는 객체 스토리지 서비스입니다. 로그 데이터를 안전하게 보관하기 위해 기본 설정으로 버킷을 생성해 봅니다.',
         requirements:
-          '- 버킷 이름은 전역적으로 고유해야 합니다\n- 버킷 이름은 my-log-bucket으로 설정해주세요',
+          '- 버킷 이름은 전역적으로 고유해야 합니다\n- 버킷 이름은 `my-log-bucket`으로 설정해주세요',
       },
       requiredFields: [
         {
@@ -476,7 +476,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
         overview:
           'VPC(Virtual Private Cloud)는 AWS 계정 전용의 가상 네트워크입니다. AWS 클라우드 내에서 다른 고객의 네트워크와 논리적으로 완전히 격리된 공간을 제공하여, 여러분의 리소스를 안전하게 배치할 수 있는 터전이 됩니다.',
         requirements:
-          "- 이름 태그: 'cloud-craft-vpc'로 설정하세요.\n- IPv4 CIDR 블록: '10.0.0.0/16'을 입력하세요. 이는 약 65,000개의 프라이빗 IP 주소를 가질 수 있는 크기입니다.",
+          '- 이름 태그: `cloud-craft-vpc`로 설정하세요.\n- IPv4 CIDR 블록: `10.0.0.0/16`을 입력하세요. 이는 약 65,000개의 프라이빗 IP 주소를 가질 수 있는 크기입니다.',
       },
       requiredFields: [
         {
@@ -497,7 +497,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
         overview:
           "인터넷 게이트웨이(IGW)는 VPC 내부 리소스(예: EC2)와 인터넷 간의 통신을 가능하게 하는 창구입니다. IGW가 없으면 VPC 내의 서버들은 외부에서 접속할 수도, 외부로 데이터를 보낼 수도 없는 '고립된 섬'이 됩니다.",
         requirements:
-          "- **이름 태그**: 'cloud-craft-igw'로 설정하세요.\n-**VPC 연결**: 앞서 생성한 'cloud-craft-vpc'를 선택하여 연결하세요",
+          '- 이름 태그: `cloud-craft-igw`로 설정하세요.\n-VPC 연결: 앞서 생성한 `cloud-craft-vpc`를 선택하여 연결하세요',
       },
       requiredFields: [
         {
@@ -533,7 +533,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
         overview:
           "서브넷(Subnet)은 VPC라는 아파트 단지 내의 '특정 동'과 같습니다. 전체 IP 범위를 용도에 맞게 나누어 관리함으로써 보안성과 효율성을 높일 수 있습니다. 여기서는 외부와 직접 통신할 수 있는 '퍼블릭 서브넷'으로 사용할 공간을 만듭니다.",
         requirements:
-          "- **이름 태그**: 'cloud-craft-public-subnet'으로 설정하세요.\n- **대상 VPC**: 'cloud-craft-vpc'를 선택하세요.\n- **IPv4 CIDR 블록**: '10.0.1.0/24'를 입력하세요 (VPC 범위 내의 부분 집합).",
+          '- 이름 태그: `cloud-craft-public-subnet`으로 설정하세요.\n- 대상 VPC: `cloud-craft-vpc`를 선택하세요.\n- IPv4 CIDR 블록: `10.0.1.0/24`를 입력하세요 (VPC 범위 내의 부분 집합).',
       },
       requiredFields: [
         {
@@ -696,7 +696,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
     {
       title: 'NAT 게이트웨이 생성',
       description:
-        '프라이빗 서브넷의 리소스가 인터넷과 통신할 수 있도록 NAT 게이트웨이를 생성하세요.\n\n요구사항:\n1. NAT 게이트웨이 이름: cloud-craft-nat\n2. 대상 서브넷: cloud-craft-public-subnet',
+        '프라이빗 서브넷의 리소스가 인터넷과 통신할 수 있도록 NAT 게이트웨이를 생성하세요.',
       type: ProblemType.UNIT,
       descDetail: {
         overview:
@@ -736,16 +736,16 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
       problemType: ProblemType.UNIT,
       title: '보안 그룹 생성 및 인바운드 규칙 설정',
       description:
-        '웹 서버를 위한 보안 그룹을 생성하고 HTTP(80) 및 SSH(22) 포트를 허용하세요.\n\n요구사항:\n1. 보안 그룹 이름: web-server-sg\n2. VPC: cloud-craft-vpc\n3. 인바운드 규칙:\n   - HTTP (TCP 80): Anywhere (0.0.0.0/0)\n   - SSH (TCP 22): Anywhere (0.0.0.0/0)',
-      descDetail: `## 개념 설명
-보안 그룹(Security Group)은 인스턴스에 대한 인바운드 및 아웃바운드 트래픽을 제어하는 가상 방화벽 역할을 합니다.
-
-## 요구사항
-- **보안 그룹 이름**: 'web-server-sg'로 설정하세요.
-- **VPC**: 'cloud-craft-vpc'를 선택하세요.
-- **인바운드 규칙**:
-  - **HTTP**: TCP 프로토콜, 포트 80, 소스 0.0.0.0/0
-  - **SSH**: TCP 프로토콜, 포트 22, 소스 0.0.0.0/0`,
+        '웹 서버를 위한 보안 그룹을 생성하고 HTTP(80) 및 SSH(22) 포트를 허용하세요.',
+      descDetail: {
+        overview:
+          '보안 그룹(Security Group)은 인스턴스에 대한 인바운드 및 아웃바운드 트래픽을 제어하는 가상 방화벽 역할을 합니다.',
+        requirements: `- 보안 그룹 이름: \`web-server-sg\`로 설정하세요.
+- VPC: \`cloud-craft-vpc\`를 선택하세요.
+- 인바운드 규칙:
+  - HTTP: TCP 프로토콜, 포트 80, 소스 0.0.0.0/0
+  - SSH: TCP 프로토콜, 포트 22, 소스 0.0.0.0/0`,
+      },
       requiredFields: [
         {
           serviceName: 'securityGroups',
@@ -773,7 +773,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
         overview:
           '독립된 네트워크 환경을 구축하기 위해 새로운 VPC를 생성합니다. 이번에는 기본 대역이 아닌 우리가 설계한 특정 IP 대역을 사용합니다.',
         requirements:
-          "- 이름 태그: 'secure-vpc'로 설정하세요.\n- IPv4 CIDR 블록: '10.1.0.0/16'을 입력하세요. (기존 10.0.0.0/16과 구분)",
+          '- 이름 태그: `secure-vpc`로 설정하세요.\n- IPv4 CIDR 블록: `10.1.0.0/16`을 입력하세요. (기존 10.0.0.0/16과 구분)',
       },
       requiredFields: [
         {
