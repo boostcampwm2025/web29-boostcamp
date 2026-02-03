@@ -5,7 +5,7 @@ export interface IServiceMapper {
   serviceName: keyof typeof AWS_SERVICE_REGISTRY
   serviceTask: string
   label?: string
-  fixedOptions?: any
+  fixedOptions?: Record<string, unknown> | Record<string, unknown>[]
 }
 
 export const serviceMapper = ({
@@ -28,7 +28,7 @@ export const serviceMapper = ({
   }
 
   const inputSet = new Set(inputSections)
-  const baseConfig = inputSections.reduce<Record<string, any>>(
+  const baseConfig = inputSections.reduce<Record<string, boolean>>(
     (acc, section) => {
       acc[section] = inputSet.has(section)
       return acc

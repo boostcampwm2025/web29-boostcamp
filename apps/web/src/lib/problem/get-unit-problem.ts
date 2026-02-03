@@ -47,7 +47,7 @@ export async function getUnitProblemDataById(id: string): Promise<ProblemData> {
 
   const serviceMappers: IServiceMapper[] = response.requiredFields.map(
     (field: RequiredField) => ({
-      serviceName: field.serviceName as any,
+      serviceName: field.serviceName as IServiceMapper['serviceName'],
       serviceTask: field.serviceTask,
       inputSections: field.serviceSections,
       label: field.label,

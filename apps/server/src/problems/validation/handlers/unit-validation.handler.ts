@@ -9,7 +9,6 @@ import {
   ServiceConfigTypes,
   SubnetConfig,
   VPCConfig,
-  RouteTableConfig,
 } from '@/problems/types/service-config-type.enum';
 import { UnitProblemValidateResult } from '@/problems/types/unit-problem-validate-results';
 import {
@@ -41,7 +40,7 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     private readonly s3ScenarioHandler: S3ScenarioHandler,
     private readonly sgScenarioHandler: SgScenarioHandler,
     private readonly networkScenarioHandler: NetworkScenarioHandler,
-  ) { }
+  ) {}
 
   support(problemType: ProblemType): boolean {
     return problemType === ProblemType.UNIT;
@@ -61,15 +60,22 @@ export class UnitValidationHandler implements ProblemValidationHandler {
       throw new Error('Unit 문제에는 networkTask가 필요하지 않습니다.');
     }
 
-    const solutionConfig = problemData.solution;
+    const solutionConfig = problemData.solution as Record<
+      string,
+      ServiceConfigTypes[]
+    >;
     const requirements = problemData.requirements || {};
 
     const mismatchedConfigs: Partial<UnitProblemValidateResult> = {};
 
     // 2. 서비스별 설정 비교 (Diffing)
+    const submitConfigRecord = submitConfig as unknown as Record<
+      string,
+      ServiceConfigTypes[]
+    >;
     for (const serviceKey in solutionConfig) {
       const diffResult = this.diffServiceConfigs(
-        submitConfig[serviceKey] || [],
+        submitConfigRecord[serviceKey] || [],
         solutionConfig[serviceKey] || [],
         serviceKey,
       );
@@ -120,50 +126,70 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     config: ServiceConfigTypes,
     serviceKey: string,
   ): ServiceConfigTypes {
-    const refined = removeUndefined(config) as any;
+    const refined = removeUndefined(config);
+    const record = refined as unknown as Record<string, unknown>;
 
     if (serviceKey === 'routeTable') {
-      if (Array.isArray(refined.routes)) {
-        refined.routes.sort((a, b) =>
-          (a.destinationCidr || '').localeCompare(b.destinationCidr || ''),
+      const routes = record['routes'];
+      if (Array.isArray(routes)) {
+        routes.sort(
+          (a: { destinationCidr?: string }, b: { destinationCidr?: string }) =>
+            (a.destinationCidr || '').localeCompare(b.destinationCidr || ''),
         );
       }
-      if (Array.isArray(refined.associations)) {
-        refined.associations.sort((a, b) =>
-          (a.subnetId || '').localeCompare(b.subnetId || ''),
+      const associations = record['associations'];
+      if (Array.isArray(associations)) {
+        associations.sort(
+          (a: { subnetId?: string }, b: { subnetId?: string }) =>
+            (a.subnetId || '').localeCompare(b.subnetId || ''),
         );
       }
     } else if (serviceKey === 'securityGroups') {
-      if (Array.isArray(refined.ipPermissions)) {
-        refined.ipPermissions.sort((a, b) => {
-          const check = (a.ipProtocol || '').localeCompare(b.ipProtocol || '');
-          if (check !== 0) return check;
+      const ipPermissions = record['ipPermissions'];
+      if (Array.isArray(ipPermissions)) {
+        ipPermissions.sort(
+          (
+            a: { ipProtocol?: string; fromPort?: string; toPort?: string },
+            b: { ipProtocol?: string; fromPort?: string; toPort?: string },
+          ) => {
+            const check = (a.ipProtocol || '').localeCompare(
+              b.ipProtocol || '',
+            );
+            if (check !== 0) return check;
 
-          const fromPortA = parseInt(a.fromPort || '0', 10);
-          const fromPortB = parseInt(b.fromPort || '0', 10);
-          const check2 = fromPortA - fromPortB;
-          if (check2 !== 0) return check2;
+            const fromPortA = parseInt(a.fromPort || '0', 10);
+            const fromPortB = parseInt(b.fromPort || '0', 10);
+            const check2 = fromPortA - fromPortB;
+            if (check2 !== 0) return check2;
 
-          const toPortA = parseInt(a.toPort || '0', 10);
-          const toPortB = parseInt(b.toPort || '0', 10);
-          return toPortA - toPortB;
-        });
+            const toPortA = parseInt(a.toPort || '0', 10);
+            const toPortB = parseInt(b.toPort || '0', 10);
+            return toPortA - toPortB;
+          },
+        );
       }
     } else if (serviceKey === 's3') {
-      if (Array.isArray(refined.tags)) {
-        refined.tags.sort((a, b) => (a.key || '').localeCompare(b.key || ''));
+      const tags = record['tags'];
+      if (Array.isArray(tags)) {
+        tags.sort((a: { key?: string }, b: { key?: string }) =>
+          (a.key || '').localeCompare(b.key || ''),
+        );
       }
     } else if (serviceKey === 'nacl') {
-      if (Array.isArray(refined.entries)) {
-        refined.entries.sort((a, b) => {
-          const numA = parseInt(a.ruleNumber || '0', 10);
-          const numB = parseInt(b.ruleNumber || '0', 10);
-          return numA - numB;
-        });
+      const entries = record['entries'];
+      if (Array.isArray(entries)) {
+        entries.sort(
+          (a: { ruleNumber?: string }, b: { ruleNumber?: string }) => {
+            const numA = parseInt(a.ruleNumber || '0', 10);
+            const numB = parseInt(b.ruleNumber || '0', 10);
+            return numA - numB;
+          },
+        );
       }
     } else if (serviceKey === 'cloudFront') {
-      if (Array.isArray(refined.cnames)) {
-        refined.cnames.sort();
+      const cnames = record['cnames'];
+      if (Array.isArray(cnames)) {
+        (cnames as string[]).sort();
       }
     }
 

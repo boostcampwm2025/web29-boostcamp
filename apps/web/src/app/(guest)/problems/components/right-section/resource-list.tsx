@@ -1,33 +1,49 @@
 'use client'
 
+import type { LucideIcon } from 'lucide-react'
 import {
-  CheckCircle2Icon,
-  RotateCcwIcon,
-  ServerIcon,
-  GlobeIcon,
   BoxIcon,
-  NetworkIcon,
+  CheckCircle2Icon,
+  CloudIcon,
+  GlobeIcon,
   LayersIcon,
+  NetworkIcon,
+  RotateCcwIcon,
   RouteIcon,
+  ServerIcon,
   ShieldCheckIcon,
   ZapIcon,
-  CloudIcon,
 } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useProblemForm } from '@/contexts/problem-form-context'
+import { cn } from '@/lib/utils'
+import type {
+  ServiceConfig,
+  ServiceConfigItem,
+} from '@/types/submitConfig.types'
 
-const SERVICE_INFO: Record<string, { label: string; icon: any; color: string }> =
-{
+const SERVICE_INFO: Record<
+  string,
+  { label: string; icon: LucideIcon; color: string }
+> = {
   s3: { label: 'S3', icon: BoxIcon, color: 'bg-orange-500/10 text-orange-600' },
   cloudFront: {
     label: 'CloudFront',
     icon: GlobeIcon,
     color: 'bg-purple-500/10 text-purple-600',
   },
-  ec2: { label: 'EC2', icon: ServerIcon, color: 'bg-orange-600/10 text-orange-700' },
-  vpc: { label: 'VPC', icon: NetworkIcon, color: 'bg-green-500/10 text-green-600' },
+  ec2: {
+    label: 'EC2',
+    icon: ServerIcon,
+    color: 'bg-orange-600/10 text-orange-700',
+  },
+  vpc: {
+    label: 'VPC',
+    icon: NetworkIcon,
+    color: 'bg-green-500/10 text-green-600',
+  },
   subnet: {
     label: 'Subnet',
     icon: LayersIcon,
@@ -66,7 +82,7 @@ export const CreatedResourcePanel = () => {
   if (totalCount === 0) return null
 
   return (
-    <div className="rounded-xl border bg-card/50 shadow-sm backdrop-blur-sm p-4 h-full flex flex-col">
+    <div className="bg-card/50 flex h-full flex-col rounded-xl border p-4 shadow-sm backdrop-blur-sm">
       <div className="mb-3 flex items-center justify-between">
         <h4 className="flex items-center gap-2 text-sm font-bold">
           <CheckCircle2Icon className="h-4 w-4 text-green-500" />
@@ -77,7 +93,7 @@ export const CreatedResourcePanel = () => {
         </Badge>
       </div>
 
-      <div className="space-y-4 overflow-y-auto max-h-[400px] pr-1 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+      <div className="scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent max-h-[400px] space-y-4 overflow-y-auto pr-1">
         {Object.entries(submitConfig).map(([serviceType, items]) => {
           if (!items || items.length === 0) return null
           const info = SERVICE_INFO[serviceType] || {
@@ -89,37 +105,52 @@ export const CreatedResourcePanel = () => {
           return (
             <div key={serviceType} className="space-y-1.5">
               <div className="flex items-center gap-2 px-1">
-                <info.icon className={cn('h-3 w-3', info.color.split(' ')[1])} />
-                <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80">
+                <info.icon
+                  className={cn('h-3 w-3', info.color.split(' ')[1])}
+                />
+                <span className="text-muted-foreground/80 text-[11px] font-bold tracking-wider uppercase">
                   {info.label} ({items.length})
                 </span>
               </div>
               <div className="grid gap-1">
-                {items.map((item: any) => (
-                  <div
-                    key={item.id}
-                    className="group bg-background hover:bg-muted/30 flex items-center justify-between rounded-lg border border-border/50 p-2 pl-3 transition-all duration-200"
-                  >
-                    <div className="min-w-0 flex-1">
-                      <div className="truncate text-xs font-semibold text-foreground/90">
-                        {item.data.name || item.data.nameTag || '이름없음'}
-                      </div>
-                      <div className="text-muted-foreground font-mono text-[9px] opacity-60">
-                        {item.id.slice(0, 8)} ∙ {item.data.cidrBlock || item.data.subnetId || ''}
-                      </div>
-                    </div>
-
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-7 w-7 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all"
-                      onClick={() => handleRemoveItem(serviceType as any, item.id)}
-                      title="취소"
+                {items.map((item: ServiceConfigItem<ServiceConfig>) => {
+                  const data = item.data as Record<string, unknown>
+                  return (
+                    <div
+                      key={item.id}
+                      className="group bg-background hover:bg-muted/30 border-border/50 flex items-center justify-between rounded-lg border p-2 pl-3 transition-all duration-200"
                     >
-                      <RotateCcwIcon className="h-3.5 w-3.5" />
-                    </Button>
-                  </div>
-                ))}
+                      <div className="min-w-0 flex-1">
+                        <div className="text-foreground/90 truncate text-xs font-semibold">
+                          {(data.name as string) ||
+                            (data.nameTag as string) ||
+                            '이름없음'}
+                        </div>
+                        <div className="text-muted-foreground font-mono text-[9px] opacity-60">
+                          {item.id.slice(0, 8)} ∙{' '}
+                          {(data.cidrBlock as string) ||
+                            (data.subnetId as string) ||
+                            ''}
+                        </div>
+                      </div>
+
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 h-7 w-7 opacity-0 transition-all group-hover:opacity-100"
+                        onClick={() =>
+                          handleRemoveItem(
+                            serviceType as keyof typeof submitConfig,
+                            item.id,
+                          )
+                        }
+                        title="취소"
+                      >
+                        <RotateCcwIcon className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  )
+                })}
               </div>
             </div>
           )
@@ -128,5 +159,3 @@ export const CreatedResourcePanel = () => {
     </div>
   )
 }
-
-import { cn } from '@/lib/utils'

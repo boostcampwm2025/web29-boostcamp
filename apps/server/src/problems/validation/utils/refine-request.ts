@@ -4,13 +4,14 @@ export function removeUndefined<T>(obj: T): T {
   }
 
   if (Array.isArray(obj)) {
-    return obj.map((item) => removeUndefined(item)) as unknown as T;
+    return obj.map((item: unknown) => removeUndefined(item)) as unknown as T;
   }
 
-  const result: any = {};
-  for (const key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      const value = obj[key];
+  const result: Record<string, unknown> = {};
+  const record = obj as Record<string, unknown>;
+  for (const key in record) {
+    if (Object.prototype.hasOwnProperty.call(record, key)) {
+      const value = record[key];
       if (value !== undefined) {
         result[key] = removeUndefined(value);
       }
