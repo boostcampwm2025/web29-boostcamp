@@ -170,3 +170,13 @@
     height: 0;
   }
 }
+
+.markdown-content ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+  margin: 0.5rem 0;
+}
+
+.markdown-content li {
+  margin: 0.25rem 0;
+}

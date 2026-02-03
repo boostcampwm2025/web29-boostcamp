@@ -2,6 +2,7 @@ import { addDefaultConfigs } from '../add-default-configs'
 import { getApiBaseUrl } from '../get-base-url'
 
 import { IServiceMapper } from '@/components/aws-services/utils/serviceMapper'
+import { ProblemDescDetail } from '@/types/problem.type'
 import { GlobalSubmitConfig, ServiceConfig } from '@/types/submitConfig.types'
 
 /*
@@ -22,7 +23,7 @@ interface ProblemData {
   problemType: string
   title: string
   description: string
-  descDetail: string
+  descDetail: ProblemDescDetail
   tags: string[]
   serviceMappers: IServiceMapper[]
   defaultConfigs: GlobalSubmitConfig
@@ -64,7 +65,7 @@ export async function getUnitProblemDataById(id: string): Promise<ProblemData> {
     problemType: response.problemType,
     title: response.title ?? '문제',
     description: response.description ?? '',
-    descDetail: response.descDetail ?? '',
+    descDetail: response.descDetail,
     tags: response.tags ?? [],
     serviceMappers,
     defaultConfigs,
