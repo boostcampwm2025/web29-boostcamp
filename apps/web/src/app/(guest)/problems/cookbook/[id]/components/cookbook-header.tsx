@@ -4,10 +4,12 @@ import ReactMarkdown from 'react-markdown'
 
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
+import { ProblemDescDetail } from '@/types/problem.type'
 
 interface CookbookProblemHeaderProps {
   title: string
   descDetail: string
+  unitDescDetail: ProblemDescDetail
   tags: string[]
   units: { id: string; title: string }[]
   currUnitId: string
@@ -16,6 +18,7 @@ interface CookbookProblemHeaderProps {
 export function CookbookProblemHeader({
   title,
   descDetail,
+  unitDescDetail,
   tags,
   units,
   currUnitId,
@@ -60,13 +63,67 @@ export function CookbookProblemHeader({
           ))}
         </div>
 
-        <div className="bg-muted/30 -mx-6 -mb-6 flex items-center gap-3 rounded-b-xl border-t px-6 py-4">
-          <Badge className="bg-primary hover:bg-primary text-primary-foreground h-6 min-w-6 rounded-full px-2.5 font-mono text-xs tabular-nums shadow-sm">
-            Step {currUnitIndex + 1}
-          </Badge>
-          <span className="text-foreground text-sm font-bold">
-            {currUnit.title}
-          </span>
+        <div className="bg-muted/30 -mx-6 -mb-6 flex flex-col gap-4 rounded-b-xl border-t px-6 py-4">
+          <div className="flex items-center gap-3">
+            <Badge className="bg-primary hover:bg-primary text-primary-foreground h-6 min-w-6 rounded-full px-2.5 font-mono text-xs tabular-nums shadow-sm">
+              Step {currUnitIndex + 1}
+            </Badge>
+            <span className="text-foreground text-base font-bold">
+              {currUnit.title}
+            </span>
+          </div>
+
+          {/* 유닛 상세 설명 */}
+          <div className="flex flex-col gap-3">
+            {/* 개요 */}
+            {unitDescDetail.overview && (
+              <div className="markdown-content text-muted-foreground text-sm">
+                <ReactMarkdown>{unitDescDetail.overview}</ReactMarkdown>
+              </div>
+            )}
+
+            {/* 요구사항 */}
+            {unitDescDetail.requirements && (
+              <div className="space-y-1.5">
+                <h4 className="text-xs font-semibold">요구사항</h4>
+                <div className="markdown-content text-muted-foreground text-xs">
+                  <ReactMarkdown>{unitDescDetail.requirements}</ReactMarkdown>
+                </div>
+              </div>
+            )}
+
+            {/* 전제 조건 */}
+            {unitDescDetail.prerequisites && (
+              <div className="space-y-1.5">
+                <h4 className="text-xs font-semibold">전제 조건</h4>
+                <div className="markdown-content text-muted-foreground text-xs">
+                  <ReactMarkdown>{unitDescDetail.prerequisites}</ReactMarkdown>
+                </div>
+              </div>
+            )}
+
+            {/* 학습 목표 */}
+            {unitDescDetail.learningObjectives && (
+              <div className="space-y-1.5">
+                <h4 className="text-xs font-semibold">학습 목표</h4>
+                <div className="markdown-content text-muted-foreground text-xs">
+                  <ReactMarkdown>
+                    {unitDescDetail.learningObjectives}
+                  </ReactMarkdown>
+                </div>
+              </div>
+            )}
+
+            {/* 힌트 */}
+            {unitDescDetail.hint && (
+              <div className="space-y-1.5">
+                <h4 className="text-xs font-semibold">힌트</h4>
+                <div className="markdown-content text-muted-foreground text-xs">
+                  <ReactMarkdown>{unitDescDetail.hint}</ReactMarkdown>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

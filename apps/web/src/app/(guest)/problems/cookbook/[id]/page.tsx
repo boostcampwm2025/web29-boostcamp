@@ -27,8 +27,11 @@ export default async function CookbookProblemPage({
   const currentUnitId =
     units.find((unit) => unit.id == unitId)?.id || units[0].id
 
-  const { serviceMappers, defaultConfigs } =
-    await getUnitProblemDataById(currentUnitId)
+  const {
+    descDetail: unitDescDetail,
+    serviceMappers,
+    defaultConfigs,
+  } = await getUnitProblemDataById(currentUnitId)
 
   // 현재 unit의 인덱스를 찾아서 다음 unit ID 계산
   const currentIndex = units.findIndex((u) => u.id === currentUnitId)
@@ -42,6 +45,7 @@ export default async function CookbookProblemPage({
       cookbookId={id}
       title={title}
       descDetail={descDetail}
+      unitDescDetail={unitDescDetail}
       tags={tags}
       problemData={serviceMappers}
       defaultConfigs={defaultConfigs}

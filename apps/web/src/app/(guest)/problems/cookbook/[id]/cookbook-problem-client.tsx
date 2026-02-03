@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation'
 import { mergeServiceDefaultValues } from '@/components/aws-services/registry/form-defaults-factory'
 import type { IServiceMapper } from '@/components/aws-services/utils/serviceMapper'
 import { ProblemFormProvider } from '@/contexts/problem-form-context'
+import { ProblemDescDetail } from '@/types/problem.type'
 import { GlobalSubmitConfig } from '@/types/submitConfig.types'
 
 interface CookbookProblemClientProps {
@@ -18,6 +19,7 @@ interface CookbookProblemClientProps {
   cookbookId: string
   title: string
   descDetail: string
+  unitDescDetail: ProblemDescDetail
   tags: string[]
   problemData: IServiceMapper[]
   defaultConfigs: GlobalSubmitConfig
@@ -30,6 +32,7 @@ export default function CookbookProblemClient({
   cookbookId,
   title,
   descDetail,
+  unitDescDetail,
   tags,
   problemData,
   defaultConfigs,
@@ -59,6 +62,7 @@ export default function CookbookProblemClient({
         <CookbookProblemHeader
           title={title}
           descDetail={descDetail}
+          unitDescDetail={unitDescDetail}
           tags={tags}
           units={units}
           currUnitId={unitId}
