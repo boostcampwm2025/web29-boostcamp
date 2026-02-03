@@ -1,10 +1,13 @@
 'use client'
 
+import { useMemo } from 'react'
+
 import {
   type IServiceMapper,
   serviceMapper,
 } from '@/components/aws-services/utils/serviceMapper'
 import { useProblemForm } from '@/contexts/problem-form-context'
+import { cn } from '@/lib/utils'
 import type { ServiceConfig, ServiceType } from '@/types/submitConfig.types'
 
 const getServiceType = (serviceName: string): ServiceType => {
@@ -32,6 +35,15 @@ export const ServiceForm = ({
 }) => {
   const { handleAddItem } = useProblemForm()
 
+  const uniqueTasks = useMemo(() => {
+    return problemData.filter(
+      (item, index, self) =>
+        self.findIndex(
+          (t) => t.serviceTask === item.serviceTask && t.label === item.label,
+        ) === index,
+    )
+  }, [problemData])
+
   const mapper = problemData.find((m) => m.serviceTask === currentTask)
 
   if (!mapper) return null
@@ -40,7 +52,12 @@ export const ServiceForm = ({
   const serviceType = getServiceType(mapper.serviceName)
 
   return (
-    <div className="rounded-b-lg border border-t-0">
+    <div
+      className={cn(
+        'border',
+        uniqueTasks.length > 1 ? 'rounded-b-lg border-t-0' : 'rounded-lg',
+      )}
+    >
       <Component
         config={config}
         onSubmit={(data: ServiceConfig) => handleAddItem(serviceType, data)}
