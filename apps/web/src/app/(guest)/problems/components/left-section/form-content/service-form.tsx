@@ -38,7 +38,7 @@ export const ServiceForm = ({
   const serviceType = getServiceType(mapper.serviceName)
 
   return (
-    <div className="rounded-lg border">
+    <div className="rounded-b-lg border border-t-0">
       <Component
         config={config}
         onSubmit={(data: ServiceConfig) => handleAddItem(serviceType, data)}

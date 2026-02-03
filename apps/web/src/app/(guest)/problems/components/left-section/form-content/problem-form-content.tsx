@@ -3,9 +3,10 @@
 import { ServiceForm } from './service-form'
 import { ServiceTabs } from './service-tabs'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { type IServiceMapper } from '@/components/aws-services/utils/serviceMapper'
+import { cn } from '@/lib/utils'
 
 interface ProblemFormContentProps {
   problemData: IServiceMapper[]
@@ -18,18 +19,24 @@ export function ProblemFormContent({ problemData }: ProblemFormContentProps) {
     setCurrService(serviceName)
   }
 
+  useEffect(() => {
+    setCurrService(problemData[0].serviceName)
+  }, [problemData])
+
   return (
     <React.Fragment>
-      {problemData.length > 1 && (
-        <div className="m-0 flex w-full items-end">
-          <ServiceTabs
-            services={problemData}
-            current={currService}
-            onChange={handleServiceChange}
-          />
-          <div className="m-0 flex-1 border-b" />
-        </div>
-      )}
+      <div
+        className={cn(
+          problemData.length < 2 && 'pointer-events-none border-b',
+          'm-0 flex w-full items-end',
+        )}
+      >
+        <ServiceTabs
+          services={problemData}
+          current={currService}
+          onChange={handleServiceChange}
+        />
+      </div>
 
       <ServiceForm problemData={problemData} currentService={currService} />
     </React.Fragment>
