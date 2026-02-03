@@ -27,6 +27,7 @@
     "@xyflow/react": "^12.10.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "framer-motion": "^12.31.0",
     "lucide-react": "^0.561.0",
     "next": "16.1.1",
     "react": "19.2.3",
