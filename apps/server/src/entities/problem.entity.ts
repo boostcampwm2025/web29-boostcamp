@@ -12,6 +12,7 @@ import { Solution } from './solution.entity';
 import { ProblemType } from '../problems/types/problem-type.enum';
 import { Tag } from './tag.entity';
 import { TServiceConfigMap } from '../constants/service-convention';
+import type { ProblemDescDetail } from '@/problems/types/problem-desc-detail-types';
 
 @Entity('problem')
 export class Problem {
@@ -27,8 +28,8 @@ export class Problem {
   @Column({ type: 'text', nullable: false })
   description: string;
 
-  @Column({ name: 'desc_detail', type: 'text', nullable: true })
-  descDetail: string;
+  @Column({ name: 'desc_detail', type: 'json', nullable: true })
+  descDetail: ProblemDescDetail;
 
   @Column({ name: 'required_fields', type: 'json', nullable: false })
   requiredFields: TServiceConfigMap[];
