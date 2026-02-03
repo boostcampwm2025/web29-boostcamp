@@ -1,11 +1,11 @@
 'use client'
 
 import { AttachForm } from './sections/attach-form'
+import { toast } from 'sonner'
 
 import { useForm, useWatch } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
-import { useActionFeedback } from '@/contexts/action-feedback-context'
 import { useProblemForm } from '@/contexts/problem-form-context'
 import type {
   InternetGatewayAttachFormData,
@@ -52,8 +52,6 @@ export default function InternetGatewayAttach({
     name: ['internetGatewayId', 'vpcId'],
   })
 
-  const { showFeedback } = useActionFeedback()
-
   const handleFormSubmit = handleSubmit((data) => {
     // 2. 전역 상태 업데이트
     setSubmitConfig((prev) => {
@@ -79,10 +77,8 @@ export default function InternetGatewayAttach({
       }
     })
 
-    showFeedback({
-      title: '연결 완료',
-      message: `인터넷 게이트웨이가 VPC(${data.vpcId})에 성공적으로 연결되었습니다.`,
-      type: 'success',
+    toast.success('연결 완료', {
+      description: `인터넷 게이트웨이가 VPC(${data.vpcId})에 성공적으로 연결되었습니다.`,
     })
 
     if (onAfterSubmit) onAfterSubmit()
