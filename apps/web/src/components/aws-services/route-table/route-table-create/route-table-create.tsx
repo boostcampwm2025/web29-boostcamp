@@ -36,12 +36,12 @@ export default function RouteTableCreate({ onSubmit }: RouteTableCreateProps) {
     defaultVpcs.length > 0
       ? defaultVpcs
       : [
-        {
-          id: 'vpc-12345678',
-          name: 'Default VPC',
-          cidrBlock: '10.0.0.0/16',
-        },
-      ]
+          {
+            id: 'vpc-12345678',
+            name: 'Default VPC',
+            cidrBlock: '10.0.0.0/16',
+          },
+        ]
 
   // 생성 버튼 활성화/비활성화를 위해 감시
   const vpcId = useWatch({ control, name: 'settings.vpcId' })

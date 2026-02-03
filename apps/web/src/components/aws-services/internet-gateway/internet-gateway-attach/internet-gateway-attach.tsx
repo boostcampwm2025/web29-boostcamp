@@ -105,11 +105,7 @@ export default function InternetGatewayAttach({
 
       {/* 하단 액션 버튼 */}
       <div className="flex justify-end gap-3 pt-4">
-        <Button
-          type="submit"
-          size="lg"
-          disabled={!selectedIgw || !selectedVpc}
-        >
+        <Button type="submit" size="lg" disabled={!selectedIgw || !selectedVpc}>
           인터넷 게이트웨이 연결
         </Button>
       </div>

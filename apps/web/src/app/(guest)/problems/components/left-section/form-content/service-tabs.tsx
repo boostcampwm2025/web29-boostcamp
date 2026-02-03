@@ -18,8 +18,8 @@ export const ServiceTabs = ({
           className={cn(
             'w-full cursor-pointer rounded-t-lg border py-1 text-center text-base font-semibold select-none',
             current === service.serviceTask
-              ? 'bg-background border-b-0 text-primary'
-              : 'bg-muted border-b text-muted-foreground',
+              ? 'bg-background text-primary border-b-0'
+              : 'bg-muted text-muted-foreground border-b',
           )}
           onClick={() => onChange(service.serviceTask)}
         >

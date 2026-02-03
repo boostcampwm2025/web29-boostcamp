@@ -1,17 +1,17 @@
 export interface NATGatewayFormData {
-    nameTag: string
-    subnetId: string
+  nameTag: string
+  subnetId: string
 }
 
 export type NATGatewaySubmitConfig = {
-    _type: 'natGateway'
+  _type: 'natGateway'
 
-    id?: string
-    name: string
+  id?: string
+  name: string
 
-    vpcId?: string
-    vpcName?: string
+  vpcId?: string
+  vpcName?: string
 
-    subnetId: string
-    subnetName: string
+  subnetId: string
+  subnetName: string
 }

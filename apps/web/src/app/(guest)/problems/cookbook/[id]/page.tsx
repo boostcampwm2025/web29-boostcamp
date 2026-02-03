@@ -21,8 +21,7 @@ export default async function CookbookProblemPage({
   const { id } = await params
   const { unitId } = await searchParams
 
-  const { tags, units } =
-    await getCookbookProblemDataById(id)
+  const { tags, units } = await getCookbookProblemDataById(id)
 
   const currentUnitId =
     units.find((unit) => unit.id == unitId)?.id || units[0].id

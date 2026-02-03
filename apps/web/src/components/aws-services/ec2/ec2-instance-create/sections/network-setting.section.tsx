@@ -20,11 +20,11 @@ import {
   SUBNET_OPTIONS,
   VPC_OPTIONS,
 } from '@/constants/aws-services/ec2'
-import type { EC2SectionProps } from '@/types/aws-services/ec2/instance-create'
 import { useProblemForm } from '@/contexts/problem-form-context'
-import { getDefaultVpcs } from '@/lib/get-default-vpcs'
-import { getDefaultSubnets } from '@/lib/get-default-subnets'
 import { getDefaultSecurityGroups } from '@/lib/get-default-security-groups'
+import { getDefaultSubnets } from '@/lib/get-default-subnets'
+import { getDefaultVpcs } from '@/lib/get-default-vpcs'
+import type { EC2SectionProps } from '@/types/aws-services/ec2/instance-create'
 
 export function NetworkSetting({ control }: EC2SectionProps) {
   const { submitConfig } = useProblemForm()
@@ -103,7 +103,9 @@ export function NetworkSetting({ control }: EC2SectionProps) {
             render={({ field }) => (
               <Select
                 value={field.value?.[0] || 'none'}
-                onValueChange={(val) => field.onChange(val === 'none' ? [] : [val])}
+                onValueChange={(val) =>
+                  field.onChange(val === 'none' ? [] : [val])
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="기존 보안 그룹 선택" />

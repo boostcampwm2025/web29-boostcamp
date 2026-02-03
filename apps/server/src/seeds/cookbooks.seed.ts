@@ -21,7 +21,6 @@ export async function seedCookbooks(dataSource: DataSource): Promise<void> {
     tagMap.get('EC2')!,
   ].filter(Boolean);
 
-
   // 모든 문제 조회
   const problems = await problemRepository.find({
     order: { id: 'ASC' },
@@ -57,7 +56,6 @@ export async function seedCookbooks(dataSource: DataSource): Promise<void> {
       '이 쿡북에서는 AWS의 가장 기초적이면서 필수적인 네트워크 구성 요소를 다룹니다. 가상 프라이빗 클라우드(VPC)를 생성하는 것부터 시작하여, 인터넷 통신을 위한 게이트웨이와 라우팅 설정, 그리고 실제 서버(EC2)를 배치하는 전 과정을 단계별로 시스템에 구축해 봅니다.',
     tags: networkTags,
   });
-
 
   // Cookbook-Problem 연결
   const cookbookProblems = [
@@ -215,19 +213,59 @@ export async function seedCookbooks(dataSource: DataSource): Promise<void> {
   });
 
   const cookbook4Problems = [
-    { cookbookId: cookbook4.id, problemId: problems[27].id, orderNumber: 1, cookbook: cookbook4, problem: problems[27] }, // HA VPC
-    { cookbookId: cookbook4.id, problemId: problems[28].id, orderNumber: 2, cookbook: cookbook4, problem: problems[28] }, // Multi-AZ Subnets
-    { cookbookId: cookbook4.id, problemId: problems[29].id, orderNumber: 3, cookbook: cookbook4, problem: problems[29] }, // IGW
-    { cookbookId: cookbook4.id, problemId: problems[30].id, orderNumber: 4, cookbook: cookbook4, problem: problems[30] }, // Unified Routing
-    { cookbookId: cookbook4.id, problemId: problems[31].id, orderNumber: 5, cookbook: cookbook4, problem: problems[31] }, // Web SG
-    { cookbookId: cookbook4.id, problemId: problems[32].id, orderNumber: 6, cookbook: cookbook4, problem: problems[32] }, // Dual Deployment
+    {
+      cookbookId: cookbook4.id,
+      problemId: problems[27].id,
+      orderNumber: 1,
+      cookbook: cookbook4,
+      problem: problems[27],
+    }, // HA VPC
+    {
+      cookbookId: cookbook4.id,
+      problemId: problems[28].id,
+      orderNumber: 2,
+      cookbook: cookbook4,
+      problem: problems[28],
+    }, // Multi-AZ Subnets
+    {
+      cookbookId: cookbook4.id,
+      problemId: problems[29].id,
+      orderNumber: 3,
+      cookbook: cookbook4,
+      problem: problems[29],
+    }, // IGW
+    {
+      cookbookId: cookbook4.id,
+      problemId: problems[30].id,
+      orderNumber: 4,
+      cookbook: cookbook4,
+      problem: problems[30],
+    }, // Unified Routing
+    {
+      cookbookId: cookbook4.id,
+      problemId: problems[31].id,
+      orderNumber: 5,
+      cookbook: cookbook4,
+      problem: problems[31],
+    }, // Web SG
+    {
+      cookbookId: cookbook4.id,
+      problemId: problems[32].id,
+      orderNumber: 6,
+      cookbook: cookbook4,
+      problem: problems[32],
+    }, // Dual Deployment
   ];
 
   const cookbookProblemRepository = dataSource.getRepository(CookbookProblem);
-  for (const cp of [...cookbookProblems, ...cookbook2Problems, ...cookbook3Problems, ...cookbook4Problems]) {
+  for (const cp of [
+    ...cookbookProblems,
+    ...cookbook2Problems,
+    ...cookbook3Problems,
+    ...cookbook4Problems,
+  ]) {
     await cookbookProblemRepository.save(cp);
   }
-
 
   console.log('Cookbooks seeded successfully');
 }

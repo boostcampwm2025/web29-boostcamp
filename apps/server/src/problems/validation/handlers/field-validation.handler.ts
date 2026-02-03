@@ -403,7 +403,11 @@ export class FieldValidationHandler implements ValidationHandler {
         }
 
         // 3. 게이트웨이 존재 여부 검사 (local 제외)
-        if (targetGateway && targetGateway !== 'local' && !igwIdSet.has(targetGateway)) {
+        if (
+          targetGateway &&
+          targetGateway !== 'local' &&
+          !igwIdSet.has(targetGateway)
+        ) {
           feedbacks.push({
             serviceType: 'routeTable',
             service: name,

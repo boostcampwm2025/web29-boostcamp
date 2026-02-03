@@ -14,14 +14,14 @@ import {
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
+import { useProblemForm } from '@/contexts/problem-form-context'
+import { getDefaultSubnets } from '@/lib/get-default-subnets'
+import { getDefaultVpcs } from '@/lib/get-default-vpcs'
 import type { EC2SubmitConfig } from '@/types/aws-services/ec2/ec2-submit-config.types'
 import type {
   EC2InstanceCreateConfig,
   EC2InstanceFormData,
 } from '@/types/aws-services/ec2/instance-create'
-import { getDefaultSubnets } from '@/lib/get-default-subnets'
-import { getDefaultVpcs } from '@/lib/get-default-vpcs'
-import { useProblemForm } from '@/contexts/problem-form-context'
 
 const DEFAULT_VALUES: EC2InstanceFormData = {
   nameTag: { name: '' },

@@ -5,13 +5,13 @@ export type EC2SubmitConfig = {
 
   // AMI
   osType?:
-  | 'amazon-linux'
-  | 'mac-os'
-  | 'ubuntu'
-  | 'windows'
-  | 'red-hat'
-  | 'suse-linux'
-  | 'debian'
+    | 'amazon-linux'
+    | 'mac-os'
+    | 'ubuntu'
+    | 'windows'
+    | 'red-hat'
+    | 'suse-linux'
+    | 'debian'
 
   // Instance type
   instanceType?: string

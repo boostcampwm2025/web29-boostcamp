@@ -5,6 +5,8 @@ import { BasicInfoSection, InboundRulesSection } from './sections'
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
+import { useProblemForm } from '@/contexts/problem-form-context'
+import { getDefaultVpcs } from '@/lib/get-default-vpcs'
 import {
   DEFAULT_SG_FORM_DATA,
   type EC2SecurityGroupConfig,
@@ -13,15 +15,12 @@ import {
   type VPCOption,
 } from '@/types/aws-services/ec2/security-group'
 import type { SGSubmitConfig } from '@/types/aws-services/ec2/sg-submit-config.types'
-import { useProblemForm } from '@/contexts/problem-form-context'
-import { getDefaultVpcs } from '@/lib/get-default-vpcs'
 
 interface EC2SecurityGroupProps {
   config?: EC2SecurityGroupConfig
   onSubmit?: (data: SGSubmitConfig) => void
   vpcOptions?: VPCOption[]
 }
-
 
 export default function EC2SecurityGroup({
   config = { basicInfo: true, inboundRules: true },
@@ -31,11 +30,11 @@ export default function EC2SecurityGroup({
     defaultValues: DEFAULT_SG_FORM_DATA,
   })
 
-  const { submitConfig } = useProblemForm();
+  const { submitConfig } = useProblemForm()
   const vpcOptions = getDefaultVpcs(submitConfig).map((vpc) => ({
     id: vpc.id,
     name: vpc.name,
-  }));
+  }))
 
   const handleSubmit = form.handleSubmit((data) => {
     // 폼 데이터를 SGSubmitConfig로 변환
@@ -45,8 +44,7 @@ export default function EC2SecurityGroup({
       name: data.basicInfo.name,
       description: data.basicInfo.description,
       vpcId: data.basicInfo.vpcId,
-      vpcName:
-        data.basicInfo.vpcId || 'Default VPC',
+      vpcName: data.basicInfo.vpcId || 'Default VPC',
       ipPermissions: data.inboundRules.map((rule) => ({
         ipProtocol: rule.protocol,
         fromPort: rule.fromPort || '0',

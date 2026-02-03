@@ -4,13 +4,13 @@ export interface EC2InstanceFormData {
   }
   ami: {
     osType:
-    | 'amazon-linux'
-    | 'mac-os'
-    | 'ubuntu'
-    | 'windows'
-    | 'red-hat'
-    | 'suse-linux'
-    | 'debian'
+      | 'amazon-linux'
+      | 'mac-os'
+      | 'ubuntu'
+      | 'windows'
+      | 'red-hat'
+      | 'suse-linux'
+      | 'debian'
   }
   instanceType: {
     type: string

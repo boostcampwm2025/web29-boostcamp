@@ -56,10 +56,7 @@ export default function InternetGatewayCreate({
 
       {/* 하단 액션 버튼 */}
       <div className="flex justify-end gap-3 pt-4">
-        <Button
-          type="submit"
-          size="lg"
-        >
+        <Button type="submit" size="lg">
           인터넷 게이트웨이 생성
         </Button>
       </div>

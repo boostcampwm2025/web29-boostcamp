@@ -1,8 +1,9 @@
 import { ProblemTagBadge } from '../../../(list)/components/problem-tag-badge'
 
+import ReactMarkdown from 'react-markdown'
+
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import ReactMarkdown from 'react-markdown'
 
 interface CookbookProblemHeaderProps {
   title: string
@@ -24,11 +25,11 @@ export function CookbookProblemHeader({
   const progress = ((currUnitIndex + 1) / units.length) * 100
 
   return (
-    <div className="space-y-6 rounded-xl border bg-card p-6 shadow-sm">
+    <div className="bg-card space-y-6 rounded-xl border p-6 shadow-sm">
       {/* 진행도 섹션 */}
       <div className="space-y-2">
         <div className="flex items-center justify-between text-xs font-bold tracking-tight">
-          <div className="flex items-center gap-2 text-primary">
+          <div className="text-primary flex items-center gap-2">
             <span className="bg-primary/10 rounded-md px-1.5 py-0.5 uppercase">
               Cookbook Progress
             </span>
@@ -36,13 +37,15 @@ export function CookbookProblemHeader({
               Step {currUnitIndex + 1} of {units.length}
             </span>
           </div>
-          <span className="font-mono text-primary">{Math.round(progress)}%</span>
+          <span className="text-primary font-mono">
+            {Math.round(progress)}%
+          </span>
         </div>
         <Progress value={progress} className="h-1.5" />
       </div>
 
       <div className="space-y-4">
-        <div className="flex flex-col gap-2 pl-1 text-card-foreground">
+        <div className="text-card-foreground flex flex-col gap-2 pl-1">
           <h1 className="flex items-center gap-2 text-2xl font-extrabold tracking-tight">
             {title}
           </h1>
@@ -57,11 +60,11 @@ export function CookbookProblemHeader({
           ))}
         </div>
 
-        <div className="flex items-center gap-3 border-t bg-muted/30 -mx-6 -mb-6 px-6 py-4 rounded-b-xl">
-          <Badge className="bg-primary hover:bg-primary h-6 min-w-6 rounded-full px-2.5 font-mono text-xs tabular-nums text-primary-foreground shadow-sm">
+        <div className="bg-muted/30 -mx-6 -mb-6 flex items-center gap-3 rounded-b-xl border-t px-6 py-4">
+          <Badge className="bg-primary hover:bg-primary text-primary-foreground h-6 min-w-6 rounded-full px-2.5 font-mono text-xs tabular-nums shadow-sm">
             Step {currUnitIndex + 1}
           </Badge>
-          <span className="text-sm font-bold text-foreground">
+          <span className="text-foreground text-sm font-bold">
             {currUnit.title}
           </span>
         </div>
