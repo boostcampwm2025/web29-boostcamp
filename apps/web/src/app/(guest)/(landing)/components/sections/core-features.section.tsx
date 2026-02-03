@@ -1,9 +1,19 @@
+'use client'
+
+import { motion } from 'framer-motion'
+
 import Image from 'next/image'
 
 export const CoreFeaturesSection = () => {
   return (
     <section className="bg-primary-foreground/30 flex flex-col gap-60 py-52">
-      <div className="flex justify-center gap-20">
+      <motion.div
+        className="flex justify-center gap-20"
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        viewport={{ once: true }}
+      >
         <Image
           src="/images/problem-list.svg"
           alt="문제 목록"
@@ -22,9 +32,15 @@ export const CoreFeaturesSection = () => {
             <p>목적에 맞는 문제를 골라 바로 풀어볼 수 있어요.</p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="flex justify-center gap-20">
+      <motion.div
+        className="flex justify-center gap-20"
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
+        viewport={{ once: true }}
+      >
         <Image
           src="/images/problem-detail.svg"
           alt="문제 상세"
@@ -43,7 +59,7 @@ export const CoreFeaturesSection = () => {
             <p>변화하는 다이어그램과 리소스를 확인하세요.</p>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   )
 }

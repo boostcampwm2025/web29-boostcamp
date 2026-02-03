@@ -1,6 +1,6 @@
 export const ValuePropositionSection = () => {
   return (
-    <section className="py-16">
+    <section className="mx-auto max-w-7xl px-4 py-16">
       <div className="mb-12 text-center">
         <h2 className="text-3xl font-bold">왜 클라우드 크래프트인가요?</h2>
         <p className="text-muted-foreground mt-4 text-lg">
