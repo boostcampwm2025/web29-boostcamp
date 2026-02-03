@@ -57,6 +57,7 @@ export function getIcons(serviceType: string): string {
     vpc: 'vpcGroup',
     subnet: 'privateSubnet',
     internetGateway: 'internetGateway',
+    natGateway: 'natGateway',
   }
   return TYPES_TO_ICON[serviceType] || serviceType
 }
