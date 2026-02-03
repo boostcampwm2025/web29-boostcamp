@@ -31,13 +31,11 @@ const DEFAULT_VALUES: CloudFrontWebsiteFormData = {
 interface CloudFrontWebsiteSettingsProps {
   config: CloudFrontWebsiteSettingsConfig
   onSubmit: (data: CloudFrontSubmitConfig) => void
-  buttonText?: string
 }
 
 export default function CloudFrontWebsiteSettings({
   config,
   onSubmit,
-  buttonText = 'CloudFront 설정 추가',
 }: CloudFrontWebsiteSettingsProps) {
   const { control, handleSubmit, setValue, reset } =
     useForm<CloudFrontWebsiteFormData>({
@@ -68,10 +66,6 @@ export default function CloudFrontWebsiteSettings({
       <ServiceTitle
         title="일반 설정 편집"
         description="Default Root Object 및 기타 웹사이트 설정을 구성하세요"
-        button={{
-          isDisabled: false,
-          buttonText,
-        }}
       />
 
       {config.defaultRootObject && (
@@ -93,6 +87,12 @@ export default function CloudFrontWebsiteSettings({
       {config.reviewSummary && (
         <ReviewSummarySection control={control} config={config} />
       )}
+
+      <div className="flex justify-end pt-4">
+        <Button type="submit" size="lg">
+          CloudFront 설정 추가
+        </Button>
+      </div>
     </form>
   )
 }
