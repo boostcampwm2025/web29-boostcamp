@@ -1,6 +1,8 @@
 import { ProblemTagBadge } from '../../../(list)/components/problem-tag-badge'
 import { LayersIcon } from 'lucide-react'
 
+import ReactMarkdown from 'react-markdown'
+
 interface UnitProblemHeaderProps {
   title: string
   descDetail: string
@@ -19,7 +21,9 @@ export function UnitProblemHeader({
           <LayersIcon className="bg-primary text-primary-foreground h-7 w-7 rounded-full p-1.5" />
           {title}
         </h1>
-        <p className="text-muted-foreground">{descDetail}</p>
+        <div className="text-muted-foreground">
+          <ReactMarkdown>{descDetail}</ReactMarkdown>
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2">

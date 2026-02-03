@@ -21,11 +21,14 @@ export type EC2SubmitConfig = {
 
   // Network settings
   vpcName?: string
+  vpcId?: string
+  subnetId?: string
   subnetName?: string
   autoAssignPublicIp?: boolean
   allowSSH?: boolean
   allowHTTPS?: boolean
   allowHTTP?: boolean
+  securityGroups?: string[]
 
   // Storage
   storageSize?: number

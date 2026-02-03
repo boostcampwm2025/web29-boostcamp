@@ -60,15 +60,22 @@ export class UnitValidationHandler implements ProblemValidationHandler {
       throw new Error('Unit 문제에는 networkTask가 필요하지 않습니다.');
     }
 
-    const solutionConfig = problemData.solution;
+    const solutionConfig = problemData.solution as Record<
+      string,
+      ServiceConfigTypes[]
+    >;
     const requirements = problemData.requirements || {};
 
     const mismatchedConfigs: Partial<UnitProblemValidateResult> = {};
 
     // 2. 서비스별 설정 비교 (Diffing)
+    const submitConfigRecord = submitConfig as unknown as Record<
+      string,
+      ServiceConfigTypes[]
+    >;
     for (const serviceKey in solutionConfig) {
       const diffResult = this.diffServiceConfigs(
-        submitConfig[serviceKey] || [],
+        submitConfigRecord[serviceKey] || [],
         solutionConfig[serviceKey] || [],
         serviceKey,
       );
@@ -115,6 +122,80 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     };
   }
 
+  private normalizeConfig(
+    config: ServiceConfigTypes,
+    serviceKey: string,
+  ): ServiceConfigTypes {
+    const refined = removeUndefined(config);
+    const record = refined as unknown as Record<string, unknown>;
+
+    if (serviceKey === 'routeTable') {
+      const routes = record['routes'];
+      if (Array.isArray(routes)) {
+        routes.sort(
+          (a: { destinationCidr?: string }, b: { destinationCidr?: string }) =>
+            (a.destinationCidr || '').localeCompare(b.destinationCidr || ''),
+        );
+      }
+      const associations = record['associations'];
+      if (Array.isArray(associations)) {
+        associations.sort(
+          (a: { subnetId?: string }, b: { subnetId?: string }) =>
+            (a.subnetId || '').localeCompare(b.subnetId || ''),
+        );
+      }
+    } else if (serviceKey === 'securityGroups') {
+      const ipPermissions = record['ipPermissions'];
+      if (Array.isArray(ipPermissions)) {
+        ipPermissions.sort(
+          (
+            a: { ipProtocol?: string; fromPort?: string; toPort?: string },
+            b: { ipProtocol?: string; fromPort?: string; toPort?: string },
+          ) => {
+            const check = (a.ipProtocol || '').localeCompare(
+              b.ipProtocol || '',
+            );
+            if (check !== 0) return check;
+
+            const fromPortA = parseInt(a.fromPort || '0', 10);
+            const fromPortB = parseInt(b.fromPort || '0', 10);
+            const check2 = fromPortA - fromPortB;
+            if (check2 !== 0) return check2;
+
+            const toPortA = parseInt(a.toPort || '0', 10);
+            const toPortB = parseInt(b.toPort || '0', 10);
+            return toPortA - toPortB;
+          },
+        );
+      }
+    } else if (serviceKey === 's3') {
+      const tags = record['tags'];
+      if (Array.isArray(tags)) {
+        tags.sort((a: { key?: string }, b: { key?: string }) =>
+          (a.key || '').localeCompare(b.key || ''),
+        );
+      }
+    } else if (serviceKey === 'nacl') {
+      const entries = record['entries'];
+      if (Array.isArray(entries)) {
+        entries.sort(
+          (a: { ruleNumber?: string }, b: { ruleNumber?: string }) => {
+            const numA = parseInt(a.ruleNumber || '0', 10);
+            const numB = parseInt(b.ruleNumber || '0', 10);
+            return numA - numB;
+          },
+        );
+      }
+    } else if (serviceKey === 'cloudFront') {
+      const cnames = record['cnames'];
+      if (Array.isArray(cnames)) {
+        (cnames as string[]).sort();
+      }
+    }
+
+    return refined;
+  }
+
   private diffServiceConfigs(
     answerConfigs: ServiceConfigTypes[],
     solutionConfigs: ServiceConfigTypes[],
@@ -124,21 +205,24 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     onlyInSolution: ServiceConfigTypes[];
   } {
     const refinedAnswerConfigs = answerConfigs.map((config) =>
-      removeUndefined(config),
+      this.normalizeConfig(config, serviceKey),
+    );
+    const normalizedSolutionConfigs = solutionConfigs.map((config) =>
+      this.normalizeConfig(config, serviceKey),
     );
 
     const matchedAnswerIndices = new Set<number>();
     const matchedSolutionIndices = new Set<number>();
 
     for (let i = 0; i < refinedAnswerConfigs.length; i++) {
-      for (let j = 0; j < solutionConfigs.length; j++) {
+      for (let j = 0; j < normalizedSolutionConfigs.length; j++) {
         if (matchedAnswerIndices.has(i)) break;
         if (matchedSolutionIndices.has(j)) continue;
 
         if (
           this.isConfigMatch(
             refinedAnswerConfigs[i],
-            solutionConfigs[j],
+            normalizedSolutionConfigs[j],
             serviceKey,
           )
         ) {
@@ -152,7 +236,7 @@ export class UnitValidationHandler implements ProblemValidationHandler {
       onlyInAnswer: refinedAnswerConfigs.filter(
         (_, i) => !matchedAnswerIndices.has(i),
       ),
-      onlyInSolution: solutionConfigs.filter(
+      onlyInSolution: normalizedSolutionConfigs.filter(
         (_, i) => !matchedSolutionIndices.has(i),
       ),
     };
@@ -168,6 +252,11 @@ export class UnitValidationHandler implements ProblemValidationHandler {
 
     if (isNetworkResource && hasCidr) {
       return this.isVPCorSubnetConfigMatch(answer, solution);
+    }
+
+    if (serviceKey === 'routeTable') {
+      // normalizeConfig가 이미 적용되어 있으므로 바로 비교
+      return this.isDeepEqual(answer, solution);
     }
 
     return this.isDeepEqual(answer, solution);
@@ -379,6 +468,7 @@ export class UnitValidationHandler implements ProblemValidationHandler {
         }
       }
 
+      // 순서 무관 비교를 위한 전처리 로직 제거 (이미 normalizeConfig 적용됨)
       if (!this.isDeepEqual(refindedSubmitted[key], solution[key])) {
         incorrectFields.push(key);
       }
@@ -423,8 +513,8 @@ export class UnitValidationHandler implements ProblemValidationHandler {
 
     if (Array.isArray(obj1) || Array.isArray(obj2)) return false;
 
-    const o1 = obj1 as Record<string, unknown>;
-    const o2 = obj2 as Record<string, unknown>;
+    const o1 = removeUndefined(obj1) as Record<string, unknown>;
+    const o2 = removeUndefined(obj2) as Record<string, unknown>;
     const keys1 = Object.keys(o1);
     const keys2 = Object.keys(o2);
 

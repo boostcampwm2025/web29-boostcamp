@@ -25,6 +25,7 @@ export interface EC2InstanceFormData {
     allowSSH: boolean
     allowHTTPS: boolean
     allowHTTP: boolean
+    securityGroups?: string[]
   }
   storage: {
     size: number

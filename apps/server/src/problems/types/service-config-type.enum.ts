@@ -19,7 +19,13 @@ export class EC2Config {
   name: string;
 
   @IsString()
+  vpcId: string;
+
+  @IsString()
   vpcName: string;
+
+  @IsString()
+  subnetId: string;
 
   @IsString()
   subnetName: string;
@@ -71,6 +77,11 @@ export class EC2Config {
   @IsString()
   @IsOptional()
   userData?: string;
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  securityGroups?: string[];
 }
 
 export class VPCConfig {
@@ -139,7 +150,13 @@ export class SecurityGroupsConfig {
   name: string;
 
   @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SGRules)
   ipPermissions: SGRules[];
+
+  @IsString()
+  @IsOptional()
+  description?: string;
 }
 
 export class S3Config {
@@ -222,11 +239,17 @@ export class RouteTableEntry {
 
   @IsString()
   targetGatewayId: string;
+
+  @IsString()
+  targetGatewayName: string;
 }
 
 export class RouteTableAssociation {
   @IsString()
   subnetId: string;
+
+  @IsString()
+  subnetName: string;
 }
 
 export class RouteTableConfig {
@@ -243,9 +266,13 @@ export class RouteTableConfig {
   name: string;
 
   @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => RouteTableEntry)
   routes: RouteTableEntry[];
 
   @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => RouteTableAssociation)
   associations: RouteTableAssociation[]; // Subnet IDs
 }
 
@@ -463,4 +490,5 @@ export type ServiceConfigTypes =
   | SecurityGroupsConfig
   | S3Config
   | InternetGatewayConfig
-  | CloudFrontConfig;
+  | CloudFrontConfig
+  | NATGatewayConfig;
