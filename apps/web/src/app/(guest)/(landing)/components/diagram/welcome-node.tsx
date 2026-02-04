@@ -14,12 +14,12 @@ import { Handle, Position } from '@xyflow/react'
 
 export const WelcomeNode = memo(() => {
   return (
-    <BaseNode className="hover:ring-primary w-md rounded-2xl">
+    <BaseNode className="hover:ring-primary w-130 rounded-2xl">
       <BaseNodeHeader className="rounded-t-2xl border-b bg-white/90 pl-5 backdrop-blur-xl supports-backdrop-filter:bg-white/90">
         <BaseNodeHeaderTitle>welcome</BaseNodeHeaderTitle>
       </BaseNodeHeader>
       <BaseNodeContent className="p-6">
-        <h3 className="text-3xl font-bold">
+        <h3 className="text-4xl font-bold">
           <span className="text-primary">클라우드</span>를 이해하며
           <br /> 직접 구성해보세요
         </h3>
