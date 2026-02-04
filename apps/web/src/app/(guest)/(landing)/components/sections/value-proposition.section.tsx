@@ -56,7 +56,7 @@ const cardVariants = {
       ease: 'easeOut',
     },
   },
-}
+} as const
 
 export const ValuePropositionSection = () => {
   return (
