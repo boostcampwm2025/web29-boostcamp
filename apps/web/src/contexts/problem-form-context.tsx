@@ -54,6 +54,7 @@ interface ProblemFormContextValue<T extends FieldValues = FieldValues> {
   edges: Edge[]
   setNodes: Dispatch<SetStateAction<Node[]>>
   setEdges: Dispatch<SetStateAction<Edge[]>>
+  addAwsResource: (payload: ServiceConfig) => void
 }
 
 const ProblemFormContext = createContext<ProblemFormContextValue | null>(null)
@@ -109,8 +110,25 @@ export function ProblemFormProvider<T extends FieldValues>({
     useSolutionDialog()
 
   // 리소스 구성 상태
-  const [submitConfig, setSubmitConfig] =
-    useState<GlobalSubmitConfig>(defaultConfigs)
+  const [submitConfig, setSubmitConfig] = useState<GlobalSubmitConfig>(() => {
+    // defaultConfigs에 있는 모든 항목에 isDefault: true 부여
+    if (!defaultConfigs) return {}
+
+    const markedConfig: Record<string, ServiceConfigItem<ServiceConfig>[]> = {}
+
+    ;(Object.keys(defaultConfigs) as Array<keyof GlobalSubmitConfig>).forEach(
+      (key) => {
+        const items = defaultConfigs[key] as ServiceConfigItem<ServiceConfig>[]
+        if (Array.isArray(items)) {
+          markedConfig[key] = items.map((item) => ({
+            ...item,
+            isDefault: true,
+          }))
+        }
+      },
+    )
+    return markedConfig as unknown as GlobalSubmitConfig
+  })
 
   // 다이어그램 상태
   const [nodes, setNodes] = useState<Node[]>(initialNodes)
@@ -135,7 +153,7 @@ export function ProblemFormProvider<T extends FieldValues>({
 
     // 초기화 완료 표시
     isInitialized.current = true
-  }, [])
+  }, [buildInitialNodes, defaultConfigs])
 
   // 다이어그램 로직 훅
   const { addAwsResource } = useAwsDiagramLogic(nodes, setNodes, setEdges)
@@ -179,6 +197,17 @@ export function ProblemFormProvider<T extends FieldValues>({
   // 리소스 삭제 핸들러
   const handleRemoveItem = useCallback(
     (type: ServiceType, id: string) => {
+      // 1. 먼저 현재 상태에서 아이템 확인
+      const currentList = submitConfig[type] || []
+      const targetItem = currentList.find((item) => item.id === id)
+
+      // 2. 기본 리소스면 삭제 방지 및 조기 리턴
+      if (targetItem?.isDefault) {
+        alert('기본 제공된 리소스는 삭제할 수 없습니다.')
+        return
+      }
+
+      // 3. 실제 삭제 진행
       setSubmitConfig((prev) => ({
         ...prev,
         [type]: (prev[type] || []).filter((item) => item.id !== id),
@@ -191,7 +220,7 @@ export function ProblemFormProvider<T extends FieldValues>({
         description: `"${id}" 리소스가 삭제되었습니다.`,
       })
     },
-    [setNodes, setSubmitConfig],
+    [showFeedback, setNodes, setSubmitConfig, submitConfig],
   )
 
   // 제출 핸들러
@@ -213,22 +242,38 @@ export function ProblemFormProvider<T extends FieldValues>({
 
     try {
       const result = await submitProblemSolution(String(unitId), finalConfig)
-
       setFeedback(result.feedback || [])
       openModal(result.result)
     } catch (error) {
       console.error('Failed to submit problem:', error)
     }
   }, [submitConfig, openModal, unitId])
+
+  type ResultDialogVariant = 'DEFAULT' | 'COOKBOOK_LAST_UNIT'
+
+  const isLastCookbookUnit = problemType === 'cookbook' && !nextUnitId
+  const dialogVariant: ResultDialogVariant = isLastCookbookUnit
+    ? 'COOKBOOK_LAST_UNIT'
+    : 'DEFAULT'
+
   // Navigation 핸들러 - problemType에 따라 분기
   const onNavigationConfirm = useCallback(() => {
     if (problemType === 'unit') {
       handleNavigation('unit', '')
     } else if (problemType === 'cookbook') {
-      // cookbook인 경우 nextUnitId가 있으면 같은 cookbook의 다음 unit으로, 없으면 목록으로
-      handleNavigation('cookbook', `${cookbookId}?unitId=${nextUnitId}`)
+      if (isLastCookbookUnit) {
+        handleNavigation('cookbook', '')
+      } else {
+        handleNavigation('cookbook', `${cookbookId}?unitId=${nextUnitId}`)
+      }
     }
-  }, [problemType, nextUnitId, cookbookId, handleNavigation])
+  }, [
+    problemType,
+    nextUnitId,
+    cookbookId,
+    handleNavigation,
+    isLastCookbookUnit,
+  ])
 
   const contextValue = useMemo(
     () => ({
@@ -244,6 +289,7 @@ export function ProblemFormProvider<T extends FieldValues>({
       edges,
       setNodes,
       setEdges,
+      addAwsResource,
     }),
     [
       methods,
@@ -256,6 +302,7 @@ export function ProblemFormProvider<T extends FieldValues>({
       handleRemoveItem,
       nodes,
       edges,
+      addAwsResource,
     ],
   )
 
@@ -267,6 +314,7 @@ export function ProblemFormProvider<T extends FieldValues>({
       <ResultDialog
         isOpen={isModalOpen}
         status={status}
+        variant={dialogVariant}
         onClose={closeModal}
         onConfirm={onNavigationConfirm}
       />

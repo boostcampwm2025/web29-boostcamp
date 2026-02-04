@@ -3,7 +3,7 @@
 import { ServiceForm } from './service-form'
 import { ServiceTabs } from './service-tabs'
 
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 
 import { type IServiceMapper } from '@/components/aws-services/utils/serviceMapper'
 import { cn } from '@/lib/utils'
@@ -15,7 +15,7 @@ interface ProblemFormContentProps {
 export function ProblemFormContent({ problemData }: ProblemFormContentProps) {
   const [currTask, setCurrTask] = useState(problemData[0].serviceTask)
 
-  const uniqueTasks = React.useMemo(() => {
+  const uniqueTasks = useMemo(() => {
     return problemData.filter(
       (item, index, self) =>
         self.findIndex(
@@ -42,7 +42,6 @@ export function ProblemFormContent({ problemData }: ProblemFormContentProps) {
             current={currTask}
             onChange={handleTaskChange}
           />
-          <div className="m-0 flex-1 border-b" />
         </div>
       )}
 

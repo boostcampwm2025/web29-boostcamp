@@ -34,6 +34,7 @@ export const AWS_RESOURCE_ICONS = {
   user: '/icons/aws/resources/user.svg',
   users: '/icons/aws/resources/users.svg',
   client: '/icons/aws/resources/client.svg',
+  natGateway: '/icons/aws/resources/nat-gateway.svg',
 } as const
 
 // 그룹 아이콘 (32px) - 컨테이너/구조적 요소용

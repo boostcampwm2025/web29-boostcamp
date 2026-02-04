@@ -97,6 +97,53 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
     webAclId: 'DONT_CARE',
   };
 
+  const vpcDontCareConfig = {
+    id: 'DONT_CARE',
+    name: 'DONT_CARE',
+    cidrBlock: 'DONT_CARE',
+    tenancy: 'DONT_CARE',
+    tags: 'DONT_CARE',
+  };
+
+  const subnetDontCareConfig = {
+    id: 'DONT_CARE',
+    name: 'DONT_CARE',
+    vpcId: 'DONT_CARE',
+    vpcName: 'DONT_CARE',
+    cidrBlock: 'DONT_CARE',
+    availabilityZone: 'DONT_CARE',
+    mapPublicIpOnLaunch: 'DONT_CARE',
+  };
+
+  const internetGatewayDontCareConfig = {
+    id: 'DONT_CARE',
+    name: 'DONT_CARE',
+    vpcId: 'DONT_CARE',
+    vpcName: 'DONT_CARE',
+    tags: 'DONT_CARE',
+  };
+
+  const natGatewayDontCareConfig = {
+    id: 'DONT_CARE',
+    name: 'DONT_CARE',
+    vpcId: 'DONT_CARE',
+    vpcName: 'DONT_CARE',
+    subnetId: 'DONT_CARE',
+    subnetName: 'DONT_CARE',
+    allocationId: 'DONT_CARE',
+    tags: 'DONT_CARE',
+  };
+
+  const routeTableDontCareConfig = {
+    id: 'DONT_CARE',
+    name: 'DONT_CARE',
+    vpcId: 'DONT_CARE',
+    vpcName: 'DONT_CARE',
+    routes: 'DONT_CARE',
+    associations: 'DONT_CARE',
+    tags: 'DONT_CARE',
+  };
+
   const solutions = [
     {
       problem: problems[0], // 로그 저장용 S3 버킷 생성
@@ -185,6 +232,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         vpc: [
           {
+            ...vpcDontCareConfig,
             id: 'cloud-craft-vpc',
             name: 'cloud-craft-vpc',
             cidrBlock: '10.0.0.0/16',
@@ -198,6 +246,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         vpc: [
           {
+            ...vpcDontCareConfig,
             id: 'cloud-craft-vpc',
             name: 'cloud-craft-vpc',
             cidrBlock: '10.0.0.0/16',
@@ -206,6 +255,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         internetGateway: [
           {
+            ...internetGatewayDontCareConfig,
             id: 'cloud-craft-igw',
             name: 'cloud-craft-igw',
             vpcId: 'cloud-craft-vpc',
@@ -219,6 +269,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         vpc: [
           {
+            ...vpcDontCareConfig,
             id: 'cloud-craft-vpc',
             name: 'cloud-craft-vpc',
             cidrBlock: '10.0.0.0/16',
@@ -227,6 +278,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         subnet: [
           {
+            ...subnetDontCareConfig,
             id: 'cloud-craft-public-subnet',
             name: 'cloud-craft-public-subnet',
             vpcId: 'cloud-craft-vpc',
@@ -236,6 +288,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         internetGateway: [
           {
+            ...internetGatewayDontCareConfig,
             id: 'cloud-craft-igw',
             name: 'cloud-craft-igw',
             vpcId: 'cloud-craft-vpc',
@@ -250,6 +303,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         vpc: [
           {
+            ...vpcDontCareConfig,
             id: 'cloud-craft-vpc',
             name: 'cloud-craft-vpc',
             cidrBlock: '10.0.0.0/16',
@@ -258,6 +312,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         internetGateway: [
           {
+            ...internetGatewayDontCareConfig,
             id: 'cloud-craft-igw',
             name: 'cloud-craft-igw',
             vpcId: 'cloud-craft-vpc',
@@ -266,6 +321,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         subnet: [
           {
+            ...subnetDontCareConfig,
             id: 'cloud-craft-public-subnet',
             name: 'cloud-craft-public-subnet',
             vpcId: 'cloud-craft-vpc',
@@ -275,6 +331,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         routeTable: [
           {
+            ...routeTableDontCareConfig,
             id: 'cloud-craft-public-rt',
             name: 'cloud-craft-public-rt',
             vpcId: 'cloud-craft-vpc',
@@ -306,6 +363,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         vpc: [
           {
+            ...vpcDontCareConfig,
             id: 'cloud-craft-vpc',
             name: 'cloud-craft-vpc',
             cidrBlock: '10.0.0.0/16',
@@ -314,6 +372,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         internetGateway: [
           {
+            ...internetGatewayDontCareConfig,
             id: 'cloud-craft-igw',
             name: 'cloud-craft-igw',
             vpcId: 'cloud-craft-vpc',
@@ -322,6 +381,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         subnet: [
           {
+            ...subnetDontCareConfig,
             id: 'cloud-craft-public-subnet',
             name: 'cloud-craft-public-subnet',
             vpcId: 'cloud-craft-vpc',
@@ -331,6 +391,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         routeTable: [
           {
+            ...routeTableDontCareConfig,
             id: 'cloud-craft-public-rt',
             name: 'cloud-craft-public-rt',
             vpcId: 'cloud-craft-vpc',
@@ -374,6 +435,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         vpc: [
           {
+            ...vpcDontCareConfig,
             id: 'cloud-craft-vpc',
             name: 'cloud-craft-vpc',
             cidrBlock: '10.0.0.0/16',
@@ -382,6 +444,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         subnet: [
           {
+            ...subnetDontCareConfig,
             id: 'cloud-craft-public-subnet',
             name: 'cloud-craft-public-subnet',
             vpcId: 'cloud-craft-vpc',
@@ -391,6 +454,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         natGateway: [
           {
+            ...natGatewayDontCareConfig,
             id: 'cloud-craft-nat',
             name: 'cloud-craft-nat',
             vpcId: 'cloud-craft-vpc',
@@ -406,6 +470,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         vpc: [
           {
+            ...vpcDontCareConfig,
             id: 'cloud-craft-vpc',
             name: 'cloud-craft-vpc',
             cidrBlock: '10.0.0.0/16',
@@ -445,6 +510,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         vpc: [
           {
+            ...vpcDontCareConfig,
             id: 'secure-vpc',
             name: 'secure-vpc',
             cidrBlock: '10.1.0.0/16',
@@ -458,6 +524,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         vpc: [
           {
+            ...vpcDontCareConfig,
             id: 'secure-vpc',
             name: 'secure-vpc',
             cidrBlock: '10.1.0.0/16',
@@ -466,6 +533,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         subnet: [
           {
+            ...subnetDontCareConfig,
             id: 'secure-public-subnet',
             name: 'secure-public-subnet',
             vpcId: 'secure-vpc',
@@ -473,6 +541,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
             cidrBlock: '10.1.1.0/24',
           },
           {
+            ...subnetDontCareConfig,
             id: 'secure-private-subnet',
             name: 'secure-private-subnet',
             vpcId: 'secure-vpc',
@@ -487,6 +556,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         vpc: [
           {
+            ...vpcDontCareConfig,
             id: 'secure-vpc',
             name: 'secure-vpc',
             cidrBlock: '10.1.0.0/16',
@@ -495,6 +565,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         subnet: [
           {
+            ...subnetDontCareConfig,
             id: 'secure-public-subnet',
             name: 'secure-public-subnet',
             vpcId: 'secure-vpc',
@@ -502,6 +573,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
             cidrBlock: '10.1.1.0/24',
           },
           {
+            ...subnetDontCareConfig,
             id: 'secure-private-subnet',
             name: 'secure-private-subnet',
             vpcId: 'secure-vpc',
@@ -511,6 +583,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         internetGateway: [
           {
+            ...internetGatewayDontCareConfig,
             id: 'secure-igw',
             name: 'secure-igw',
             vpcId: 'secure-vpc',
@@ -524,6 +597,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         vpc: [
           {
+            ...vpcDontCareConfig,
             id: 'secure-vpc',
             name: 'secure-vpc',
             cidrBlock: '10.1.0.0/16',
@@ -532,6 +606,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         subnet: [
           {
+            ...subnetDontCareConfig,
             id: 'secure-public-subnet',
             name: 'secure-public-subnet',
             vpcId: 'secure-vpc',
@@ -539,6 +614,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
             cidrBlock: '10.1.1.0/24',
           },
           {
+            ...subnetDontCareConfig,
             id: 'secure-private-subnet',
             name: 'secure-private-subnet',
             vpcId: 'secure-vpc',
@@ -548,6 +624,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         internetGateway: [
           {
+            ...internetGatewayDontCareConfig,
             id: 'secure-igw',
             name: 'secure-igw',
             vpcId: 'secure-vpc',
@@ -556,6 +633,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         routeTable: [
           {
+            ...routeTableDontCareConfig,
             id: 'secure-public-rt',
             name: 'secure-public-rt',
             vpcId: 'secure-vpc',
@@ -587,6 +665,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         vpc: [
           {
+            ...vpcDontCareConfig,
             id: 'secure-vpc',
             name: 'secure-vpc',
             cidrBlock: '10.1.0.0/16',
@@ -595,6 +674,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         subnet: [
           {
+            ...subnetDontCareConfig,
             id: 'secure-public-subnet',
             name: 'secure-public-subnet',
             vpcId: 'secure-vpc',
@@ -602,6 +682,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
             cidrBlock: '10.1.1.0/24',
           },
           {
+            ...subnetDontCareConfig,
             id: 'secure-private-subnet',
             name: 'secure-private-subnet',
             vpcId: 'secure-vpc',
@@ -611,6 +692,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         internetGateway: [
           {
+            ...internetGatewayDontCareConfig,
             id: 'secure-igw',
             name: 'secure-igw',
             vpcId: 'secure-vpc',
@@ -619,6 +701,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         natGateway: [
           {
+            ...natGatewayDontCareConfig,
             id: 'secure-nat',
             name: 'secure-nat',
             vpcId: 'secure-vpc',
@@ -629,6 +712,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         routeTable: [
           {
+            ...routeTableDontCareConfig,
             // Public RT check (to ensure it persists)
             id: 'secure-public-rt',
             name: 'secure-public-rt',
@@ -654,6 +738,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
             ],
           },
           {
+            ...routeTableDontCareConfig,
             id: 'secure-private-rt',
             name: 'secure-private-rt',
             vpcId: 'secure-vpc',
@@ -685,6 +770,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       answerConfig: {
         vpc: [
           {
+            ...vpcDontCareConfig,
             id: 'secure-vpc',
             name: 'secure-vpc',
             cidrBlock: '10.1.0.0/16',
@@ -693,6 +779,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         subnet: [
           {
+            ...subnetDontCareConfig,
             id: 'secure-public-subnet',
             name: 'secure-public-subnet',
             vpcId: 'secure-vpc',
@@ -700,6 +787,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
             cidrBlock: '10.1.1.0/24',
           },
           {
+            ...subnetDontCareConfig,
             id: 'secure-private-subnet',
             name: 'secure-private-subnet',
             vpcId: 'secure-vpc',
@@ -709,6 +797,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         internetGateway: [
           {
+            ...internetGatewayDontCareConfig,
             id: 'secure-igw',
             name: 'secure-igw',
             vpcId: 'secure-vpc',
@@ -717,6 +806,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         natGateway: [
           {
+            ...natGatewayDontCareConfig,
             id: 'secure-nat',
             name: 'secure-nat',
             vpcId: 'secure-vpc',
@@ -727,6 +817,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         ],
         routeTable: [
           {
+            ...routeTableDontCareConfig,
             // Public RT check (to ensure it persists)
             id: 'secure-public-rt',
             name: 'secure-public-rt',
@@ -752,6 +843,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
             ],
           },
           {
+            ...routeTableDontCareConfig,
             id: 'secure-private-rt',
             name: 'secure-private-rt',
             vpcId: 'secure-vpc',
@@ -794,18 +886,18 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
             ],
           },
         ],
-        ec2: [
-          {
-            ...ec2DontCareConfig,
-            id: 'secure-db-server',
-            name: 'secure-db-server',
-            vpcId: 'secure-vpc',
-            vpcName: 'secure-vpc',
-            subnetId: 'secure-private-subnet',
-            subnetName: 'secure-private-subnet',
-          },
-        ],
       },
+      ec2: [
+        {
+          ...ec2DontCareConfig,
+          id: 'secure-db-server',
+          name: 'secure-db-server',
+          vpcId: 'secure-vpc',
+          vpcName: 'secure-vpc',
+          subnetId: 'secure-private-subnet',
+          subnetName: 'secure-private-subnet',
+        },
+      ],
     },
     // Solutions for High Availability Cookbook (Multi-AZ)
     {

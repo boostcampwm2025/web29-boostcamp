@@ -5,7 +5,7 @@ import { SubmitButton } from './submit-button'
 
 export const ProblemRightSection = () => {
   return (
-    <section className="w-full">
+    <section className="sticky top-20 w-full shrink-0 space-y-6 self-start">
       <div className="flex flex-col gap-4">
         <DiagramPanel />
         <CreatedResourcePanel />

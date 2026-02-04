@@ -8,10 +8,10 @@ import {
   GlobeIcon,
   LayersIcon,
   NetworkIcon,
-  RotateCcwIcon,
   RouteIcon,
   ServerIcon,
   ShieldCheckIcon,
+  Trash2Icon,
   ZapIcon,
 } from 'lucide-react'
 
@@ -137,16 +137,16 @@ export const CreatedResourcePanel = () => {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 h-7 w-7 opacity-0 transition-all group-hover:opacity-100"
+                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 h-7 w-7 transition-all"
                         onClick={() =>
                           handleRemoveItem(
                             serviceType as keyof typeof submitConfig,
                             item.id,
                           )
                         }
-                        title="취소"
+                        title="제거"
                       >
-                        <RotateCcwIcon className="h-3.5 w-3.5" />
+                        <Trash2Icon className="h-3.5 w-3.5" />
                       </Button>
                     </div>
                   )

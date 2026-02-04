@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 
 export const HeroSection = () => {
   return (
-    <section className="grid grid-cols-1 gap-8 py-16 lg:grid-cols-2 lg:items-center">
+    <section className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 py-16 lg:grid-cols-2 lg:items-center">
       <div>
         <AppSquareIcon width={100} height={100} />
         <p className="mt-8 text-3xl leading-10 font-bold">

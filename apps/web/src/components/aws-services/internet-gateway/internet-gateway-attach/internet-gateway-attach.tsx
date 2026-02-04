@@ -20,7 +20,7 @@ interface InternetGatewayAttachProps {
 export default function InternetGatewayAttach({
   onAfterSubmit,
 }: InternetGatewayAttachProps) {
-  const { submitConfig, setSubmitConfig } = useProblemForm()
+  const { submitConfig, setSubmitConfig, addAwsResource } = useProblemForm()
 
   // 1. 데이터 가공 (Transformation)
   // ServiceConfigItem<{...}>[] 형태를 순수 Config[] 형태로 변환합니다.
@@ -53,7 +53,22 @@ export default function InternetGatewayAttach({
   })
 
   const handleFormSubmit = handleSubmit((data) => {
-    // 2. 전역 상태 업데이트
+    // 2. 다이어그램 업데이트
+    const targetIgw = (submitConfig.internetGateway || []).find(
+      (item) => item.id === data.internetGatewayId,
+    )
+    if (targetIgw) {
+      const vpcName =
+        vpcList.find((v) => v.id === data.vpcId)?.name || data.vpcId
+      const updatedPayload = {
+        ...targetIgw.data,
+        vpcId: data.vpcId,
+        vpcName,
+      }
+      addAwsResource(updatedPayload)
+    }
+
+    // 3. 전역 상태 업데이트
     setSubmitConfig((prev) => {
       if (!prev.internetGateway) return prev
 
