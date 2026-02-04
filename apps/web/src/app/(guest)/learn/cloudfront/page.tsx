@@ -11,7 +11,7 @@ export default function CloudFrontPage() {
           </p>
         </div>
 
-        <SectionContainer>
+        <SectionContainer title="CloudFront 가이드">
           <div className="space-y-6">
             <div>
               <h2 className="mb-3 text-2xl font-semibold">CloudFront란?</h2>
