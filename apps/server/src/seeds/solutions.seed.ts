@@ -102,7 +102,6 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
     name: 'DONT_CARE',
     cidrBlock: 'DONT_CARE',
     tenancy: 'DONT_CARE',
-    tags: 'DONT_CARE',
   };
 
   const subnetDontCareConfig = {
@@ -112,7 +111,6 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
     vpcName: 'DONT_CARE',
     cidrBlock: 'DONT_CARE',
     availabilityZone: 'DONT_CARE',
-    mapPublicIpOnLaunch: 'DONT_CARE',
   };
 
   const internetGatewayDontCareConfig = {
@@ -120,7 +118,6 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
     name: 'DONT_CARE',
     vpcId: 'DONT_CARE',
     vpcName: 'DONT_CARE',
-    tags: 'DONT_CARE',
   };
 
   const natGatewayDontCareConfig = {
@@ -130,8 +127,6 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
     vpcName: 'DONT_CARE',
     subnetId: 'DONT_CARE',
     subnetName: 'DONT_CARE',
-    allocationId: 'DONT_CARE',
-    tags: 'DONT_CARE',
   };
 
   const routeTableDontCareConfig = {
@@ -141,7 +136,6 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
     vpcName: 'DONT_CARE',
     routes: 'DONT_CARE',
     associations: 'DONT_CARE',
-    tags: 'DONT_CARE',
   };
 
   const solutions = [
