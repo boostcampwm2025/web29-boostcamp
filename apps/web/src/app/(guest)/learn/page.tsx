@@ -13,7 +13,7 @@ export default function LearnPage() {
           </p>
         </div>
 
-        <SectionContainer>
+        <SectionContainer title="시작하기">
           <div className="space-y-4">
             <h2 className="text-2xl font-bold">시작하기</h2>
             <p className="leading-relaxed text-gray-700 dark:text-gray-300">
@@ -37,7 +37,7 @@ export default function LearnPage() {
           </div>
         </SectionContainer>
 
-        <SectionContainer>
+        <SectionContainer title="직접 실습해보세요!">
           <div className="space-y-4 text-center">
             <h2 className="text-2xl font-bold">직접 실습해보세요!</h2>
             <p className="text-muted-foreground">
