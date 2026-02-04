@@ -35,27 +35,23 @@ export default function UnitProblemClient({
   )
 
   return (
-    <>
-      <UnitProblemHeader title={title} descDetail={descDetail} tags={tags} />
+    <ProblemFormProvider
+      defaultValues={defaultValues}
+      unitId={unitId}
+      problemType="unit"
+      defaultConfigs={defaultConfigs}
+    >
+      <div className="grid grid-cols-2 gap-4">
+        <ProblemLeftSection problemData={problemData}>
+          <UnitProblemHeader
+            title={title}
+            descDetail={descDetail}
+            tags={tags}
+          />
+        </ProblemLeftSection>
 
-      <ProblemFormProvider
-        defaultValues={defaultValues}
-        unitId={unitId}
-        problemType="unit"
-        defaultConfigs={defaultConfigs}
-      >
-        <div className="grid grid-cols-2 gap-4">
-          <ProblemLeftSection problemData={problemData}>
-            <UnitProblemHeader
-              title={title}
-              descDetail={descDetail}
-              tags={tags}
-            />
-          </ProblemLeftSection>
-
-          <ProblemRightSection />
-        </div>
-      </ProblemFormProvider>
-    </>
+        <ProblemRightSection />
+      </div>
+    </ProblemFormProvider>
   )
 }
