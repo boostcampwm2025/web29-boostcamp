@@ -1,32 +1,90 @@
-import Link from 'next/link'
+'use client'
 
-import AwsDiagram from '@/components/aws-diagram'
-import { AppSquareIcon } from '@/components/icons/app-square.icon'
-import { Button } from '@/components/ui/button'
+import { ConceptNode, ProblemNode, WelcomeNode } from '../diagram'
+
+import { Background, FitViewOptions, ReactFlow } from '@xyflow/react'
+import '@xyflow/react/dist/style.css'
 
 export const HeroSection = () => {
   return (
-    <section className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 py-16 lg:grid-cols-2 lg:items-center">
-      <div>
-        <AppSquareIcon width={100} height={100} />
-        <p className="mt-8 text-3xl leading-10 font-bold">
-          시각적으로 이해하는 <br /> AWS 클라우드 인프라 학습 플랫폼
-        </p>
-        <p className="text-muted-foreground mt-6 text-lg">
-          안전한 샌드박스 환경에서 실습하며 배우는 가장 효과적인 클라우드 학습
-          플랫폼입니다.
-        </p>
-
-        <div className="mt-6 flex gap-2">
-          <Button asChild>
-            <Link href="/problems?type=unit">문제 풀기 시작하기</Link>
-          </Button>
-        </div>
-      </div>
-
-      <div id="xyflow" className="h-100">
-        <AwsDiagram />
-      </div>
+    <section className="h-[calc(100vh-10.5rem)] w-full">
+      <LandingDiagram />
     </section>
+  )
+}
+
+const LandingDiagram = () => {
+  const nodeTypes = {
+    welcomeNode: WelcomeNode,
+    conceptNode: ConceptNode,
+    problemNode: ProblemNode,
+  }
+
+  const defaultNodes = [
+    {
+      id: 'welcome',
+      position: { x: 220, y: 200 },
+      data: {},
+      type: 'welcomeNode',
+    },
+    {
+      id: 'concept',
+      position: { x: 1200, y: 100 },
+      data: {},
+      type: 'conceptNode',
+    },
+    {
+      id: 'problem',
+      position: { x: 920, y: 360 },
+      data: {},
+      type: 'problemNode',
+    },
+  ]
+
+  const defaultEdges = [
+    {
+      id: 'e-welcome-concept',
+      source: 'welcome',
+      target: 'concept',
+      animated: true,
+    },
+    {
+      id: 'e-welcome-problem',
+      source: 'welcome',
+      target: 'problem',
+      animated: true,
+    },
+  ]
+
+  const fitViewOptions: FitViewOptions = {
+    padding: '150px',
+  }
+
+  return (
+    <div className="relative h-[calc(100vh-10.5rem)] w-full overflow-hidden">
+      <DiagramGradient />
+
+      <ReactFlow
+        defaultNodes={defaultNodes}
+        defaultEdges={defaultEdges}
+        nodeTypes={nodeTypes}
+        fitView
+        fitViewOptions={fitViewOptions}
+        panOnDrag={false}
+        zoomOnScroll={false}
+        preventScrolling={false}
+        proOptions={{ hideAttribution: true }}
+      >
+        <Background />
+      </ReactFlow>
+    </div>
+  )
+}
+
+const DiagramGradient = () => {
+  return (
+    <div className="pointer-events-none absolute inset-0">
+      <div className="absolute inset-0 bg-[radial-gradient(40%_80%_at_30%_50%,rgba(100,147,242,0.22),transparent_70%)]" />
+    </div>
   )
 }
