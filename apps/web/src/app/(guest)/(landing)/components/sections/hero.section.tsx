@@ -23,7 +23,7 @@ const LandingDiagram = () => {
   const defaultNodes = [
     {
       id: 'welcome',
-      position: { x: 200, y: 200 },
+      position: { x: 220, y: 200 },
       data: {},
       type: 'welcomeNode',
     },
@@ -35,7 +35,7 @@ const LandingDiagram = () => {
     },
     {
       id: 'problem',
-      position: { x: 900, y: 360 },
+      position: { x: 920, y: 360 },
       data: {},
       type: 'problemNode',
     },
@@ -84,7 +84,7 @@ const LandingDiagram = () => {
 const DiagramGradient = () => {
   return (
     <div className="pointer-events-none absolute inset-0">
-      <div className="absolute inset-0 bg-[radial-gradient(40%_80%_at_30%_50%,rgba(99,102,241,0.22),transparent_70%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(40%_80%_at_30%_50%,rgba(100,147,242,0.22),transparent_70%)]" />
     </div>
   )
 }
