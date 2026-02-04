@@ -216,15 +216,14 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
       descDetail: {
         overview:
           '보안 그룹은 EC2 인스턴스의 가상 방화벽 역할을 합니다. 웹 서버를 외부에서 접근하려면 HTTP(80) 포트를 인바운드 규칙에 추가해야 합니다.',
-        prerequisities:
-          '- VPC가 이미 존재: default-vpc\n- EC2 인스턴스가 이미 존재: web-server',
+        prerequisities: '- VPC가 이미 존재: default-vpc',
         learningObjectives:
           '1. 보안 그룹의 역할 이해\n2. 인바운드 규칙 추가 방법\n3. 포트와 소스 IP 설정',
       },
       requiredFields: [
         {
-          serviceName: 'ec2',
-          serviceTask: 'securityGroupCreate',
+          serviceName: 'securityGroups',
+          serviceTask: 'securityGroupsCreate',
           serviceSections: ['basicInfo', 'inboundRules'],
           fixedOptions: [
             {
