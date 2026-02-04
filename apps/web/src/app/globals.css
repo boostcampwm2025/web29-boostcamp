@@ -196,3 +196,13 @@
   font-family: var(--font-mono);
   font-weight: 600;
 }
+
+.markdown-content em,
+.markdown-content i {
+  font-style: italic;
+}
+
+.markdown-content strong,
+.markdown-content b {
+  font-weight: 700;
+}
