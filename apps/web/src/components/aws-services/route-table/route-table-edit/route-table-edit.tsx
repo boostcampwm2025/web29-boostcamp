@@ -1,6 +1,7 @@
 'use client'
 
 import { RoutesEditor, SubnetAssociations } from './sections'
+import { toast } from 'sonner'
 
 import { useEffect, useMemo } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -15,7 +16,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useActionFeedback } from '@/contexts/action-feedback-context'
 import { useProblemForm } from '@/contexts/problem-form-context'
 import { getRouteTables } from '@/lib/get-route-tables'
 import type {
@@ -29,7 +29,6 @@ interface RouteTableEditProps {
 
 export default function RouteTableEdit({ onAfterSubmit }: RouteTableEditProps) {
   const { submitConfig, setSubmitConfig } = useProblemForm()
-  const { showFeedback } = useActionFeedback()
 
   // 1. 필요한 데이터 목록 가져오기 (RouteTable, VPC, Subnet)
   const routeTableItems = getRouteTables(submitConfig)
@@ -138,10 +137,8 @@ export default function RouteTableEdit({ onAfterSubmit }: RouteTableEditProps) {
       }
     })
 
-    showFeedback({
-      title: '변경사항 저장 완료',
-      message: `라우팅 테이블(${data.selectedRouteTableId})의 규칙 및 연결이 업데이트되었습니다.`,
-      type: 'success',
+    toast.success('변경사항 저장 완료', {
+      description: `라우팅 테이블(${data.selectedRouteTableId})의 규칙 및 연결이 업데이트되었습니다.`,
     })
 
     reset(data)

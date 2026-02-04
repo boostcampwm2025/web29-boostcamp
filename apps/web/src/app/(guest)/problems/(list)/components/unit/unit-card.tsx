@@ -25,7 +25,7 @@ export const UnitCard = ({ id, title, description, tags }: UnitProblem) => {
   }
 
   return (
-    <Card className="duration-300 hover:scale-105">
+    <Card className="flex h-[324px] flex-col duration-300 hover:scale-105">
       <CardHeader>
         <CardTitle className="text-lg">{title}</CardTitle>
         <div className="flex gap-1">
@@ -35,8 +35,10 @@ export const UnitCard = ({ id, title, description, tags }: UnitProblem) => {
         </div>
       </CardHeader>
 
-      <CardContent>
-        <CardDescription className="text-base">{description}</CardDescription>
+      <CardContent className="flex-1">
+        <CardDescription className="line-clamp-3 min-h-[4.5rem] text-base">
+          {description}
+        </CardDescription>
       </CardContent>
 
       <CardFooter>

@@ -11,6 +11,7 @@ import {
 
 import { useForm } from 'react-hook-form'
 
+import { Button } from '@/components/ui/button'
 import type { CloudFrontCacheFormData } from '@/types/aws-services/cloudfront/cache-behavior/cloudfront-cache-form-data.types'
 import type { CloudFrontCacheBehaviorConfig } from '@/types/aws-services/cloudfront/cache-behavior/constants'
 import type { CloudFrontSubmitConfig } from '@/types/aws-services/cloudfront/cloudfront-submit-config.types'
@@ -29,13 +30,11 @@ const DEFAULT_VALUES: CloudFrontCacheFormData = {
 interface CloudFrontCacheBehaviorProps {
   config: CloudFrontCacheBehaviorConfig
   onSubmit: (data: CloudFrontSubmitConfig) => void
-  buttonText?: string
 }
 
 export default function CloudFrontCacheBehavior({
   config,
   onSubmit,
-  buttonText = '캐시 동작 추가',
 }: CloudFrontCacheBehaviorProps) {
   const { control, handleSubmit, reset } = useForm<CloudFrontCacheFormData>({
     mode: 'onChange',
@@ -66,10 +65,6 @@ export default function CloudFrontCacheBehavior({
       <ServiceTitle
         title="캐시 및 동작 설정"
         description="CloudFront 캐시 정책과 뷰어 액세스 제어를 구성하세요"
-        button={{
-          isDisabled: false,
-          buttonText,
-        }}
       />
 
       {config.viewerProtocol && (
@@ -91,6 +86,12 @@ export default function CloudFrontCacheBehavior({
       {config.functionAssociations && (
         <FunctionAssociationsSection control={control} config={config} />
       )}
+
+      <div className="flex justify-end pt-4">
+        <Button type="submit" size="lg">
+          캐시 동작 추가
+        </Button>
+      </div>
     </form>
   )
 }

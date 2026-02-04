@@ -1,5 +1,7 @@
 'use client'
 
+import { toast } from 'sonner'
+
 import {
   type Dispatch,
   type PropsWithChildren,
@@ -20,7 +22,6 @@ import {
 } from 'react-hook-form'
 
 import ResultDialog from '@/components/result-dialog'
-import { useActionFeedback } from '@/contexts/action-feedback-context'
 import { LAYOUT_CONFIG, useAwsDiagramLogic } from '@/hooks/diagram'
 import useSolutionDialog from '@/hooks/useSolutionDialog'
 import { useBuildDefaultNodes } from '@/lib/build-initial-nodes'
@@ -107,7 +108,6 @@ export function ProblemFormProvider<T extends FieldValues>({
   const [feedback, setFeedback] = useState<FeedbackDetail[]>(initialFeedback)
   const { status, openModal, closeModal, handleNavigation, isModalOpen } =
     useSolutionDialog()
-  const { showFeedback } = useActionFeedback()
 
   // 리소스 구성 상태
   const [submitConfig, setSubmitConfig] = useState<GlobalSubmitConfig>(() => {
@@ -187,13 +187,11 @@ export function ProblemFormProvider<T extends FieldValues>({
         name: id,
       })
 
-      showFeedback({
-        title: '리소스 생성 완료',
-        message: `"${id}" ${type.toUpperCase()} 리소스가 성공적으로 생성되었습니다.`,
-        type: 'success',
+      toast.success('리소스 생성 완료', {
+        description: `"${id}" ${type.toUpperCase()} 리소스가 성공적으로 생성되었습니다.`,
       })
     },
-    [submitConfig, addAwsResource, showFeedback],
+    [submitConfig, addAwsResource],
   )
 
   // 리소스 삭제 핸들러
@@ -218,10 +216,8 @@ export function ProblemFormProvider<T extends FieldValues>({
       // 다이어그램에서 노드 제거
       setNodes((prevNodes) => prevNodes.filter((node) => node.id !== id))
 
-      showFeedback({
-        title: '리소스 삭제 완료',
-        message: `"${id}" 리소스가 삭제되었습니다.`,
-        type: 'warning',
+      toast.warning('리소스 삭제 완료', {
+        description: `"${id}" 리소스가 삭제되었습니다.`,
       })
     },
     [showFeedback, setNodes, setSubmitConfig, submitConfig],

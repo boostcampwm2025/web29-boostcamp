@@ -1,6 +1,5 @@
 'use client'
 
-import { ServiceTitle } from '../../common/service-title'
 import {
   Ami,
   InstanceType,
@@ -44,13 +43,11 @@ const DEFAULT_VALUES: EC2InstanceFormData = {
 interface EC2InstanceCreateProps {
   config: EC2InstanceCreateConfig
   onSubmit: (data: EC2SubmitConfig) => void
-  buttonText?: string
 }
 
 export default function EC2InstanceCreate({
   config,
   onSubmit,
-  buttonText = 'EC2 인스턴스 추가',
 }: EC2InstanceCreateProps) {
   const { submitConfig } = useProblemForm()
   const currentVpcs = getDefaultVpcs(submitConfig)
@@ -100,14 +97,12 @@ export default function EC2InstanceCreate({
 
   return (
     <form onSubmit={handleFormSubmit} className="w-full space-y-4 p-8">
-      <ServiceTitle
-        title="인스턴스 시작"
-        description="Amazon EC2 인스턴스를 생성하고 구성하세요"
-        button={{
-          isDisabled,
-          buttonText,
-        }}
-      />
+      <div className="mb-4 space-y-2">
+        <h1 className="text-2xl font-bold">인스턴스 시작</h1>
+        <p className="text-muted-foreground text-sm">
+          Amazon EC2 인스턴스를 생성하고 구성하세요
+        </p>
+      </div>
 
       {config.nameTag && <NameTag control={control} config={config} />}
 
@@ -126,6 +121,12 @@ export default function EC2InstanceCreate({
       {config.storage && <Storage control={control} config={config} />}
 
       {config.userData && <UserData control={control} config={config} />}
+
+      <div className="flex justify-end pt-4">
+        <Button type="submit" size="lg" disabled={isDisabled}>
+          EC2 인스턴스 추가
+        </Button>
+      </div>
     </form>
   )
 }
