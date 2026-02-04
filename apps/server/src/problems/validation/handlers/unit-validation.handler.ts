@@ -117,7 +117,7 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     );
 
     return {
-      result: Object.keys(mismatchedConfigs).length === 0 ? 'PASS' : 'FAIL',
+      result: feedbacks.length === 0 ? 'PASS' : 'FAIL',
       feedback: feedbacks,
     };
   }
@@ -391,7 +391,8 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     const refinedSubmittedKeys = Object.keys(refinedSubmitted);
 
     const onlyInSolutionKeys = solutionKeys.filter(
-      (key) => !refinedSubmittedKeys.includes(key),
+      (key) =>
+        !refinedSubmittedKeys.includes(key) && solution[key] !== 'DONT_CARE',
     );
     if (onlyInSolutionKeys.length === 0) return [];
 
@@ -518,11 +519,19 @@ export class UnitValidationHandler implements ProblemValidationHandler {
     const keys1 = Object.keys(o1);
     const keys2 = Object.keys(o2);
 
-    if (keys1.length !== keys2.length) return false;
-
-    return keys1.every((key) => {
-      if (!Object.prototype.hasOwnProperty.call(o2, key)) return false;
-      return this.isDeepEqual(o1[key], o2[key]);
-    });
+    return (
+      keys1.every((key) => {
+        if (!Object.prototype.hasOwnProperty.call(o2, key)) {
+          return false;
+        }
+        return this.isDeepEqual(o1[key], o2[key]);
+      }) &&
+      keys2.every((key) => {
+        if (!Object.prototype.hasOwnProperty.call(o1, key)) {
+          return o2[key] === 'DONT_CARE';
+        }
+        return true;
+      })
+    );
   }
 }

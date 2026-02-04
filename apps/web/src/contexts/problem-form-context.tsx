@@ -220,7 +220,7 @@ export function ProblemFormProvider<T extends FieldValues>({
         description: `"${id}" 리소스가 삭제되었습니다.`,
       })
     },
-    [showFeedback, setNodes, setSubmitConfig, submitConfig],
+    [setNodes, setSubmitConfig, submitConfig],
   )
 
   // 제출 핸들러
