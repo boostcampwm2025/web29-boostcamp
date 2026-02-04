@@ -12,6 +12,9 @@ export const Header = () => {
           <AppSquareIcon width={64} height={64} />
         </Link>
         <div className="flex gap-4 justify-self-end">
+          <Button asChild variant="ghost">
+            <Link href="/learn">클라우드 개념 학습</Link>
+          </Button>
           <Button asChild variant="outline">
             <Link href="/problems?type=unit">문제 목록</Link>
           </Button>
