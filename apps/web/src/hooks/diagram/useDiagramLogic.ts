@@ -12,7 +12,6 @@ import { useCallback } from 'react'
 import type { ServiceConfig } from '@/types/submitConfig.types'
 import type { Edge, Node } from '@xyflow/react'
 
-// TODO: ServiceConfig, ServiceType에 vpc, subnet 등도 추가 필요. 지금 타입 경고
 export function useAwsDiagramLogic(
   _nodes: Node[],
   setNodes: React.Dispatch<React.SetStateAction<Node[]>>,
@@ -103,6 +102,11 @@ export function useAwsDiagramLogic(
             throw new Error(`VPC '${payload.vpcId}' not found for Subnet.`)
           }
           parentId = payload.vpcId
+        } else if (payload._type === 'internetGateway') {
+          // IGW가 VPC에 연결된 경우
+          if (payload.vpcId && nodeExists(payload.vpcId, newNodes)) {
+            parentId = payload.vpcId
+          }
         } else {
           // EC2, ASG 등은 Subnet 아래 (Subnet ID 체크)
           // (타입 가드 덕분에 payload.subnetId 접근 안전)
@@ -138,6 +142,11 @@ export function useAwsDiagramLogic(
             `Group ID ${payload.groupId} not found. Staying in Subnet.`,
           )
         }
+      }
+
+      // 기존 노드가 있다면 제거 (업데이트/이동 시나리오)
+      if (nodeExists(targetNode.id, updatedNodes)) {
+        updatedNodes = updatedNodes.filter((n) => n.id !== targetNode.id)
       }
 
       // 일단 타겟 노드 추가
@@ -181,6 +190,12 @@ export function useAwsDiagramLogic(
             return prevNodes
           }
           if (payload._type === 'internetGateway' && !payload.vpcId) {
+            return prevNodes
+          }
+          if (payload._type === 'natGateway' && !payload.subnetId) {
+            return prevNodes
+          }
+          if (payload._type === 'securityGroups') {
             return prevNodes
           }
 

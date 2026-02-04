@@ -10,15 +10,16 @@ export const feedbackMessages = {
   [UnitProblemFeedbackType.SERVICE_MISSING]: (
     service: string,
     details: string,
-  ) => `제출한 ${service} 설정에 누락된 서비스가 있습니다: ${details}`,
+  ) =>
+    `${service} 리소스가 부족합니다. 문제 해결을 위해 ${service}를 추가로 생성해야 합니다. (${details})`,
   [UnitProblemFeedbackType.FIELD_MISSING]: (service: string, details: string) =>
-    `제출한 ${service} 설정에 누락된 필드가 있습니다: ${details}`,
+    `${service} 설정에서 '${details}' 항목이 빠져 있습니다. 해당 항목을 설정해주세요.`,
   [UnitProblemFeedbackType.UNNECESSARY]: (service: string, details: string) =>
-    `제출한 ${service} 설정에 불필요한 필드가 있습니다: ${details}`,
+    `${service} 설정에 불필요한 '${details}' 항목이 포함되어 있습니다. 해당 설정을 제거하거나 기본값으로 되돌려주세요.`,
   [UnitProblemFeedbackType.INCORRECT]: (service: string, details: string) =>
-    `제출한 ${service} 설정에 올바르지 않은 값이 있습니다: ${details}`,
+    `${service}의 '${details}' 설정이 요구사항과 다릅니다. 문제 지문을 다시 확인하여 올바른 값을 선택해주세요.`,
   [UnitProblemFeedbackType.INVALID]: (service: string, details: string) =>
-    `제출한 ${service} 설정에 유효하지 않은 값이 있습니다: ${details}`,
+    `${service}의 '${details}' 형식이 올바르지 않습니다. 형식을 다시 확인해주세요.`,
 };
 
 export const NetworkFeedbackScenarios = {

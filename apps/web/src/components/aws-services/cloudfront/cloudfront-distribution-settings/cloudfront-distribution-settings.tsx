@@ -11,6 +11,7 @@ import {
 
 import { useForm } from 'react-hook-form'
 
+import { Button } from '@/components/ui/button'
 import type { CloudFrontSubmitConfig } from '@/types/aws-services/cloudfront/cloudfront-submit-config.types'
 import type { CloudFrontDistributionSettingsFormData } from '@/types/aws-services/cloudfront/distribution-settings/cloudfront-settings-form-data.types'
 import type { CloudFrontDistributionSettingsConfig } from '@/types/aws-services/cloudfront/distribution-settings/constants'
@@ -30,13 +31,11 @@ const DEFAULT_VALUES: CloudFrontDistributionSettingsFormData = {
 interface CloudFrontDistributionSettingsProps {
   config: CloudFrontDistributionSettingsConfig
   onSubmit: (data: CloudFrontSubmitConfig) => void
-  buttonText?: string
 }
 
 export default function CloudFrontDistributionSettings({
   config,
   onSubmit,
-  buttonText = 'CloudFront 배포 추가',
 }: CloudFrontDistributionSettingsProps) {
   const { control, handleSubmit, setValue, watch, reset } =
     useForm<CloudFrontDistributionSettingsFormData>({
@@ -73,10 +72,6 @@ export default function CloudFrontDistributionSettings({
       <ServiceTitle
         title="배포 설정"
         description="CloudFront 배포의 기본 설정을 구성하세요"
-        button={{
-          isDisabled,
-          buttonText,
-        }}
       />
 
       {config.generalConfig && (
@@ -94,6 +89,12 @@ export default function CloudFrontDistributionSettings({
       {config.sslTls && <SslTlsSection control={control} config={config} />}
 
       {config.network && <NetworkSection control={control} config={config} />}
+
+      <div className="flex justify-end pt-4">
+        <Button type="submit" size="lg" disabled={isDisabled}>
+          CloudFront 배포 추가
+        </Button>
+      </div>
     </form>
   )
 }

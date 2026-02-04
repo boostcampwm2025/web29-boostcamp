@@ -14,7 +14,10 @@ export const ProblemLeftSection = ({
   return (
     <section className="space-y-6 overflow-y-auto">
       {children}
-      <ProblemFormContent problemData={problemData} />
+      <ProblemFormContent
+        key={problemData.map((p) => p.serviceName).join(',')}
+        problemData={problemData}
+      />
     </section>
   )
 }

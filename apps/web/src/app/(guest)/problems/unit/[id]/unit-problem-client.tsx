@@ -9,12 +9,13 @@ import { useMemo } from 'react'
 import { mergeServiceDefaultValues } from '@/components/aws-services/registry/form-defaults-factory'
 import type { IServiceMapper } from '@/components/aws-services/utils/serviceMapper'
 import { ProblemFormProvider } from '@/contexts/problem-form-context'
+import { ProblemDescDetail } from '@/types/problem.type'
 import { GlobalSubmitConfig } from '@/types/submitConfig.types'
 
 interface UnitProblemClientProps {
   unitId: string
   title: string
-  descDetail: string
+  descDetail: ProblemDescDetail
   tags: string[]
   problemData: IServiceMapper[]
   defaultConfigs: GlobalSubmitConfig
@@ -40,11 +41,17 @@ export default function UnitProblemClient({
       problemType="unit"
       defaultConfigs={defaultConfigs}
     >
-      <ProblemLeftSection problemData={problemData}>
-        <UnitProblemHeader title={title} descDetail={descDetail} tags={tags} />
-      </ProblemLeftSection>
+      <div className="grid grid-cols-2 gap-4">
+        <ProblemLeftSection problemData={problemData}>
+          <UnitProblemHeader
+            title={title}
+            descDetail={descDetail}
+            tags={tags}
+          />
+        </ProblemLeftSection>
 
-      <ProblemRightSection />
+        <ProblemRightSection />
+      </div>
     </ProblemFormProvider>
   )
 }

@@ -4,6 +4,7 @@ import type { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
 
 import { Footer, Header } from '@/components/layout'
+import { Toaster } from '@/components/ui/sonner'
 import { cn } from '@/lib/utils'
 
 const Pretendard = localFont({
@@ -43,6 +44,7 @@ export default function RootLayout({
         <Header />
         <main className="h-full min-h-[calc(100vh)] pt-18">{children}</main>
         <Footer />
+        <Toaster />
       </body>
     </html>
   )

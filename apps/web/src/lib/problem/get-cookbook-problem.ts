@@ -8,7 +8,6 @@ interface UnitProblem {
 
 interface CookbookProblemData {
   title: string
-  description: string
   descDetail: string
   tags: string[]
   units: UnitProblem[]
@@ -35,8 +34,7 @@ export async function getCookbookProblemDataById(
 
   return {
     title: response.title ?? '문제',
-    description: response.description ?? '',
-    descDetail: response.descDetail,
+    descDetail: response.descDetail ?? '',
     tags: response.tags ?? [],
     units: response.problems ?? [],
   }

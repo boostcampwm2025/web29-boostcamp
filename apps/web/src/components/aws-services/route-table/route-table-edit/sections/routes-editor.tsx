@@ -1,6 +1,6 @@
 'use client'
 
-import { Plus, Trash2 } from 'lucide-react'
+import { PinIcon, Plus, Trash2 } from 'lucide-react'
 
 import { useFieldArray, useFormContext } from 'react-hook-form'
 
@@ -51,16 +51,20 @@ export function RoutesEditor() {
                   <TableCell>
                     <Input
                       {...register(`routes.${index}.destinationCidr`)}
-                      disabled={isLocal}
+                      readOnly={isLocal}
                       className={
                         isLocal ? 'bg-muted text-muted-foreground' : ''
                       }
+                    />
+                    <input
+                      type="hidden"
+                      {...register(`routes.${index}.targetGatewayName`)}
                     />
                   </TableCell>
                   <TableCell>
                     <Input
                       {...register(`routes.${index}.targetGatewayId`)}
-                      disabled={isLocal}
+                      readOnly={isLocal}
                       className={
                         isLocal ? 'bg-muted text-muted-foreground' : ''
                       }
@@ -80,9 +84,14 @@ export function RoutesEditor() {
                       </Button>
                     )}
                     {isLocal && (
-                      <span className="text-muted-foreground px-2 text-xs">
-                        기본
-                      </span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        disabled
+                        size="icon"
+                      >
+                        <PinIcon className="h-4 w-4" />
+                      </Button>
                     )}
                   </TableCell>
                 </TableRow>
@@ -96,7 +105,13 @@ export function RoutesEditor() {
         <Button
           type="button"
           variant="outline"
-          onClick={() => append({ destinationCidr: '', targetGatewayId: '' })}
+          onClick={() =>
+            append({
+              destinationCidr: '',
+              targetGatewayId: '',
+              targetGatewayName: '',
+            })
+          }
           className="gap-2"
         >
           <Plus className="h-4 w-4" /> 라우트 추가

@@ -12,7 +12,7 @@ import type { VpcSubmitConfig } from '@/types/aws-services/vpc/vpc-submit-config
 const DEFAULT_VALUES: VpcFormData = {
   nameTag: { name: '' },
   cidr: {
-    cidrBlock: '10.0.0.0/16',
+    cidrBlock: '',
   },
   tenancy: { type: 'default' },
 }
@@ -33,7 +33,7 @@ export default function VpcCreate({ config, onSubmit }: VpcCreateProps) {
       _type: 'vpc',
       id: data.nameTag?.name || crypto.randomUUID(),
       name: data.nameTag?.name || 'Unnamed VPC',
-      cidrBlock: data.cidr?.cidrBlock || '10.0.0.0/16',
+      cidrBlock: data.cidr?.cidrBlock || '',
       tenancy: data.tenancy?.type || 'default',
     }
     onSubmit(submitData)
@@ -67,11 +67,7 @@ export default function VpcCreate({ config, onSubmit }: VpcCreateProps) {
       </div>
 
       <div className="flex justify-end">
-        <Button
-          type="submit"
-          size="lg"
-          className="bg-orange-600 font-bold text-white hover:bg-orange-700"
-        >
+        <Button type="submit" size="lg">
           VPC 생성
         </Button>
       </div>

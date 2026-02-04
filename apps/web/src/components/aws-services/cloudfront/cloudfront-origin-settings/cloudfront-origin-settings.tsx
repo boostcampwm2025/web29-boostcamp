@@ -10,6 +10,7 @@ import {
 
 import { useForm } from 'react-hook-form'
 
+import { Button } from '@/components/ui/button'
 import type { CloudFrontSubmitConfig } from '@/types/aws-services/cloudfront/cloudfront-submit-config.types'
 import type { CloudFrontOriginFormData } from '@/types/aws-services/cloudfront/origin-settings/cloudfront-origin-form-data.types'
 import type { CloudFrontOriginSettingsConfig } from '@/types/aws-services/cloudfront/origin-settings/constants'
@@ -27,13 +28,11 @@ const DEFAULT_VALUES: CloudFrontOriginFormData = {
 interface CloudFrontOriginSettingsProps {
   config: CloudFrontOriginSettingsConfig
   onSubmit: (data: CloudFrontSubmitConfig) => void
-  buttonText?: string
 }
 
 export default function CloudFrontOriginSettings({
   config,
   onSubmit,
-  buttonText = 'Origin 추가',
 }: CloudFrontOriginSettingsProps) {
   const { control, handleSubmit, setValue, watch, reset } =
     useForm<CloudFrontOriginFormData>({
@@ -75,10 +74,6 @@ export default function CloudFrontOriginSettings({
       <ServiceTitle
         title="Origin 설정"
         description="CloudFront 배포의 콘텐츠 Origin을 구성하세요"
-        button={{
-          isDisabled,
-          buttonText,
-        }}
       />
 
       {config.originDomain && (
@@ -104,6 +99,12 @@ export default function CloudFrontOriginSettings({
           setValue={setValue}
         />
       )}
+
+      <div className="flex justify-end pt-4">
+        <Button type="submit" size="lg" disabled={isDisabled}>
+          Origin 추가
+        </Button>
+      </div>
     </form>
   )
 }

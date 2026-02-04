@@ -1,7 +1,16 @@
+export interface ProblemDescDetail {
+  overview: string
+  requirements?: string
+  prerequisites?: string
+  learningObjectives?: string
+  hint?: string
+}
+
 interface BaseProblem {
   id: number
   title: string
   description: string
+  descDetail?: ProblemDescDetail
   tags?: string[]
 }
 

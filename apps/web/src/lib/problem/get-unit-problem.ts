@@ -2,6 +2,7 @@ import { addDefaultConfigs } from '../add-default-configs'
 import { getApiBaseUrl } from '../get-base-url'
 
 import { IServiceMapper } from '@/components/aws-services/utils/serviceMapper'
+import { ProblemDescDetail } from '@/types/problem.type'
 import { GlobalSubmitConfig, ServiceConfig } from '@/types/submitConfig.types'
 
 /*
@@ -15,13 +16,14 @@ interface RequiredField {
   serviceTask: string
   serviceSections: string[]
   fixedOptions?: Record<string, string>[]
+  label?: string
 }
 
 interface ProblemData {
   problemType: string
   title: string
   description: string
-  descDetail: string
+  descDetail: ProblemDescDetail
   tags: string[]
   serviceMappers: IServiceMapper[]
   defaultConfigs: GlobalSubmitConfig
@@ -46,9 +48,11 @@ export async function getUnitProblemDataById(id: string): Promise<ProblemData> {
 
   const serviceMappers: IServiceMapper[] = response.requiredFields.map(
     (field: RequiredField) => ({
-      serviceName: field.serviceName,
+      serviceName: field.serviceName as IServiceMapper['serviceName'],
       serviceTask: field.serviceTask,
       inputSections: field.serviceSections,
+      label: field.label,
+      fixedOptions: field.fixedOptions,
     }),
   )
   const fixedOptions: ServiceConfig[] =
@@ -61,7 +65,7 @@ export async function getUnitProblemDataById(id: string): Promise<ProblemData> {
     problemType: response.problemType,
     title: response.title ?? '문제',
     description: response.description ?? '',
-    descDetail: response.descDetail ?? '',
+    descDetail: response.descDetail,
     tags: response.tags ?? [],
     serviceMappers,
     defaultConfigs,

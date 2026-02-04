@@ -1,6 +1,6 @@
 'use client'
 
-import { AWS_SERVICE_ICONS, type AwsServiceIconKey } from '../aws-icons'
+import { AWS_ICONS, type AwsIconKey } from '../aws-icons'
 
 import Image from 'next/image'
 
@@ -8,7 +8,7 @@ import { Handle, Position } from '@xyflow/react'
 
 export interface AwsServiceNodeData {
   label: string
-  icon: AwsServiceIconKey
+  icon: AwsIconKey
   description?: string
   [key: string]: unknown
 }
@@ -18,7 +18,7 @@ interface AwsServiceNodeProps {
 }
 
 export function AwsServiceNode({ data }: AwsServiceNodeProps) {
-  const iconPath = AWS_SERVICE_ICONS[data.icon]
+  const iconPath = AWS_ICONS[data.icon]
 
   return (
     <div className="flex items-center gap-3 rounded-lg border-2 border-gray-300 bg-white px-4 py-3 shadow-lg">
