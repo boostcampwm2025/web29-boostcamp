@@ -208,8 +208,8 @@ export default function RouteTableEdit({ onAfterSubmit }: RouteTableEditProps) {
         {selectedRouteTableId && (
           <div className="bg-card animate-in fade-in slide-in-from-bottom-2 overflow-hidden rounded-lg border shadow-sm duration-300">
             <Tabs defaultValue="routes" className="w-full">
-              <div className="bg-muted/30 border-b px-6 pt-4">
-                <TabsList className="grid w-full max-w-md grid-cols-2">
+              <div className="bg-muted/30 border-b px-6 py-3">
+                <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="routes">라우트 편집</TabsTrigger>
                   <TabsTrigger value="associations">서브넷 연결</TabsTrigger>
                 </TabsList>
