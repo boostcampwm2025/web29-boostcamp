@@ -1,5 +1,7 @@
 'use client'
 
+import { TooltipBox } from '../../common/tooltip-box'
+
 import { Controller } from 'react-hook-form'
 import type { Control } from 'react-hook-form'
 
@@ -12,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { SUBNET_CREATE_TOOLTIPS } from '@/constants/aws-services/subnet'
 import type { SubnetFormData } from '@/types/aws-services/subnet/subnet-form-data.types'
 
 // TODO: 나중에 리전에 따라 가용 영역 동적으로 불러오기
@@ -41,7 +44,12 @@ export function SubnetSettings({ control, vpcCidr }: SubnetSettingsProps) {
 
       <div className="space-y-8 p-6">
         <SectionContainer
-          title="서브넷 이름"
+          title={
+            <div className="flex items-center gap-2">
+              서브넷 이름
+              <TooltipBox content={SUBNET_CREATE_TOOLTIPS.nameTag} />
+            </div>
+          }
           description="'Name' 키와 사용자가 지정하는 값을 포함하는 태그를 생성합니다."
         >
           <Controller
@@ -58,8 +66,13 @@ export function SubnetSettings({ control, vpcCidr }: SubnetSettingsProps) {
         </SectionContainer>
 
         <SectionContainer
-          title="가용 영역"
-          description="서브넷이 상주할 영역을 선택합니다. 선택하지 않으면 Amazon이 자동으로 선택합니다."
+          title={
+            <div className="flex items-center gap-2">
+              가용 영역
+              <TooltipBox content={SUBNET_CREATE_TOOLTIPS.availabilityZone} />
+            </div>
+          }
+          description="서브넷이 상주할 영역을 선택합니다."
         >
           <Controller
             name="subnetSettings.availabilityZone"
@@ -82,7 +95,12 @@ export function SubnetSettings({ control, vpcCidr }: SubnetSettingsProps) {
         </SectionContainer>
 
         <SectionContainer
-          title="IPv4 서브넷 CIDR 블록"
+          title={
+            <div className="flex items-center gap-2">
+              IPv4 서브넷 CIDR 블록
+              <TooltipBox content={SUBNET_CREATE_TOOLTIPS.cidrBlock} />
+            </div>
+          }
           description={
             vpcCidr
               ? `VPC CIDR (${vpcCidr}) 내에 있어야 합니다.`
