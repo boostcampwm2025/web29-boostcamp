@@ -173,6 +173,15 @@
   }
 }
 
+.markdown-content p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.markdown-content p + p {
+  margin-top: 0.5rem;
+}
+
 .markdown-content ul {
   list-style-type: disc;
   padding-left: 1.25rem;

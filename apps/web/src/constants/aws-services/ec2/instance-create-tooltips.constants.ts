@@ -5,7 +5,7 @@ export const INSTANCE_CREATE_TOOLTIPS = {
     '태그는 리소스를 분류하고 관리하기 위한 메모라고 생각하면 됩니다.',
 
   ami:
-    'AMI는 인스턴스를 시작할 때 사용하는 운영체제 이미지입니다.\n\n' +
+    'AMI는 인스턴스를 시작할 때 사용하는 운영체제 이미지입니다.\n' +
     'Amazon Linux, Ubuntu 같은 OS 종류를 선택한다고 생각하면 됩니다.\n',
 
   instanceType:
