@@ -4,6 +4,7 @@ import { PinIcon, Plus, Trash2 } from 'lucide-react'
 
 import { useFieldArray, useFormContext } from 'react-hook-form'
 
+import { TooltipBox } from '@/components/aws-services/common/tooltip-box'
 import { SectionContainer } from '@/components/section-container'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,6 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { ROUTE_TABLE_EDIT_TOOLTIPS } from '@/constants/aws-services/route-table'
 import type { RouteTableEditFormData } from '@/types/aws-services/route-table/route-table.types'
 
 export function RoutesEditor() {
@@ -29,16 +31,21 @@ export function RoutesEditor() {
 
   return (
     <SectionContainer
-      title="라우트 (Routes)"
+      title={
+        <div className="flex items-center gap-2">
+          라우트 (Routes)
+          <TooltipBox content={ROUTE_TABLE_EDIT_TOOLTIPS.routes} />
+        </div>
+      }
       description="트래픽이 향할 대상을 결정합니다. 가장 구체적인 라우트가 우선순위를 갖습니다."
     >
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/50">
-              <TableHead className="w-[45%]">대상 (Destination)</TableHead>
-              <TableHead className="w-[45%]">타겟 (Target)</TableHead>
-              <TableHead className="w-[10%] text-right">삭제</TableHead>
+              <TableHead className="w-[45%] px-6">대상 (Destination)</TableHead>
+              <TableHead className="w-[45%] px-6">타겟 (Target)</TableHead>
+              <TableHead className="w-[10%] text-center">관리</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -77,21 +84,23 @@ export function RoutesEditor() {
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="text-destructive hover:bg-destructive/10"
+                        className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                         onClick={() => remove(index)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     )}
                     {isLocal && (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        disabled
-                        size="icon"
-                      >
-                        <PinIcon className="h-4 w-4" />
-                      </Button>
+                      <span title="로컬 라우트는 삭제할 수 없어요">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          disabled
+                        >
+                          <PinIcon className="h-4 w-4" />
+                        </Button>
+                      </span>
                     )}
                   </TableCell>
                 </TableRow>

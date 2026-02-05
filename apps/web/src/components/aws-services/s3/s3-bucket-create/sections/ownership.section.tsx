@@ -2,9 +2,11 @@ import { AlertCircle } from 'lucide-react'
 
 import { Controller, useWatch } from 'react-hook-form'
 
+import { TooltipBox } from '@/components/aws-services/common/tooltip-box'
 import { SectionContainer } from '@/components/section-container'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { BUCKET_CREATE_TOOLTIPS } from '@/constants/aws-services/s3'
 import type { S3SectionProps } from '@/types/aws-services/s3/bucket-create'
 
 export const ObjectOwnership = ({ control }: S3SectionProps) => {
@@ -12,7 +14,12 @@ export const ObjectOwnership = ({ control }: S3SectionProps) => {
 
   return (
     <SectionContainer
-      title="객체 소유권"
+      title={
+        <div className="flex items-center gap-2">
+          객체 소유권
+          <TooltipBox content={BUCKET_CREATE_TOOLTIPS.ownership} />
+        </div>
+      }
       description="다른 AWS 계정에서 이 버킷에 기록된 객체의 소유권 제어"
     >
       <div className="space-y-4">

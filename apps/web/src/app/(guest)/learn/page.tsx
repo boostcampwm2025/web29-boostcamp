@@ -1,10 +1,12 @@
+import Link from 'next/link'
+
 import { SectionContainer } from '@/components/section-container'
 
 export default function LearnPage() {
   return (
     <div className="py-12">
       <div className="space-y-8">
-        <div className="space-y-4 text-center">
+        <div className="space-y-4">
           <h1 className="text-4xl font-bold tracking-tight">
             클라우드 개념 학습
           </h1>
@@ -13,7 +15,7 @@ export default function LearnPage() {
           </p>
         </div>
 
-        <SectionContainer title="시작하기">
+        <SectionContainer>
           <div className="space-y-4">
             <h2 className="text-2xl font-bold">시작하기</h2>
             <p className="leading-relaxed text-gray-700 dark:text-gray-300">
@@ -37,7 +39,7 @@ export default function LearnPage() {
           </div>
         </SectionContainer>
 
-        <SectionContainer title="직접 실습해보세요!">
+        <SectionContainer>
           <div className="space-y-4 text-center">
             <h2 className="text-2xl font-bold">직접 실습해보세요!</h2>
             <p className="text-muted-foreground">
@@ -45,12 +47,12 @@ export default function LearnPage() {
               있습니다.
             </p>
             <div className="flex justify-center gap-4 pt-4">
-              <a
-                href="/problems"
+              <Link
+                href="/problems?type=unit"
                 className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex h-10 items-center justify-center rounded-md px-8 text-sm font-medium transition-colors"
               >
                 문제 풀어보기
-              </a>
+              </Link>
             </div>
           </div>
         </SectionContainer>

@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import {
-  EC2_TOOLTIPS,
+  INSTANCE_CREATE_TOOLTIPS,
   INSTANCE_TYPE_OPTIONS,
 } from '@/constants/aws-services/ec2'
 import type { EC2SectionProps } from '@/types/aws-services/ec2/instance-create'
@@ -22,7 +22,7 @@ export function InstanceType({ control }: EC2SectionProps) {
       title={
         <div className="flex items-center gap-2">
           인스턴스 유형
-          <TooltipBox content={EC2_TOOLTIPS.instanceType} />
+          <TooltipBox content={INSTANCE_CREATE_TOOLTIPS.instanceType} />
         </div>
       }
       description="애플리케이션에 적합한 인스턴스 유형을 선택하세요"

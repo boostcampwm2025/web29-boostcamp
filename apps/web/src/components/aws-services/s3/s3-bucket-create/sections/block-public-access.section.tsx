@@ -5,9 +5,11 @@ import { AlertCircle } from 'lucide-react'
 import { useEffect } from 'react'
 import { Controller, useWatch } from 'react-hook-form'
 
+import { TooltipBox } from '@/components/aws-services/common/tooltip-box'
 import { SectionContainer } from '@/components/section-container'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
+import { BUCKET_CREATE_TOOLTIPS } from '@/constants/aws-services/s3'
 import type { S3WithSetValuesSectionProps } from '@/types/aws-services/s3/bucket-create'
 
 export const BlockPublicAccess = ({
@@ -46,6 +48,7 @@ export const BlockPublicAccess = ({
         <div className="flex items-center gap-2">
           <AlertCircle className="text-destructive h-5 w-5" />이 버킷의 퍼블릭
           액세스 차단 설정
+          <TooltipBox content={BUCKET_CREATE_TOOLTIPS.blockPublicAccess} />
         </div>
       }
       description="S3 퍼블릭 액세스 차단은 S3 버킷 내 데이터에 대한 퍼블릭 액세스를 허용하는 모든 설정의 적용을 방지합니다. 모든 설정을 활성화 상태로 유지하는 것이 좋습니다."

@@ -1,5 +1,7 @@
 'use client'
 
+import { TooltipBox } from '../../common/tooltip-box'
+
 import { Controller, useWatch } from 'react-hook-form'
 import type { Control } from 'react-hook-form'
 
@@ -12,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { SUBNET_CREATE_TOOLTIPS } from '@/constants/aws-services/subnet'
 import type { SubnetFormData } from '@/types/aws-services/subnet/subnet-form-data.types'
 
 interface VpcSelectProps {
@@ -25,14 +28,19 @@ export function VpcSelect({ control, vpcs }: VpcSelectProps) {
   const selectedVpc = vpcs.find((vpc) => vpc.id === selectedVpcId)
 
   return (
-    <div className="bg-card text-card-foreground rounded-lg border shadow-sm">
+    <div className="bg-card text-card-foreground rounded-lg border">
       <div className="border-b px-6 py-4">
         <h2 className="text-xl font-semibold">VPC</h2>
       </div>
 
       <div className="space-y-6 p-6">
         <SectionContainer
-          title="VPC ID"
+          title={
+            <div className="flex items-center gap-2">
+              VPC ID
+              <TooltipBox content={SUBNET_CREATE_TOOLTIPS.vpcId} />
+            </div>
+          }
           description="이 VPC에 서브넷을 생성합니다."
         >
           <Controller

@@ -15,8 +15,8 @@ import {
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import {
-  EC2_TOOLTIPS,
   FIREWALL_OPTIONS,
+  INSTANCE_CREATE_TOOLTIPS,
   SUBNET_OPTIONS,
   VPC_OPTIONS,
 } from '@/constants/aws-services/ec2'
@@ -42,7 +42,7 @@ export function NetworkSetting({ control }: EC2SectionProps) {
       title={
         <div className="flex items-center gap-2">
           네트워크 설정
-          <TooltipBox content={EC2_TOOLTIPS.networkSetting} />
+          <TooltipBox content={INSTANCE_CREATE_TOOLTIPS.networkSetting} />
         </div>
       }
       description="인스턴스의 네트워크 및 보안 설정을 구성하세요"

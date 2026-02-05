@@ -4,7 +4,7 @@ import { TooltipBox } from '@/components/aws-services/common/tooltip-box'
 import { SectionContainer } from '@/components/section-container'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { EC2_TOOLTIPS } from '@/constants/aws-services/ec2'
+import { INSTANCE_CREATE_TOOLTIPS } from '@/constants/aws-services/ec2'
 import type { EC2SectionProps } from '@/types/aws-services/ec2/instance-create'
 
 export function UserData({ control }: EC2SectionProps) {
@@ -13,7 +13,7 @@ export function UserData({ control }: EC2SectionProps) {
       title={
         <div className="flex items-center gap-2">
           고급 세부 정보 - User Data
-          <TooltipBox content={EC2_TOOLTIPS.userData} />
+          <TooltipBox content={INSTANCE_CREATE_TOOLTIPS.userData} />
         </div>
       }
     >

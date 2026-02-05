@@ -7,15 +7,15 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
   const problemRepository = dataSource.getRepository(Problem);
   const tagRepository = dataSource.getRepository(Tag);
 
-  // 태그 데이터 먼저 생성
+  // 태그 데이터
   const tagNames = [
     'Storage',
     'S3',
     'Web Hosting',
     'Security',
-    'Compute', // 추가
-    'EC2', // 추가
-    'Server', // 추가
+    'Compute',
+    'EC2',
+    'Server',
     'Networking',
     'VPC',
   ];
@@ -29,7 +29,6 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
     tags.push(tag);
   }
 
-  // 태그 이름으로 찾기 편하게 Map 생성
   const tagMap = new Map(tags.map((tag) => [tag.name, tag]));
 
   const problems = [

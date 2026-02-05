@@ -2,6 +2,7 @@
 
 import { Controller, useFormContext } from 'react-hook-form'
 
+import { TooltipBox } from '@/components/aws-services/common/tooltip-box'
 import { SectionContainer } from '@/components/section-container'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -12,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { ROUTE_TABLE_EDIT_TOOLTIPS } from '@/constants/aws-services/route-table'
 import type { RouteTableEditFormData } from '@/types/aws-services/route-table/route-table.types'
 import type { SubnetSubmitConfig } from '@/types/aws-services/subnet/subnet-submit-config.types'
 
@@ -26,7 +28,12 @@ export function SubnetAssociations({
 
   return (
     <SectionContainer
-      title="서브넷 연결 (Subnet Associations)"
+      title={
+        <div className="flex items-center gap-2">
+          서브넷 연결 (Subnet Associations)
+          <TooltipBox content={ROUTE_TABLE_EDIT_TOOLTIPS.subnetAssociations} />
+        </div>
+      }
       description="이 라우팅 테이블을 명시적으로 사용할 서브넷을 선택합니다."
     >
       <div className="overflow-hidden rounded-md border">
@@ -42,11 +49,13 @@ export function SubnetAssociations({
               <Table>
                 <TableHeader>
                   <TableRow className="bg-muted/50">
-                    <TableHead className="w-[50px] text-center">연결</TableHead>
-                    <TableHead>이름</TableHead>
-                    <TableHead>서브넷 ID</TableHead>
-                    <TableHead>IPv4 CIDR</TableHead>
-                    <TableHead>가용 영역</TableHead>
+                    <TableHead className="w-[10%] text-center text-nowrap">
+                      연결
+                    </TableHead>
+                    <TableHead className="w-[23%]">이름</TableHead>
+                    <TableHead className="w-[23%]">서브넷 ID</TableHead>
+                    <TableHead className="w-[21%]">IPv4 CIDR</TableHead>
+                    <TableHead className="w-[23%]">가용 영역</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -67,7 +76,7 @@ export function SubnetAssociations({
                           }}
                         >
                           <TableCell
-                            className="text-center"
+                            className="px-0 text-center"
                             onClick={(e) => e.stopPropagation()}
                           >
                             <Checkbox
