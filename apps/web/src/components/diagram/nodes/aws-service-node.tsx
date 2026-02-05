@@ -26,16 +26,16 @@ export function AwsServiceNode({ data }: AwsServiceNodeProps) {
       <Image
         src={iconPath}
         alt={data.label}
-        width={48}
-        height={48}
-        className="h-12 w-12"
+        width={80}
+        height={80}
+        className="h-20 w-20"
       />
       <div className="flex flex-col">
-        <span className="text-sm font-semibold text-gray-800">
+        <span className="text-lg font-semibold text-gray-800">
           {data.label}
         </span>
         {data.description && (
-          <span className="text-xs text-gray-500">{data.description}</span>
+          <span className="text-base text-gray-500">{data.description}</span>
         )}
       </div>
       <Handle

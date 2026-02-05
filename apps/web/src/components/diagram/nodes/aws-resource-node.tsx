@@ -26,16 +26,16 @@ export function AwsResourceNode({ data }: AwsResourceNodeProps) {
       <Image
         src={iconPath}
         alt={data.label}
-        width={36}
-        height={36}
-        className="h-9 w-9"
+        width={64}
+        height={64}
+        className="h-16 w-16"
       />
       <div className="flex flex-col">
-        <span className="text-xs font-semibold text-gray-800">
+        <span className="text-base font-semibold text-gray-800">
           {data.label}
         </span>
         {data.description && (
-          <span className="text-[10px] text-gray-500">{data.description}</span>
+          <span className="text-sm text-gray-500">{data.description}</span>
         )}
       </div>
       <Handle

@@ -57,12 +57,12 @@ export function AwsGroupNode({ data }: AwsGroupNodeProps) {
           <Image
             src={iconPath}
             alt={data.label}
-            width={24}
-            height={24}
-            className="h-6 w-6"
+            width={40}
+            height={40}
+            className="h-10 w-10"
           />
         )}
-        <span className="text-sm font-semibold text-gray-700">
+        <span className="text-lg font-semibold text-gray-700">
           {data.label}
         </span>
       </div>
