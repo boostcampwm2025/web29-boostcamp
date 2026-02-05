@@ -13,8 +13,7 @@ export async function submitProblemSolution(
   problemId: string,
   submitConfig: FinalSubmitConfig,
 ) {
-  // const baseUrl = getApiBaseUrl()
-  const baseUrl = 'http://localhost:3001'
+  const baseUrl = getApiBaseUrl()
 
   const res = await fetch(`${baseUrl}/api/problems/${problemId}/submit`, {
     method: 'POST',

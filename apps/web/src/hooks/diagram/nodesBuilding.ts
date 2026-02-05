@@ -2,7 +2,7 @@ import { type Node } from '@xyflow/react'
 
 const CONFIG = {
   GAP: 20,
-  PADDING: 40,
+  PADDING: 60,
   ROOT_ID: 'aws-cloud',
   ROOT_INIT_WIDTH: 1000,
   ROOT_INIT_HEIGHT: 800,
@@ -30,18 +30,25 @@ const applyLayoutToNode = (
   currentNodes: Node[],
 ): Node[] => {
   // 1. 내 직속 자식들 찾기
-  const children = currentNodes.filter((n) => n.parentId === targetNodeId)
+  const allChildren = currentNodes.filter((n) => n.parentId === targetNodeId)
 
   // 자식이 없으면 아무것도 안 함
-  if (children.length === 0) {
+  if (allChildren.length === 0) {
     return currentNodes
   }
 
-  // 2. 기초 데이터 계산 (총 면적, 최대 자식 너비 등)
+  const layoutChildren = allChildren.filter(
+    (n) => n.data?.type !== 'internetGateway',
+  )
+  const specialChildren = allChildren.filter(
+    (n) => n.data?.type === 'internetGateway',
+  )
+
+  // 2. 기초 데이터 계산 (총 면적, 최대 자식 너비 등) - 레이아웃 자식만 고려
   let totalArea = 0
   let maxChildWidth = 0
 
-  children.forEach((child) => {
+  layoutChildren.forEach((child) => {
     const w = Number(child.data?.width) || 100
     const h = Number(child.data?.height) || 50
     totalArea += w * h
@@ -55,7 +62,7 @@ const applyLayoutToNode = (
     let currentRowHeight = 0
     let simulCurrentX = CONFIG.PADDING
 
-    children.forEach((child) => {
+    layoutChildren.forEach((child) => {
       const childW = Number(child.data?.width) || 100
       const childH = Number(child.data?.height) || 50
 
@@ -146,19 +153,25 @@ const applyLayoutToNode = (
     minParentHeight = CONFIG.FIRST_LAYER_INIT_HEIGHT
   }
 
+  // 특수 자식(IGW)이 있을 경우 상단 여백 추가 확보
+  const hasSpecialChildren = specialChildren.length > 0
+  const topPadding = hasSpecialChildren ? 100 : CONFIG.PADDING
+  const bottomPadding = hasSpecialChildren ? 100 : CONFIG.PADDING // 대칭을 위해 하단도 동일하게
+
   // 최종 부모 크기 = Max(콘텐츠 크기 + 패딩, 최소 크기)
   const newParentWidth = Math.max(
     bestResult.contentWidth + CONFIG.PADDING * 2,
     minParentWidth,
   )
   const newParentHeight = Math.max(
-    bestResult.contentHeight + CONFIG.PADDING * 2,
+    bestResult.contentHeight + topPadding + bottomPadding,
     minParentHeight,
   )
 
   // 수직 중앙 정렬 (Align Content: Center)
+  // (newHeight - contentHeight) / 2 가 중앙인데, 최소 topPadding은 보장해야 함
   let startY = (newParentHeight - bestResult.contentHeight) / 2
-  startY = Math.max(startY, CONFIG.PADDING)
+  startY = Math.max(startY, topPadding)
 
   let currentY = startY
   const updatedChildren: Node[] = []
@@ -198,6 +211,28 @@ const applyLayoutToNode = (
     currentY += row.height + CONFIG.GAP
   })
 
+  // 2. 특수 자식 노드 배치 (중앙 상단)
+  const totalSpecialWidth =
+    specialChildren.reduce(
+      (sum, child) => sum + (Number(child.data?.width) || 100),
+      0,
+    ) +
+    (specialChildren.length - 1) * CONFIG.GAP
+
+  let currentSpecialX = (newParentWidth - totalSpecialWidth) / 2
+
+  specialChildren.forEach((child) => {
+    const childW = Number(child.data?.width) || 100
+    const yPos = 0 // 상단에 완전히 밀착
+
+    updatedChildren.push({
+      ...child,
+      position: { x: currentSpecialX, y: yPos },
+    })
+
+    currentSpecialX += childW + CONFIG.GAP
+  })
+
   return currentNodes.map((node) => {
     // 부모 노드: 크기 업데이트
     if (node.id === targetNodeId) {
@@ -218,12 +253,10 @@ const applyLayoutToNode = (
   })
 }
 
-// recalculateTree 함수는 기존 그대로 사용하시면 됩니다.
 export { applyLayoutToNode }
 
 export const recalculateTree = (allNodes: Node[]) => {
   // 1. 노드 별 깊이(Depth) 계산을 위한 맵 생성
-  // (React Flow는 Flat 구조이므로 parentId를 추적해야 함)
   const depthMap = new Map<string, number>()
 
   const getDepth = (nodeId: string): number => {
@@ -258,8 +291,6 @@ export const recalculateTree = (allNodes: Node[]) => {
 
   sortedNodes.forEach((node) => {
     // 그룹 노드(컨테이너)인 경우에만 레이아웃 계산 수행
-    // (type을 체크하거나, 자식이 있는지 확인하는 로직)
-    // 여기서는 applyLayoutToNode 내부에서 자식 없으면 skip하므로 그냥 호출해도 무방
     currentNodes = applyLayoutToNode(node.id, currentNodes)
   })
 

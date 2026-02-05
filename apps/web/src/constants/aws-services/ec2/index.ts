@@ -7,4 +7,5 @@ export {
   VPC_OPTIONS,
   SUBNET_OPTIONS,
 } from './ec2-options.constants'
-export { EC2_TOOLTIPS } from './ec2-tooltips.constants'
+export { INSTANCE_CREATE_TOOLTIPS } from './instance-create-tooltips.constants'
+export { SECURITY_GROUP_TOOLTIPS } from './security-group-tooltips.constants'

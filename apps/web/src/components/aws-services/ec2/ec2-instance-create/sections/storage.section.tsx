@@ -10,7 +10,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { EC2_TOOLTIPS, VOLUME_TYPE_OPTIONS } from '@/constants/aws-services/ec2'
+import {
+  INSTANCE_CREATE_TOOLTIPS,
+  VOLUME_TYPE_OPTIONS,
+} from '@/constants/aws-services/ec2'
 import type { EC2SectionProps } from '@/types/aws-services/ec2/instance-create'
 
 export function Storage({ control }: EC2SectionProps) {
@@ -27,7 +30,7 @@ export function Storage({ control }: EC2SectionProps) {
       title={
         <div className="flex items-center gap-2">
           스토리지 구성
-          <TooltipBox content={EC2_TOOLTIPS.storage} />
+          <TooltipBox content={INSTANCE_CREATE_TOOLTIPS.storage} />
         </div>
       }
     >
@@ -36,16 +39,31 @@ export function Storage({ control }: EC2SectionProps) {
         <Controller
           name="storage.size"
           control={control}
-          render={({ field }) => (
-            <Input
-              type="number"
-              min={8}
-              max={16384}
-              className="w-20"
-              {...field}
-              value={field.value ?? 8}
-              onChange={(e) => field.onChange(Number(e.target.value))}
-            />
+          rules={{
+            min: {
+              value: 8,
+              message: '최소 8GiB 이상이어야 합니다.',
+            },
+            max: {
+              value: 16384,
+              message: '최대 16384GiB까지 가능합니다.',
+            },
+          }}
+          render={({ field, fieldState: { error } }) => (
+            <div>
+              <Input
+                type="number"
+                min={8}
+                max={16384}
+                className="w-20"
+                {...field}
+                value={field.value ?? 8}
+                onChange={(e) => field.onChange(Number(e.target.value))}
+              />
+              {error && (
+                <p className="text-destructive text-sm">{error.message}</p>
+              )}
+            </div>
           )}
         />
         <span className="text-muted-foreground">GiB</span>

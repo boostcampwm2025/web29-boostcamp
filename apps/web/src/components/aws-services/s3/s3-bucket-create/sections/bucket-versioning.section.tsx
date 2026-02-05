@@ -1,14 +1,21 @@
 import { Controller } from 'react-hook-form'
 
+import { TooltipBox } from '@/components/aws-services/common/tooltip-box'
 import { SectionContainer } from '@/components/section-container'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
+import { BUCKET_CREATE_TOOLTIPS } from '@/constants/aws-services/s3'
 import type { S3SectionProps } from '@/types/aws-services/s3/bucket-create'
 
 export const BucketVersioning = ({ control }: S3SectionProps) => {
   return (
     <SectionContainer
-      title="버킷 버전 관리"
+      title={
+        <div className="flex items-center gap-2">
+          버킷 버전 관리
+          <TooltipBox content={BUCKET_CREATE_TOOLTIPS.bucketVersioning} />
+        </div>
+      }
       description="동일한 버킷에 여러 버전의 객체를 유지하여 버킷에 저장된 모든 객체의 모든 버전을 보존, 검색 및 복원할 수 있습니다."
     >
       <div className="flex items-center justify-between">

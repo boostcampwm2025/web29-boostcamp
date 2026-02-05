@@ -8,6 +8,7 @@ import { useForm, useWatch } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { useProblemForm } from '@/contexts/problem-form-context'
 import { getDefaultVpcs } from '@/lib/get-default-vpcs'
+import { AZ_OPTIONS } from '@/types/aws-services/subnet/constants'
 import type { SubnetFormData } from '@/types/aws-services/subnet/subnet-form-data.types'
 import type { SubnetSubmitConfig } from '@/types/aws-services/subnet/subnet-submit-config.types'
 
@@ -50,8 +51,9 @@ export default function SubnetCreate({ onSubmit }: SubnetCreateProps) {
       id: data.subnetSettings.nameTag || crypto.randomUUID(),
       name: data.subnetSettings.nameTag || 'Unnamed Subnet',
       availabilityZone:
+        !data.subnetSettings.availabilityZone ||
         data.subnetSettings.availabilityZone === 'no-preference'
-          ? undefined
+          ? AZ_OPTIONS[0].value
           : data.subnetSettings.availabilityZone,
       cidrBlock: data.subnetSettings.cidrBlock,
     }

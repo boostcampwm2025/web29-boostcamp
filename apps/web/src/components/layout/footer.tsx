@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export const Footer = () => {
   return (
-    <footer className="bg-secondary/40 h-36">
+    <footer className="bg-secondary/40 mt-15 h-36">
       <div className="mx-auto flex h-full max-w-7xl flex-col items-center justify-center gap-2 px-4">
         <Link href="https://github.com/boostcampwm2025/web29-LBD">
           <svg

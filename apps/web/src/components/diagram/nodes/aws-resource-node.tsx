@@ -23,19 +23,13 @@ export function AwsResourceNode({ data }: AwsResourceNodeProps) {
   return (
     <div className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-md">
       <Handle type="target" position={Position.Top} className="!bg-gray-400" />
-      <Image
-        src={iconPath}
-        alt={data.label}
-        width={36}
-        height={36}
-        className="h-9 w-9"
-      />
+      <Image src={iconPath} alt={data.label} width={80} height={80} />
       <div className="flex flex-col">
-        <span className="text-xs font-semibold text-gray-800">
+        <span className="text-lg font-semibold text-gray-800">
           {data.label}
         </span>
         {data.description && (
-          <span className="text-[10px] text-gray-500">{data.description}</span>
+          <span className="text-md text-gray-500">{data.description}</span>
         )}
       </div>
       <Handle

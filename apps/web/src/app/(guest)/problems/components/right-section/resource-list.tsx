@@ -135,31 +135,32 @@ export const CreatedResourcePanel = () => {
                         </div>
                       </div>
 
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className={cn(
-                          'h-7 w-7 transition-all',
-                          item.isDefault
-                            ? 'text-muted-foreground/50 cursor-default'
-                            : 'text-muted-foreground hover:text-destructive hover:bg-destructive/10',
-                        )}
-                        onClick={() =>
-                          !item.isDefault &&
-                          handleRemoveItem(
-                            serviceType as keyof typeof submitConfig,
-                            item.id,
-                          )
-                        }
-                        title={item.isDefault ? '고정된 리소스' : '제거'}
-                        disabled={item.isDefault}
-                      >
-                        {item.isDefault ? (
-                          <PinIcon className="h-3.5 w-3.5" />
-                        ) : (
-                          <Trash2Icon className="h-3.5 w-3.5" />
-                        )}
-                      </Button>
+                      <span title={item.isDefault ? '고정된 리소스' : '제거'}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className={cn(
+                            'h-7 w-7 transition-all',
+                            item.isDefault
+                              ? 'text-muted-foreground/50 cursor-default'
+                              : 'text-muted-foreground hover:text-destructive hover:bg-destructive/10',
+                          )}
+                          onClick={() =>
+                            !item.isDefault &&
+                            handleRemoveItem(
+                              serviceType as keyof typeof submitConfig,
+                              item.id,
+                            )
+                          }
+                          disabled={item.isDefault}
+                        >
+                          {item.isDefault ? (
+                            <PinIcon className="h-3.5 w-3.5" />
+                          ) : (
+                            <Trash2Icon className="h-3.5 w-3.5" />
+                          )}
+                        </Button>
+                      </span>
                     </div>
                   )
                 })}

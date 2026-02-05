@@ -4,6 +4,7 @@ import { Plus, Trash2 } from 'lucide-react'
 
 import { Controller, type UseFormReturn, useFieldArray } from 'react-hook-form'
 
+import { TooltipBox } from '@/components/aws-services/common/tooltip-box'
 import { SectionContainer } from '@/components/section-container'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -23,6 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { SECURITY_GROUP_TOOLTIPS } from '@/constants/aws-services/ec2/'
 import {
   DEFAULT_SG_RULE,
   RULE_TYPE_PRESETS,
@@ -77,7 +79,12 @@ export function InboundRulesSection({ form }: InboundRulesSectionProps) {
 
   return (
     <SectionContainer
-      title="인바운드 규칙"
+      title={
+        <div className="flex items-center gap-2">
+          인바운드 규칙
+          <TooltipBox content={SECURITY_GROUP_TOOLTIPS.inboundRules} />
+        </div>
+      }
       description="인스턴스로 들어오는 트래픽을 제어하는 규칙을 추가하세요"
     >
       <div className="space-y-4">
@@ -148,30 +155,76 @@ export function InboundRulesSection({ form }: InboundRulesSectionProps) {
                       {/* 포트 범위 */}
                       <TableCell>
                         {isCustomType ? (
-                          <div className="flex items-center gap-1">
-                            <Controller
-                              name={`inboundRules.${index}.fromPort`}
-                              control={control}
-                              render={({ field: portField }) => (
-                                <Input
-                                  className="h-8 w-16 text-sm"
-                                  placeholder="0"
-                                  {...portField}
-                                />
-                              )}
-                            />
-                            <span className="text-muted-foreground">-</span>
-                            <Controller
-                              name={`inboundRules.${index}.toPort`}
-                              control={control}
-                              render={({ field: portField }) => (
-                                <Input
-                                  className="h-8 w-16 text-sm"
-                                  placeholder="65535"
-                                  {...portField}
-                                />
-                              )}
-                            />
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-1">
+                              <Controller
+                                name={`inboundRules.${index}.fromPort`}
+                                control={control}
+                                rules={{
+                                  pattern: {
+                                    value: /^\d+$/,
+                                    message: '숫자만 입력 가능합니다.',
+                                  },
+                                  validate: (value) => {
+                                    const num = Number(value)
+                                    if (num < 0 || num > 65535)
+                                      return '포트 범위는 0~65535입니다.'
+                                    return true
+                                  },
+                                }}
+                                render={({
+                                  field: portField,
+                                  fieldState: { error },
+                                }) => (
+                                  <div>
+                                    <Input
+                                      className="h-8 w-16 text-sm"
+                                      placeholder="0"
+                                      {...portField}
+                                    />
+                                    {error && (
+                                      <p className="text-destructive text-xs">
+                                        {error.message}
+                                      </p>
+                                    )}
+                                  </div>
+                                )}
+                              />
+                              <span className="text-muted-foreground">-</span>
+                              <Controller
+                                name={`inboundRules.${index}.toPort`}
+                                control={control}
+                                rules={{
+                                  pattern: {
+                                    value: /^\d+$/,
+                                    message: '숫자만 입력 가능합니다.',
+                                  },
+                                  validate: (value) => {
+                                    const num = Number(value)
+                                    if (num < 0 || num > 65535)
+                                      return '포트 범위는 0~65535입니다.'
+                                    return true
+                                  },
+                                }}
+                                render={({
+                                  field: portField,
+                                  fieldState: { error },
+                                }) => (
+                                  <div>
+                                    <Input
+                                      className="h-8 w-16 text-sm"
+                                      placeholder="65535"
+                                      {...portField}
+                                    />
+                                    {error && (
+                                      <p className="text-destructive text-xs">
+                                        {error.message}
+                                      </p>
+                                    )}
+                                  </div>
+                                )}
+                              />
+                            </div>
                           </div>
                         ) : (
                           <Controller
@@ -227,20 +280,41 @@ export function InboundRulesSection({ form }: InboundRulesSectionProps) {
                         <Controller
                           name={`inboundRules.${index}.customCidr`}
                           control={control}
-                          render={({ field: cidrField }) => (
-                            <Input
-                              className="h-8 text-sm"
-                              placeholder="0.0.0.0/0"
-                              disabled={source !== 'custom'}
-                              {...cidrField}
-                              value={
-                                source === 'anywhere'
-                                  ? SOURCE_PRESETS.anywhere
-                                  : source === 'anywherev6'
-                                    ? SOURCE_PRESETS.anywherev6
-                                    : cidrField.value
-                              }
-                            />
+                          rules={
+                            source === 'custom'
+                              ? {
+                                  pattern: {
+                                    value: /^(\d{1,3}\.){3}\d{1,3}\/\d{1,2}$/,
+                                    message:
+                                      '올바른 CIDR 형식을 입력하세요. (예: 192.168.1.0/24)',
+                                  },
+                                }
+                              : undefined
+                          }
+                          render={({
+                            field: cidrField,
+                            fieldState: { error },
+                          }) => (
+                            <div>
+                              <Input
+                                className="h-8 text-sm"
+                                placeholder="0.0.0.0/0"
+                                disabled={source !== 'custom'}
+                                {...cidrField}
+                                value={
+                                  source === 'anywhere'
+                                    ? SOURCE_PRESETS.anywhere
+                                    : source === 'anywherev6'
+                                      ? SOURCE_PRESETS.anywherev6
+                                      : cidrField.value
+                                }
+                              />
+                              {source === 'custom' && error && (
+                                <p className="text-destructive text-xs">
+                                  {error.message}
+                                </p>
+                              )}
+                            </div>
                           )}
                         />
                       </TableCell>

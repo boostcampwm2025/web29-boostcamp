@@ -2,6 +2,7 @@
 
 import { Controller, type UseFormReturn } from 'react-hook-form'
 
+import { TooltipBox } from '@/components/aws-services/common/tooltip-box'
 import { SectionContainer } from '@/components/section-container'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -13,6 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { SECURITY_GROUP_TOOLTIPS } from '@/constants/aws-services/ec2'
 import type {
   SecurityGroupFormData,
   VPCOption,
@@ -31,7 +33,12 @@ export function BasicInfoSection({
 
   return (
     <SectionContainer
-      title="기본 세부 정보"
+      title={
+        <div className="flex items-center gap-2">
+          기본 세부 정보
+          <TooltipBox content={SECURITY_GROUP_TOOLTIPS.basicInfo} />
+        </div>
+      }
       description="보안 그룹의 이름과 설명을 입력하세요"
     >
       <div className="space-y-4">

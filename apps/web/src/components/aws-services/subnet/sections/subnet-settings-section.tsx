@@ -1,5 +1,7 @@
 'use client'
 
+import { TooltipBox } from '../../common/tooltip-box'
+
 import { Controller } from 'react-hook-form'
 import type { Control } from 'react-hook-form'
 
@@ -12,17 +14,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { SUBNET_CREATE_TOOLTIPS } from '@/constants/aws-services/subnet'
+import { AZ_OPTIONS } from '@/types/aws-services/subnet/constants'
 import type { SubnetFormData } from '@/types/aws-services/subnet/subnet-form-data.types'
-
-// TODO: 나중에 리전에 따라 가용 영역 동적으로 불러오기
-const AZ_OPTIONS = [
-  { value: 'us-east-1a', label: 'us-east-1a' },
-  { value: 'us-east-1b', label: 'us-east-1b' },
-  { value: 'us-east-1c', label: 'us-east-1c' },
-  { value: 'us-east-1d', label: 'us-east-1d' },
-  { value: 'us-east-1e', label: 'us-east-1e' },
-  { value: 'us-east-1f', label: 'us-east-1f' },
-]
 
 interface SubnetSettingsProps {
   control: Control<SubnetFormData>
@@ -31,7 +25,7 @@ interface SubnetSettingsProps {
 
 export function SubnetSettings({ control, vpcCidr }: SubnetSettingsProps) {
   return (
-    <div className="bg-card text-card-foreground animate-in fade-in slide-in-from-top-4 rounded-lg border shadow-sm duration-300">
+    <div className="bg-card text-card-foreground animate-in fade-in slide-in-from-top-4 rounded-lg border duration-300">
       <div className="border-b px-6 py-4">
         <h2 className="text-xl font-semibold">서브넷 설정</h2>
         <p className="text-muted-foreground mt-1 text-sm">
@@ -41,7 +35,12 @@ export function SubnetSettings({ control, vpcCidr }: SubnetSettingsProps) {
 
       <div className="space-y-8 p-6">
         <SectionContainer
-          title="서브넷 이름"
+          title={
+            <div className="flex items-center gap-2">
+              서브넷 이름
+              <TooltipBox content={SUBNET_CREATE_TOOLTIPS.nameTag} />
+            </div>
+          }
           description="'Name' 키와 사용자가 지정하는 값을 포함하는 태그를 생성합니다."
         >
           <Controller
@@ -58,8 +57,13 @@ export function SubnetSettings({ control, vpcCidr }: SubnetSettingsProps) {
         </SectionContainer>
 
         <SectionContainer
-          title="가용 영역"
-          description="서브넷이 상주할 영역을 선택합니다. 선택하지 않으면 Amazon이 자동으로 선택합니다."
+          title={
+            <div className="flex items-center gap-2">
+              가용 영역
+              <TooltipBox content={SUBNET_CREATE_TOOLTIPS.availabilityZone} />
+            </div>
+          }
+          description="서브넷이 상주할 영역을 선택합니다."
         >
           <Controller
             name="subnetSettings.availabilityZone"
@@ -82,7 +86,12 @@ export function SubnetSettings({ control, vpcCidr }: SubnetSettingsProps) {
         </SectionContainer>
 
         <SectionContainer
-          title="IPv4 서브넷 CIDR 블록"
+          title={
+            <div className="flex items-center gap-2">
+              IPv4 서브넷 CIDR 블록
+              <TooltipBox content={SUBNET_CREATE_TOOLTIPS.cidrBlock} />
+            </div>
+          }
           description={
             vpcCidr
               ? `VPC CIDR (${vpcCidr}) 내에 있어야 합니다.`

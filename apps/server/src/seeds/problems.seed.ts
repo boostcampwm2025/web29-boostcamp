@@ -7,17 +7,15 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
   const problemRepository = dataSource.getRepository(Problem);
   const tagRepository = dataSource.getRepository(Tag);
 
-  // 태그 데이터 먼저 생성
+  // 태그 데이터
   const tagNames = [
     'Storage',
     'S3',
-    'CDN',
-    'CloudFront',
     'Web Hosting',
     'Security',
-    'Compute', // 추가
-    'EC2', // 추가
-    'Server', // 추가
+    'Compute',
+    'EC2',
+    'Server',
     'Networking',
     'VPC',
   ];
@@ -31,7 +29,6 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
     tags.push(tag);
   }
 
-  // 태그 이름으로 찾기 편하게 Map 생성
   const tagMap = new Map(tags.map((tag) => [tag.name, tag]));
 
   const problems = [
@@ -65,6 +62,8 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
           '버전 관리를 활성화하면 실수로 객체를 삭제하거나 덮어써도 이전 버전을 복구할 수 있습니다.',
         learningObjectives:
           '중요 문서나 백업 파일 저장 시 필수적인 버전 관리 설정 방법을 학습합니다.',
+        requirements:
+          '- 버킷 이름은 `versioning-bucket`으로 설정해주세요\n- 버킷 생성 시 `버전 관리` 기능을 활성화하세요.',
       },
       requiredFields: [
         {
@@ -80,27 +79,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
         tagMap.get('Security')!,
       ],
     },
-    {
-      problemType: ProblemType.UNIT,
-      title: 'CloudFront 원본(Origin) 설정',
-      description:
-        'S3 버킷을 원본으로 하는 CloudFront 배포의 원본 설정을 구성하세요.',
-      descDetail: {
-        overview:
-          'CloudFront는 전 세계 엣지 로케이션을 통해 콘텐츠를 빠르게 전송하는 CDN 서비스입니다.',
-        requirements:
-          '- S3 버킷을 원본으로 지정\n- 원본 액세스 제어(OAC)를 활성화하여 보안을 강화',
-      },
-      requiredFields: [
-        {
-          serviceName: 'cloudFront',
-          serviceTask: 'originSettings',
-          serviceSections: ['originDomain', 'originAccessControl'],
-          fixedOptions: [],
-        },
-      ],
-      tags: [tagMap.get('CDN')!, tagMap.get('CloudFront')!],
-    },
+
     {
       problemType: ProblemType.UNIT,
       title: '웹 서버용 EC2 인스턴스 생성',
@@ -110,7 +89,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
         overview:
           'EC2는 안전하고 크기를 조정할 수 있는 컴퓨팅 파워를 클라우드에서 제공합니다.',
         requirements:
-          '- 프리티어에서 사용 가능한 t2.micro 인스턴스를 생성\n- 기본 네트워크 설정을 구성',
+          '- 인스턴스 이름은 `web-server-instance`로 설정해주세요\n- 프리티어에서 사용 가능한 t2.micro 인스턴스를 생성\n- 기본 네트워크 설정을 구성',
       },
       requiredFields: [
         {
@@ -123,91 +102,29 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
             'networkSetting',
             'storage',
           ],
-          fixedOptions: [],
+          fixedOptions: [
+            {
+              _type: 'vpc',
+              id: 'default-vpc',
+              name: 'default-vpc',
+              cidrBlock: '10.0.0.0/16',
+              tenancy: 'default',
+            },
+            {
+              _type: 'subnet',
+              id: 'default-subnet',
+              name: 'default-subnet',
+              vpcId: 'default-vpc',
+              vpcName: 'default-vpc',
+              cidrBlock: '10.0.1.0/24',
+              availabilityZone: 'us-east-1a',
+            },
+          ],
         },
       ],
       tags: [tagMap.get('Compute')!, tagMap.get('EC2')!, tagMap.get('Server')!],
     },
-    {
-      problemType: ProblemType.UNIT,
-      title: '정적 웹사이트 글로벌 배포 (S3 + CloudFront)',
-      description:
-        'S3 버킷을 생성하고 CloudFront CDN을 연결하여 웹사이트를 배포하세요.',
-      descDetail: {
-        overview:
-          '단일 리전의 S3 버킷만으로는 전 세계 사용자에게 빠른 속도를 제공하기 어렵습니다.',
-        learningObjectives:
-          'CloudFront를 S3 앞단에 배치하여 성능을 최적화하고, OAC를 통해 보안을 강화하는 구성을 실습합니다.',
-      },
-      requiredFields: [
-        {
-          serviceName: 's3',
-          serviceTask: 'bucketCreate',
-          serviceSections: ['general'],
-          fixedOptions: [],
-        },
-        {
-          serviceName: 'cloudFront',
-          serviceTask: 'originSettings',
-          serviceSections: ['originDomain', 'originAccessControl'],
-          fixedOptions: [],
-        },
-      ],
-      tags: [
-        tagMap.get('S3')!,
-        tagMap.get('CloudFront')!,
-        tagMap.get('CDN')!,
-        tagMap.get('Web Hosting')!,
-      ],
-    },
-    {
-      problemType: ProblemType.UNIT,
-      title: 'S3 버킷 생성하기',
-      description: '기본 설정으로 S3 버킷을 하나 생성하세요',
-      descDetail: {
-        overview:
-          'S3는 객체 스토리지 서비스로, 데이터를 파일 단위로 저장하고 관리할 수 있습니다.',
-        requirements:
-          '특별한 설정 없이 기본 구성으로 S3 버킷을 하나 생성하는 것이 목표입니다. 생성한 버킷은 이후 문제에서 사용될 수 있습니다.',
-      },
-      requiredFields: [
-        {
-          serviceName: 's3',
-          serviceTask: 'bucketCreate',
-          serviceSections: ['general', 'ownership', 'blockPublicAccess'],
-        },
-        {
-          serviceName: 's3',
-          serviceTask: 'bucketList',
-          serviceSections: ['header', 'bucketTable', 'searchBar'],
-        },
-        {
-          serviceName: 'cloudFront',
-          serviceTask: 'websiteSettings',
-          serviceSections: ['defaultRootObject'],
-        },
-      ],
-      tags: [tagMap.get('Storage')!, tagMap.get('S3')!],
-    },
-    {
-      problemType: ProblemType.UNIT,
-      title: 'VPC 생성하기',
-      description: '기본 설정으로 VPC를 하나 생성하세요',
-      descDetail: {
-        overview: 'VPC는 가상 네트워크를 생성하고 관리할 수 있는 서비스입니다.',
-        requirements:
-          '특별한 설정 없이 기본 구성으로 VPC를 하나 생성하는 것이 목표입니다. 생성한 VPC는 이후 문제에서 사용될 수 있습니다.',
-      },
-      requiredFields: [
-        {
-          serviceName: 'vpc',
-          serviceTask: 'vpcCreate',
-          serviceSections: ['nameTag', 'cidrBlock', 'tags', 'tenancy'],
-          fixedOptions: [],
-        },
-      ],
-      tags: [tagMap.get('Networking')!, tagMap.get('VPC')!],
-    },
+
     {
       problemType: ProblemType.UNIT,
       title: 'EC2 보안 그룹 HTTP 포트 열기',
@@ -219,6 +136,8 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
         prerequisities: '- VPC가 이미 존재: default-vpc',
         learningObjectives:
           '1. 보안 그룹의 역할 이해\n2. 인바운드 규칙 추가 방법\n3. 포트와 소스 IP 설정',
+        requirements:
+          '- 보안 그룹 이름은 `web-server-sg`로 설정해주세요\n- HTTP(80) 포트를 모든 IP(0.0.0.0/0)에 대해 개방하세요',
       },
       requiredFields: [
         {
@@ -230,242 +149,15 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               _type: 'vpc',
               id: 'default-vpc',
               name: 'default-vpc',
+              cidrBlock: '10.0.0.0/16',
+              tenancy: 'default',
             },
           ],
         },
       ],
-      solution: {
-        answerConfig: {
-          securityGroups: [
-            {
-              name: 'web-server-sg',
-              vpcId: 'default-vpc',
-              vpcName: 'default-vpc',
-              ipPermissions: [
-                {
-                  ipProtocol: 'tcp',
-                  fromPort: '80',
-                  toPort: '80',
-                  cidrIp: '0.0.0.0/0',
-                  isInbound: true,
-                },
-              ],
-            },
-          ],
-        },
-      },
-      requirements: {
-        securityGroup: {
-          'web-server-sg': {
-            requireOpenPorts: [80],
-          },
-        },
-      },
       tags: [tagMap.get('Security')!, tagMap.get('EC2')!],
     },
-    {
-      problemType: ProblemType.UNIT,
-      title: 'EC2 User Data로 nginx 웹서버 설정',
-      description:
-        'User Data 스크립트를 사용하여 EC2 인스턴스에 nginx를 자동 설치하세요.',
-      descDetail: {
-        overview:
-          'EC2 인스턴스 시작 시 자동으로 nginx 웹서버를 설치하고 실행하는 User Data 스크립트를 작성하세요.',
-        prerequisities:
-          '- VPC와 퍼블릭 서브넷이 이미 존재합니다.\n- 보안 그룹에서 HTTP(80) 포트가 열려있습니다.',
-        learningObjectives:
-          '1. EC2 User Data 개념 이해\n2. 부트스트래핑을 통한 인스턴스 자동 구성\n3. Amazon Linux에서 nginx 설치 명령어',
-        hint: '- Amazon Linux에서는 yum 패키지 매니저를 사용합니다.\n- systemctl 명령으로 서비스를 시작/활성화합니다.',
-      },
-      requiredFields: [
-        {
-          serviceName: 'ec2',
-          serviceTask: 'instanceCreate',
-          serviceSections: ['nameTag', 'ami', 'userData'],
-          fixedOptions: [],
-        },
-      ],
-      solution: {
-        answerConfig: {
-          ec2: [
-            {
-              name: 'web-server',
-              osType: 'amazon-linux',
-              userData: 'DONT_CARE',
-            },
-          ],
-        },
-      },
-      requirements: {
-        ec2: {
-          'web-server': {
-            requireUserData: true,
-            userDataMustContain: ['nginx', 'yum install', 'systemctl start'],
-          },
-        },
-      },
-      tags: [tagMap.get('Compute')!, tagMap.get('EC2')!, tagMap.get('Server')!],
-    },
-    {
-      problemType: ProblemType.UNIT,
-      title: '퍼블릭 서브넷 생성하기',
-      description: '기본 설정으로 퍼블릭 서브넷을 하나 생성하세요',
-      descDetail: {
-        overview:
-          '서브넷은 VPC 내에서 IP 주소 범위를 나누어 네트워크를 구성하는 단위입니다.',
-        requirements:
-          '특별한 설정 없이 기본 구성으로 퍼블릭 서브넷을 하나 생성하는 것이 목표입니다. 생성한 서브넷은 이후 문제에서 사용될 수 있습니다.',
-      },
-      requiredFields: [
-        {
-          serviceName: 'subnet',
-          serviceTask: 'subnetCreate',
-          serviceSections: [
-            'nameTag',
-            'vpcSelection',
-            'cidrBlock',
-            'availabilityZone',
-            'publicPrivateSetting',
-            'tags',
-          ],
-          fixedOptions: [
-            {
-              _type: 'vpc',
-              id: 'default-vpc',
-              name: 'default-vpc',
-              cidrBlock: '10.0.0.0/16',
-              tenancy: 'default',
-            },
-          ],
-        },
-      ],
-      tags: [tagMap.get('Networking')!, tagMap.get('VPC')!],
-    },
-    {
-      problemType: ProblemType.UNIT,
-      title: '라우트 테이블 생성하기',
-      description: '기본 설정으로 라우트 테이블을 하나 생성하세요',
-      descDetail: {
-        overview:
-          '라우트 테이블은 VPC 내에서 네트워크 트래픽의 경로를 정의하는 역할을 합니다.',
-        requirements:
-          '특별한 설정 없이 기본 구성으로 라우트 테이블을 하나 생성하는 것이 목표입니다. 생성한 라우트 테이블은 이후 문제에서 사용될 수 있습니다.',
-      },
-      requiredFields: [
-        {
-          serviceName: 'routeTable',
-          serviceTask: 'routeTableCreate',
-          serviceSections: ['general'],
-          fixedOptions: [
-            {
-              _type: 'vpc',
-              id: 'default-vpc',
-              name: 'default-vpc',
-              cidrBlock: '10.0.0.0/16',
-              tenancy: 'default',
-            },
-          ],
-        },
-      ],
-      tags: [tagMap.get('Networking')!, tagMap.get('VPC')!],
-    },
-    {
-      problemType: ProblemType.UNIT,
-      title: '인터넷 게이트웨이 생성하기',
-      description: '기본 설정으로 인터넷 게이트웨이를 하나 생성하세요',
-      descDetail: {
-        overview:
-          '인터넷 게이트웨이는 VPC와 인터넷 간의 통신을 가능하게 하는 서비스입니다.',
-        requirements:
-          '특별한 설정 없이 기본 구성으로 인터넷 게이트웨이를 하나 생성하는 것이 목표입니다. 생성한 인터넷 게이트웨이는 이후 문제에서 사용될 수 있습니다.',
-      },
-      requiredFields: [
-        {
-          serviceName: 'internetGateway',
-          serviceTask: 'internetGatewayCreate',
-          serviceSections: ['nameTag'],
-          fixedOptions: [],
-        },
-      ],
-      tags: [tagMap.get('Networking')!, tagMap.get('VPC')!],
-    },
-    {
-      problemType: ProblemType.UNIT,
-      title: '인터넷 게이트웨이 VPC에 연결하기',
-      description: '인터넷 게이트웨이를 기존 VPC에 연결하세요',
-      descDetail: {
-        overview:
-          '인터넷 게이트웨이를 VPC에 연결하면 해당 VPC 내의 리소스가 인터넷과 통신할 수 있습니다.',
-        requirements:
-          '기존에 생성된 인터넷 게이트웨이를 특정 VPC에 연결하는 것이 목표입니다.',
-      },
-      requiredFields: [
-        {
-          serviceName: 'internetGateway',
-          serviceTask: 'internetGatewayAttach',
-          serviceSections: ['attachForm'],
-          fixedOptions: [
-            {
-              _type: 'vpc',
-              id: 'default-vpc',
-              name: 'default-vpc',
-              cidrBlock: '10.0.0.0/16',
-              tenancy: 'default',
-            },
-            {
-              _type: 'internetGateway',
-              id: 'default-igw',
-              name: 'default-igw',
-            },
-          ],
-        },
-      ],
-      tags: [tagMap.get('Networking')!, tagMap.get('VPC')!],
-    },
-    {
-      problemType: ProblemType.UNIT,
-      title: '퍼블릭 서브넷 라우트 테이블 연결하기',
-      description: '퍼블릭 서브넷을 라우트 테이블에 연결하세요',
-      descDetail: {
-        overview:
-          '서브넷을 라우트 테이블에 연결하면 해당 서브넷의 트래픽이 라우트 테이블의 규칙을 따르게 됩니다.',
-        requirements:
-          '기존에 생성된 퍼블릭 서브넷을 특정 라우트 테이블에 연결하는 것이 목표입니다.',
-      },
-      requiredFields: [
-        {
-          serviceName: 'routeTable',
-          serviceTask: 'routeTableEdit',
-          serviceSections: ['routes', 'subnetAssociations'],
-          fixedOptions: [
-            {
-              _type: 'vpc',
-              id: 'default-vpc',
-              name: 'default-vpc',
-              cidrBlock: '10.0.0.0/16',
-              tenancy: 'default',
-            },
-            {
-              _type: 'subnet',
-              id: 'public-subnet-1',
-              name: 'public-subnet-1',
-              vpcId: 'default-vpc',
-              vpcName: 'default-vpc',
-              cidrBlock: '10.0.1.0/24',
-              availabilityZone: 'us-east-1a',
-            },
-            {
-              _type: 'routeTable',
-              id: 'route-table-1',
-              name: 'route-table-1',
-              vpcId: 'default-vpc',
-              vpcName: 'default-vpc',
-            },
-          ],
-        },
-      ],
-      tags: [tagMap.get('Networking')!, tagMap.get('VPC')!],
-    },
+
     {
       problemType: ProblemType.UNIT,
       title: '리전 내 가상 네트워크(VPC) 구축',
@@ -614,6 +306,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'cloud-craft-vpc',
               vpcName: 'cloud-craft-vpc',
               cidrBlock: '10.0.1.0/24',
+              availabilityZone: 'us-east-1a',
             },
           ],
         },
@@ -660,6 +353,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'cloud-craft-vpc',
               vpcName: 'cloud-craft-vpc',
               cidrBlock: '10.0.1.0/24',
+              availabilityZone: 'us-east-1a',
             },
             {
               _type: 'routeTable',
@@ -725,6 +419,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'cloud-craft-vpc',
               vpcName: 'cloud-craft-vpc',
               cidrBlock: '10.0.1.0/24',
+              availabilityZone: 'us-east-1a',
             },
           ],
         },
@@ -866,6 +561,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'secure-vpc',
               vpcName: 'secure-vpc',
               cidrBlock: '10.1.1.0/24',
+              availabilityZone: 'us-east-1a',
             },
             {
               _type: 'subnet',
@@ -874,6 +570,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'secure-vpc',
               vpcName: 'secure-vpc',
               cidrBlock: '10.1.2.0/24',
+              availabilityZone: 'us-east-1a',
             },
           ],
         },
@@ -912,6 +609,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'secure-vpc',
               vpcName: 'secure-vpc',
               cidrBlock: '10.1.1.0/24',
+              availabilityZone: 'us-east-1a',
             },
             {
               _type: 'subnet',
@@ -920,6 +618,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'secure-vpc',
               vpcName: 'secure-vpc',
               cidrBlock: '10.1.2.0/24',
+              availabilityZone: 'us-east-1a',
             },
             {
               _type: 'internetGateway',
@@ -949,6 +648,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'secure-vpc',
               vpcName: 'secure-vpc',
               cidrBlock: '10.1.1.0/24',
+              availabilityZone: 'us-east-1a',
             },
             {
               _type: 'subnet',
@@ -957,6 +657,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'secure-vpc',
               vpcName: 'secure-vpc',
               cidrBlock: '10.1.2.0/24',
+              availabilityZone: 'us-east-1a',
             },
             {
               _type: 'internetGateway',
@@ -1002,6 +703,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'secure-vpc',
               vpcName: 'secure-vpc',
               cidrBlock: '10.1.1.0/24',
+              availabilityZone: 'us-east-1a',
             },
             {
               _type: 'subnet',
@@ -1010,6 +712,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'secure-vpc',
               vpcName: 'secure-vpc',
               cidrBlock: '10.1.2.0/24',
+              availabilityZone: 'us-east-1a',
             },
             {
               _type: 'internetGateway',
@@ -1064,6 +767,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'secure-vpc',
               vpcName: 'secure-vpc',
               cidrBlock: '10.1.1.0/24',
+              availabilityZone: 'us-east-1a',
             },
             {
               _type: 'subnet',
@@ -1072,6 +776,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'secure-vpc',
               vpcName: 'secure-vpc',
               cidrBlock: '10.1.2.0/24',
+              availabilityZone: 'us-east-1a',
             },
             {
               _type: 'internetGateway',
@@ -1126,6 +831,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'secure-vpc',
               vpcName: 'secure-vpc',
               cidrBlock: '10.1.1.0/24',
+              availabilityZone: 'us-east-1a',
             },
             {
               _type: 'subnet',
@@ -1134,16 +840,9 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'secure-vpc',
               vpcName: 'secure-vpc',
               cidrBlock: '10.1.2.0/24',
+              availabilityZone: 'us-east-1a',
             },
-            {
-              _type: 'natGateway',
-              id: 'secure-nat',
-              name: 'secure-nat',
-              vpcId: 'secure-vpc',
-              vpcName: 'secure-vpc',
-              subnetId: 'secure-public-subnet',
-              subnetName: 'secure-public-subnet',
-            },
+
             {
               _type: 'internetGateway',
               id: 'secure-igw',
@@ -1212,6 +911,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'secure-vpc',
               vpcName: 'secure-vpc',
               cidrBlock: '10.1.1.0/24',
+              availabilityZone: 'us-east-1a',
             },
             {
               _type: 'subnet',
@@ -1220,6 +920,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'secure-vpc',
               vpcName: 'secure-vpc',
               cidrBlock: '10.1.2.0/24',
+              availabilityZone: 'us-east-1a',
             },
             {
               _type: 'internetGateway',
@@ -1308,6 +1009,7 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'secure-vpc',
               vpcName: 'secure-vpc',
               cidrBlock: '10.1.1.0/24',
+              availabilityZone: 'us-east-1a',
             },
             {
               _type: 'subnet',
@@ -1316,24 +1018,9 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'secure-vpc',
               vpcName: 'secure-vpc',
               cidrBlock: '10.1.2.0/24',
+              availabilityZone: 'us-east-1a',
             },
-            {
-              _type: 'securityGroups',
-              id: 'secure-web-sg',
-              name: 'secure-web-sg',
-              vpcId: 'secure-vpc',
-              vpcName: 'secure-vpc',
-              description: 'Security group for secure web server',
-              ipPermissions: [
-                {
-                  ipProtocol: 'tcp',
-                  fromPort: '80',
-                  toPort: '80',
-                  cidrIp: '0.0.0.0/0',
-                  isInbound: true,
-                },
-              ],
-            },
+
             {
               _type: 'internetGateway',
               id: 'secure-igw',
@@ -1625,35 +1312,6 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
               vpcId: 'ha-vpc',
               vpcName: 'ha-vpc',
             },
-            {
-              _type: 'routeTable',
-              id: 'ha-public-rt',
-              name: 'ha-public-rt',
-              vpcId: 'ha-vpc',
-              vpcName: 'ha-vpc',
-              routes: [
-                {
-                  destinationCidr: '0.0.0.0/0',
-                  targetGatewayId: 'ha-igw',
-                  targetGatewayName: 'ha-igw',
-                },
-                {
-                  destinationCidr: '10.2.0.0/16',
-                  targetGatewayId: 'local',
-                  targetGatewayName: 'local',
-                },
-              ],
-              associations: [
-                {
-                  subnetId: 'ha-subnet-a',
-                  subnetName: 'ha-subnet-a',
-                },
-                {
-                  subnetId: 'ha-subnet-c',
-                  subnetName: 'ha-subnet-c',
-                },
-              ],
-            },
           ],
         },
       ],
@@ -1733,22 +1391,6 @@ export async function seedProblems(dataSource: DataSource): Promise<void> {
                 {
                   subnetId: 'ha-subnet-c',
                   subnetName: 'ha-subnet-c',
-                },
-              ],
-            },
-            {
-              _type: 'securityGroups',
-              id: 'ha-web-sg',
-              name: 'ha-web-sg',
-              vpcId: 'ha-vpc',
-              vpcName: 'ha-vpc',
-              ipPermissions: [
-                {
-                  ipProtocol: 'tcp',
-                  fromPort: '80',
-                  toPort: '80',
-                  cidrIp: '0.0.0.0/0',
-                  isInbound: true,
                 },
               ],
             },

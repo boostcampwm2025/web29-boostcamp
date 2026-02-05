@@ -321,7 +321,7 @@ export class UnitValidationHandler implements ProblemValidationHandler {
             serviceType: serviceKey,
             service: submittedConfig.name,
             code: UnitProblemFeedbackType.SERVICE_MISSING,
-            message: '제출한 이름을 다시 한 번 확인해주세요.',
+            message: `'${submittedConfig.name}' 서비스 이름을 다시 한 번 확인해주세요.`,
           });
           continue;
         }

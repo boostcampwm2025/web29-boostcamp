@@ -3,6 +3,7 @@
 import { Controller } from 'react-hook-form'
 import type { Control } from 'react-hook-form'
 
+import { TooltipBox } from '@/components/aws-services/common/tooltip-box'
 import { SectionContainer } from '@/components/section-container'
 import {
   Select,
@@ -11,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { ATTACH_TOOLTIPS } from '@/constants/aws-services/internet-gateway'
 import type {
   InternetGatewayAttachFormData,
   InternetGatewaySubmitConfig,
@@ -26,7 +28,7 @@ interface AttachFormProps {
 
 export function AttachForm({ control, igwList, vpcList }: AttachFormProps) {
   return (
-    <div className="bg-card text-card-foreground rounded-lg border shadow-sm">
+    <div className="bg-card text-card-foreground rounded-lg border">
       <div className="border-b px-6 py-4">
         <h2 className="text-xl font-semibold">VPC 연결 설정</h2>
       </div>
@@ -34,7 +36,12 @@ export function AttachForm({ control, igwList, vpcList }: AttachFormProps) {
       <div className="space-y-8 p-6">
         {/* IGW 선택 */}
         <SectionContainer
-          title="인터넷 게이트웨이"
+          title={
+            <div className="flex items-center gap-2">
+              인터넷 게이트웨이
+              <TooltipBox content={ATTACH_TOOLTIPS.internetGateway} />
+            </div>
+          }
           description="VPC에 연결할 인터넷 게이트웨이를 선택합니다."
         >
           <Controller
@@ -68,7 +75,12 @@ export function AttachForm({ control, igwList, vpcList }: AttachFormProps) {
 
         {/* VPC 선택 */}
         <SectionContainer
-          title="사용 가능한 VPC"
+          title={
+            <div className="flex items-center gap-2">
+              사용 가능한 VPC
+              <TooltipBox content={ATTACH_TOOLTIPS.availableVpc} />
+            </div>
+          }
           description="인터넷 게이트웨이를 연결할 VPC를 선택합니다."
         >
           <Controller

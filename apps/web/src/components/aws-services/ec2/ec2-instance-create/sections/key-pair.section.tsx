@@ -10,7 +10,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { EC2_TOOLTIPS, KEY_PAIR_OPTIONS } from '@/constants/aws-services/ec2'
+import {
+  INSTANCE_CREATE_TOOLTIPS,
+  KEY_PAIR_OPTIONS,
+} from '@/constants/aws-services/ec2'
 import type { EC2SectionProps } from '@/types/aws-services/ec2/instance-create'
 
 export function KeyPair({ control }: EC2SectionProps) {
@@ -19,7 +22,7 @@ export function KeyPair({ control }: EC2SectionProps) {
       title={
         <div className="flex items-center gap-2">
           키 페어(로그인)
-          <TooltipBox content={EC2_TOOLTIPS.keyPair} />
+          <TooltipBox content={INSTANCE_CREATE_TOOLTIPS.keyPair} />
         </div>
       }
       description="키 페어를 사용하여 인스턴스에 안전하게 연결하세요"

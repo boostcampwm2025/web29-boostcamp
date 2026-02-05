@@ -1,3 +1,4 @@
+import { TooltipBox } from '@/components/aws-services/common/tooltip-box'
 import { SectionContainer } from '@/components/section-container'
 import {
   Accordion,
@@ -8,12 +9,18 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { BUCKET_CREATE_TOOLTIPS } from '@/constants/aws-services/s3'
 import type { S3SectionProps } from '@/types/aws-services/s3/bucket-create'
 
 export const Tags = ({ control: _control }: S3SectionProps) => {
   return (
     <SectionContainer
-      title="태그 - 선택 사항"
+      title={
+        <div className="flex items-center gap-2">
+          태그 - 선택 사항
+          <TooltipBox content={BUCKET_CREATE_TOOLTIPS.tags} />
+        </div>
+      }
       description="버킷을 구성하고 분류하기 위해 태그를 추가하세요"
     >
       <Accordion type="single" collapsible>

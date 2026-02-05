@@ -2,15 +2,22 @@ import { Info } from 'lucide-react'
 
 import { Controller } from 'react-hook-form'
 
+import { TooltipBox } from '@/components/aws-services/common/tooltip-box'
 import { SectionContainer } from '@/components/section-container'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { BUCKET_CREATE_TOOLTIPS } from '@/constants/aws-services/s3'
 import type { S3SectionProps } from '@/types/aws-services/s3/bucket-create'
 
 export const DefaultEncryption = ({ control }: S3SectionProps) => {
   return (
     <SectionContainer
-      title="기본 암호화"
+      title={
+        <div className="flex items-center gap-2">
+          기본 암호화
+          <TooltipBox content={BUCKET_CREATE_TOOLTIPS.defaultEncryption} />
+        </div>
+      }
       description="서버 측 암호화는 디스크에 기록될 때 데이터를 자동으로 암호화하고 액세스 시 복호화합니다."
     >
       <div className="space-y-4">

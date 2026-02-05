@@ -350,6 +350,7 @@ export class FieldValidationHandler implements ValidationHandler {
     const feedbacks: FeedbackDto[] = [];
     const routeTableConfigs = submitConfig.routeTable || [];
     const internetGateways = submitConfig.internetGateway || [];
+    const natGateways = submitConfig.natGateway || []; // NAT Gateway 추가
 
     const refinedRouteTableConfigs = routeTableConfigs.map((config) =>
       removeUndefined(config),
@@ -357,8 +358,13 @@ export class FieldValidationHandler implements ValidationHandler {
     const refinedInternetGateways = internetGateways.map((igw) =>
       removeUndefined(igw),
     );
+    const refinedNatGateways = natGateways.map((nat) => removeUndefined(nat));
 
-    const igwIdSet = new Set(refinedInternetGateways.map((igw) => igw.id));
+    // IGW와 NAT Gateway ID를 모두 포함하는 Set 생성
+    const gatewayIdSet = new Set([
+      ...refinedInternetGateways.map((igw) => igw.id),
+      ...refinedNatGateways.map((nat) => nat.id),
+    ]);
 
     for (const config of refinedRouteTableConfigs) {
       const name = config.name;
@@ -406,7 +412,7 @@ export class FieldValidationHandler implements ValidationHandler {
         if (
           targetGateway &&
           targetGateway !== 'local' &&
-          !igwIdSet.has(targetGateway)
+          !gatewayIdSet.has(targetGateway) // 통합된 Set으로 검사
         ) {
           feedbacks.push({
             serviceType: 'routeTable',

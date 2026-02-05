@@ -2,6 +2,7 @@ import { Info } from 'lucide-react'
 
 import { Controller } from 'react-hook-form'
 
+import { TooltipBox } from '@/components/aws-services/common/tooltip-box'
 import { SectionContainer } from '@/components/section-container'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -12,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { BUCKET_CREATE_TOOLTIPS } from '@/constants/aws-services/s3'
 import type { S3SectionProps } from '@/types/aws-services/s3/bucket-create'
 
 const GENERAL_OPTIONS = {
@@ -39,7 +41,12 @@ export const GeneralConfiguration = ({
 }: S3SectionProps) => {
   return (
     <SectionContainer
-      title="일반 구성"
+      title={
+        <div className="flex items-center gap-2">
+          일반 구성
+          <TooltipBox content={BUCKET_CREATE_TOOLTIPS.general} />
+        </div>
+      }
       description="버킷에 고유한 이름을 선택하고 AWS 리전을 선택하세요"
     >
       <div className="space-y-6">
@@ -49,13 +56,34 @@ export const GeneralConfiguration = ({
           <Controller
             name="general.name"
             control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                id="bucket-name"
-                placeholder={GENERAL_OPTIONS.bucketName.placeholder}
-                className="max-w-md"
-              />
+            rules={{
+              required: '버킷 이름을 입력하세요',
+              minLength: {
+                value: 3,
+                message: '버킷 이름은 최소 3자 이상이어야 합니다.',
+              },
+              maxLength: {
+                value: 63,
+                message: '버킷 이름은 최대 63자까지 가능합니다.',
+              },
+              pattern: {
+                value: /^[a-z0-9.-]+$/,
+                message:
+                  '소문자, 숫자, 하이픈(-) 및 마침표(.)만 사용할 수 있습니다.',
+              },
+            }}
+            render={({ field, fieldState: { error } }) => (
+              <>
+                <Input
+                  {...field}
+                  id="bucket-name"
+                  placeholder={GENERAL_OPTIONS.bucketName.placeholder}
+                  className="max-w-md"
+                />
+                {error && (
+                  <p className="text-destructive text-sm">{error.message}</p>
+                )}
+              </>
             )}
           />
           <div className="text-muted-foreground flex items-start gap-2 text-sm">

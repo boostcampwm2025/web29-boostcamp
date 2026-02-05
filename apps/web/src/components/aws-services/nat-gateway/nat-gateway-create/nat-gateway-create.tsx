@@ -1,5 +1,7 @@
 'use client'
 
+import { TooltipBox } from '../../common/tooltip-box'
+
 import { Controller, useForm } from 'react-hook-form'
 
 import { SectionContainer } from '@/components/section-container'
@@ -13,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { NAT_GATEWAY_CREATE_TOOLTIPS } from '@/constants/aws-services/nat-gateway'
 import { useProblemForm } from '@/contexts/problem-form-context'
 import { getDefaultSubnets } from '@/lib/get-default-subnets'
 import type {
@@ -74,7 +77,12 @@ export default function NATGatewayCreate({ onSubmit }: NATGatewayCreateProps) {
 
       {/* Name Section */}
       <SectionContainer
-        title="이름 및 태그"
+        title={
+          <div className="flex items-center gap-2">
+            이름 및 태그
+            <TooltipBox content={NAT_GATEWAY_CREATE_TOOLTIPS.nameTag} />
+          </div>
+        }
         description="NAT 게이트웨이의 이름을 지정합니다."
       >
         <div className="space-y-2">
@@ -92,7 +100,12 @@ export default function NATGatewayCreate({ onSubmit }: NATGatewayCreateProps) {
 
       {/* Subnet Section */}
       <SectionContainer
-        title="서브넷"
+        title={
+          <div className="flex items-center gap-2">
+            서브넷
+            <TooltipBox content={NAT_GATEWAY_CREATE_TOOLTIPS.subnetId} />
+          </div>
+        }
         description="NAT 게이트웨이를 배치할 퍼블릭 서브넷을 선택합니다."
       >
         <div className="space-y-2">

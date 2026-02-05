@@ -62,41 +62,6 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
     securityGroups: 'DONT_CARE',
   };
 
-  const cloudFrontDontCareConfig = {
-    id: 'DONT_CARE',
-    name: 'DONT_CARE',
-    originType: 'DONT_CARE',
-    selectedBucket: 'DONT_CARE',
-    customDomain: 'DONT_CARE',
-    originPath: 'DONT_CARE',
-    accessControl: 'DONT_CARE',
-    oacName: 'DONT_CARE',
-    distributionName: 'DONT_CARE',
-    description: 'DONT_CARE',
-    enabled: 'DONT_CARE',
-    priceClass: 'DONT_CARE',
-    cnames: 'DONT_CARE',
-    sslCertificate: 'DONT_CARE',
-    acmCertificateArn: 'DONT_CARE',
-    minTlsVersion: 'DONT_CARE',
-    ipv6Enabled: 'DONT_CARE',
-    viewerProtocolPolicy: 'DONT_CARE',
-    allowedMethods: 'DONT_CARE',
-    cachePolicy: 'DONT_CARE',
-    managedPolicyName: 'DONT_CARE',
-    customTTL: 'DONT_CARE',
-    compressionEnabled: 'DONT_CARE',
-    viewerRequestFunction: 'DONT_CARE',
-    viewerResponseFunction: 'DONT_CARE',
-    defaultRootObject: 'DONT_CARE',
-    errorResponses: 'DONT_CARE',
-    loggingEnabled: 'DONT_CARE',
-    loggingBucket: 'DONT_CARE',
-    logPrefix: 'DONT_CARE',
-    wafEnabled: 'DONT_CARE',
-    webAclId: 'DONT_CARE',
-  };
-
   const vpcDontCareConfig = {
     id: 'DONT_CARE',
     name: 'DONT_CARE',
@@ -156,73 +121,82 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
         s3: [
           {
             ...s3DontCareConfig,
+            name: 'versioning-bucket', // 필수 조건
             versioningEnabled: true, // 필수 조건
           },
         ],
       },
     },
+
     {
-      problem: problems[2], // CloudFront 원본 설정
+      problem: problems[2], // 웹 서버용 EC2 인스턴스 생성 (was 3)
       answerConfig: {
-        cloudFront: [
+        vpc: [
           {
-            ...cloudFrontDontCareConfig,
-            originType: 's3',
-            // originDomain 관련 필드는 현재 프론트 DTO와 매칭 필요 (임시로 DONT_CARE 유지)
+            ...vpcDontCareConfig,
+            id: 'default-vpc',
+            name: 'default-vpc',
+            cidrBlock: '10.0.0.0/16',
+            tenancy: 'default',
           },
         ],
-      },
-    },
-    {
-      problem: problems[3], // 웹 서버용 EC2 인스턴스 생성
-      answerConfig: {
+        subnet: [
+          {
+            ...subnetDontCareConfig,
+            id: 'default-subnet',
+            name: 'default-subnet',
+            vpcId: 'default-vpc',
+            vpcName: 'default-vpc',
+            cidrBlock: '10.0.1.0/24',
+            availabilityZone: 'us-east-1a',
+          },
+        ],
         ec2: [
           {
             ...ec2DontCareConfig,
+            name: 'web-server-instance', // 필수 조건
             instanceType: 't2.micro', // 필수 조건
+            vpcId: 'default-vpc',
+            vpcName: 'default-vpc',
+            subnetId: 'default-subnet',
+            subnetName: 'default-subnet',
           },
         ],
       },
     },
+
     {
-      problem: problems[4], // 정적 웹사이트 글로벌 배포 (S3 + CloudFront)
+      problem: problems[3], // EC2 보안 그룹 HTTP 포트 열기
       answerConfig: {
-        s3: [
+        vpc: [
           {
-            ...s3DontCareConfig,
-            name: 'my-global-site', // 문제의 필수 조건
+            ...vpcDontCareConfig,
+            id: 'default-vpc',
+            name: 'default-vpc',
           },
         ],
-        cloudFront: [
+        securityGroups: [
           {
-            ...cloudFrontDontCareConfig,
-            originType: 's3',
-          },
-        ],
-      },
-    },
-    {
-      problem: problems[5], // S3 버킷 생성하기 (Unit)
-      answerConfig: {
-        s3: [
-          {
-            ...s3DontCareConfig, // 특별한 조건 없음 (기본 생성)
-          },
-        ],
-      },
-    },
-    {
-      problem: problems[6], // EC2 인스턴스 생성하기 (Unit)
-      answerConfig: {
-        ec2: [
-          {
-            ...ec2DontCareConfig, // 특별한 조건 없음 (기본 생성)
+            ...securityGroupsDontCareConfig,
+            name: 'web-server-sg',
+            vpcId: 'default-vpc',
+            vpcName: 'default-vpc',
+            ipPermissions: [
+              {
+                ipProtocol: 'tcp',
+                fromPort: '80',
+                toPort: '80',
+                cidrIp: '0.0.0.0/0',
+                isInbound: true,
+              },
+            ],
           },
         ],
       },
     },
+
     {
-      problem: problems[14], // [가장 단순한 서버 배포] 1단계: VPC 구축
+      problem: problems[4], // [가장 단순한 서버 배포] 1단계: VPC 구축
       answerConfig: {
         vpc: [
           {
@@ -236,7 +210,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       },
     },
     {
-      problem: problems[15], // [가장 단순한 서버 배포] 2단계: IGW 생성 및 연결
+      problem: problems[5], // [가장 단순한 서버 배포] 2단계: IGW 생성 및 연결
       answerConfig: {
         vpc: [
           {
@@ -259,7 +233,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       },
     },
     {
-      problem: problems[16], // [가장 단순한 서버 배포] 3단계: 퍼블릭 서브넷 구성
+      problem: problems[6], // [가장 단순한 서버 배포] 3단계: 퍼블릭 서브넷 구성
       answerConfig: {
         vpc: [
           {
@@ -293,7 +267,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
     },
 
     {
-      problem: problems[17], // [가장 단순한 서버 배포] 4단계: 인터넷 경로 설정 및 서브넷 연결
+      problem: problems[7], // [가장 단순한 서버 배포] 4단계: 인터넷 경로 설정 및 서브넷 연결
       answerConfig: {
         vpc: [
           {
@@ -353,7 +327,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       },
     },
     {
-      problem: problems[18], // [가장 단순한 서버 배포] 5단계: EC2 인스턴스 실행
+      problem: problems[8], // [가장 단순한 서버 배포] 5단계: EC2 인스턴스 실행
       answerConfig: {
         vpc: [
           {
@@ -425,7 +399,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       },
     },
     {
-      problem: problems[19], // NAT 게이트웨이 생성
+      problem: problems[9], // NAT 게이트웨이 생성
       answerConfig: {
         vpc: [
           {
@@ -460,7 +434,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       },
     },
     {
-      problem: problems[20], // 보안 그룹 생성 및 인바운드 규칙 설정
+      problem: problems[10], // 보안 그룹 생성 및 인바운드 규칙 설정
       answerConfig: {
         vpc: [
           {
@@ -500,7 +474,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
     },
     // Solutions for Advanced Cookbook (Secure Network)
     {
-      problem: problems[21], // 1단계: 사용자 지정 VPC
+      problem: problems[11], // 1단계: 사용자 지정 VPC
       answerConfig: {
         vpc: [
           {
@@ -514,7 +488,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       },
     },
     {
-      problem: problems[22], // 2단계: 서브넷 분리
+      problem: problems[12], // 2단계: 서브넷 분리
       answerConfig: {
         vpc: [
           {
@@ -546,7 +520,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       },
     },
     {
-      problem: problems[23], // 3단계: IGW 구성
+      problem: problems[13], // 3단계: IGW 구성
       answerConfig: {
         vpc: [
           {
@@ -587,7 +561,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       },
     },
     {
-      problem: problems[24], // 4단계: 퍼블릭 라우팅
+      problem: problems[14], // 4단계: 퍼블릭 라우팅
       answerConfig: {
         vpc: [
           {
@@ -655,7 +629,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       },
     },
     {
-      problem: problems[25], // 5단계: NAT & 프라이빗 라우팅
+      problem: problems[15], // 5단계: NAT & 프라이빗 라우팅
       answerConfig: {
         vpc: [
           {
@@ -760,7 +734,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       },
     },
     {
-      problem: problems[26], // 6단계: 보안 그룹 & EC2
+      problem: problems[16], // 6단계: 보안 그룹 & EC2
       answerConfig: {
         vpc: [
           {
@@ -880,22 +854,23 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
             ],
           },
         ],
+        ec2: [
+          {
+            ...ec2DontCareConfig,
+            id: 'secure-db-server',
+            name: 'secure-db-server',
+            vpcId: 'secure-vpc',
+            vpcName: 'secure-vpc',
+            subnetId: 'secure-private-subnet',
+            subnetName: 'secure-private-subnet',
+            securityGroups: ['secure-web-sg'],
+          },
+        ],
       },
-      ec2: [
-        {
-          ...ec2DontCareConfig,
-          id: 'secure-db-server',
-          name: 'secure-db-server',
-          vpcId: 'secure-vpc',
-          vpcName: 'secure-vpc',
-          subnetId: 'secure-private-subnet',
-          subnetName: 'secure-private-subnet',
-        },
-      ],
     },
     // Solutions for High Availability Cookbook (Multi-AZ)
     {
-      problem: problems[27], // 1단계: HA VPC
+      problem: problems[17], // 1단계: HA VPC
       answerConfig: {
         vpc: [
           {
@@ -908,7 +883,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       },
     },
     {
-      problem: problems[28], // 2단계: Multi-AZ Subnets
+      problem: problems[18], // 2단계: Multi-AZ Subnets
       answerConfig: {
         vpc: [
           {
@@ -939,7 +914,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       },
     },
     {
-      problem: problems[29], // 3단계: IGW
+      problem: problems[19], // 3단계: IGW
       answerConfig: {
         vpc: [
           {
@@ -978,7 +953,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       },
     },
     {
-      problem: problems[30], // 4단계: Unified Routing
+      problem: problems[20], // 4단계: Unified Routing
       answerConfig: {
         vpc: [
           {
@@ -1047,7 +1022,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       },
     },
     {
-      problem: problems[31], // 5단계: Web SG
+      problem: problems[21], // 5단계: Web SG
       answerConfig: {
         vpc: [
           {
@@ -1134,7 +1109,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
       },
     },
     {
-      problem: problems[32], // 6단계: Dual Deployment
+      problem: problems[22], // 6단계: Dual Deployment
       answerConfig: {
         vpc: [
           {
@@ -1227,6 +1202,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
             vpcName: 'ha-vpc',
             subnetId: 'ha-subnet-a',
             subnetName: 'ha-subnet-a',
+            securityGroups: ['ha-web-sg'],
           },
           {
             ...ec2DontCareConfig,
@@ -1236,6 +1212,7 @@ export async function seedSolutions(dataSource: DataSource): Promise<void> {
             vpcName: 'ha-vpc',
             subnetId: 'ha-subnet-c',
             subnetName: 'ha-subnet-c',
+            securityGroups: ['ha-web-sg'],
           },
         ],
       },

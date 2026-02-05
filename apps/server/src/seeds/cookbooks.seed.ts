@@ -13,14 +13,6 @@ export async function seedCookbooks(dataSource: DataSource): Promise<void> {
   const allTags = await tagRepository.find();
   const tagMap = new Map(allTags.map((tag) => [tag.name, tag]));
 
-  // 기존 쿡북용 태그 필터링
-  const tags = [
-    tagMap.get('S3')!,
-    tagMap.get('CloudFront')!,
-    tagMap.get('Web Hosting')!,
-    tagMap.get('EC2')!,
-  ].filter(Boolean);
-
   // 모든 문제 조회
   const problems = await problemRepository.find({
     order: { id: 'ASC' },
@@ -30,16 +22,6 @@ export async function seedCookbooks(dataSource: DataSource): Promise<void> {
     console.log('Not enough problems found. Skipping cookbook seeding.');
     return;
   }
-
-  // Cookbook 생성
-  const cookbook = await cookbookRepository.save({
-    title: 'AWS 정적 웹 호스팅 마스터하기',
-    description:
-      'S3, CloudFront, EC2를 사용하여 웹 서비스 인프라를 구축해 봅니다.',
-    descDetail:
-      '이 쿡북에서는 AWS의 핵심 서비스인 S3(스토리지), CloudFront(CDN), EC2(컴퓨팅)를 다룹니다. 정적 웹사이트 호스팅부터 백엔드 서버를 위한 인스턴스 생성까지, 웹 서비스를 위한 기초 인프라를 단계별로 구성해 봅니다.',
-    tags: tags,
-  });
 
   // 두 번째 Cookbook 생성: 가장 단순한 서버 배포 아키텍처
   const networkTags = [
@@ -57,81 +39,42 @@ export async function seedCookbooks(dataSource: DataSource): Promise<void> {
     tags: networkTags,
   });
 
-  // Cookbook-Problem 연결
-  const cookbookProblems = [
-    {
-      cookbookId: cookbook.id,
-      problemId: problems[0].id, // 로그 저장용 S3 버킷 생성
-      orderNumber: 1,
-      cookbook: cookbook,
-      problem: problems[0],
-    },
-    {
-      cookbookId: cookbook.id,
-      problemId: problems[1].id, // S3 버킷 버전 관리 활성화
-      orderNumber: 2,
-      cookbook: cookbook,
-      problem: problems[1],
-    },
-    {
-      cookbookId: cookbook.id,
-      problemId: problems[2].id, // CloudFront 원본 설정
-      orderNumber: 3,
-      cookbook: cookbook,
-      problem: problems[2],
-    },
-    {
-      cookbookId: cookbook.id,
-      problemId: problems[3].id, // 웹 서버용 EC2 인스턴스 생성
-      orderNumber: 4,
-      cookbook: cookbook,
-      problem: problems[3],
-    },
-    {
-      cookbookId: cookbook.id,
-      problemId: problems[4].id, // 정적 웹사이트 글로벌 배포 (복합)
-      orderNumber: 5,
-      cookbook: cookbook,
-      problem: problems[4],
-    },
-  ];
-
   // Cookbook 2 - Problem 연결
   const cookbook2Problems = [
     {
       cookbookId: cookbook2.id,
-      problemId: problems[14].id,
+      problemId: problems[4].id,
       orderNumber: 1,
       cookbook: cookbook2,
-      problem: problems[14],
+      problem: problems[4],
     },
     {
       cookbookId: cookbook2.id,
-      problemId: problems[15].id,
+      problemId: problems[5].id,
       orderNumber: 2,
       cookbook: cookbook2,
-      problem: problems[15],
+      problem: problems[5],
     },
     {
       cookbookId: cookbook2.id,
-      problemId: problems[16].id,
+      problemId: problems[6].id,
       orderNumber: 3,
       cookbook: cookbook2,
-      problem: problems[16],
+      problem: problems[6],
     },
     {
       cookbookId: cookbook2.id,
-      problemId: problems[17].id,
+      problemId: problems[7].id,
       orderNumber: 4,
       cookbook: cookbook2,
-      problem: problems[17],
+      problem: problems[7],
     },
     {
       cookbookId: cookbook2.id,
-      problemId: problems[18].id,
+      problemId: problems[8].id,
       orderNumber: 5,
       cookbook: cookbook2,
-      problem: problems[18],
+      problem: problems[8],
     },
   ];
 
@@ -154,45 +97,45 @@ export async function seedCookbooks(dataSource: DataSource): Promise<void> {
   const cookbook3Problems = [
     {
       cookbookId: cookbook3.id,
-      problemId: problems[21].id, // 1단계: 사용자 지정 VPC
+      problemId: problems[11].id, // 1단계: 사용자 지정 VPC
       orderNumber: 1,
       cookbook: cookbook3,
-      problem: problems[21],
+      problem: problems[11],
     },
     {
       cookbookId: cookbook3.id,
-      problemId: problems[22].id, // 2단계: 서브넷 분리
+      problemId: problems[12].id, // 2단계: 서브넷 분리
       orderNumber: 2,
       cookbook: cookbook3,
-      problem: problems[22],
+      problem: problems[12],
     },
     {
       cookbookId: cookbook3.id,
-      problemId: problems[23].id, // 3단계: IGW 구성
+      problemId: problems[13].id, // 3단계: IGW 구성
       orderNumber: 3,
       cookbook: cookbook3,
-      problem: problems[23],
+      problem: problems[13],
     },
     {
       cookbookId: cookbook3.id,
-      problemId: problems[24].id, // 4단계: 퍼블릭 라우팅
+      problemId: problems[14].id, // 4단계: 퍼블릭 라우팅
       orderNumber: 4,
       cookbook: cookbook3,
-      problem: problems[24],
+      problem: problems[14],
     },
     {
       cookbookId: cookbook3.id,
-      problemId: problems[25].id, // 5단계: NAT & 프라이빗 라우팅
+      problemId: problems[15].id, // 5단계: NAT & 프라이빗 라우팅
       orderNumber: 5,
       cookbook: cookbook3,
-      problem: problems[25],
+      problem: problems[15],
     },
     {
       cookbookId: cookbook3.id,
-      problemId: problems[26].id, // 6단계: 보안 그룹 & EC2
+      problemId: problems[16].id, // 6단계: 보안 그룹 & EC2
       orderNumber: 6,
       cookbook: cookbook3,
-      problem: problems[26],
+      problem: problems[16],
     },
   ];
 
@@ -215,51 +158,50 @@ export async function seedCookbooks(dataSource: DataSource): Promise<void> {
   const cookbook4Problems = [
     {
       cookbookId: cookbook4.id,
-      problemId: problems[27].id,
+      problemId: problems[17].id,
       orderNumber: 1,
       cookbook: cookbook4,
-      problem: problems[27],
+      problem: problems[17],
     }, // HA VPC
     {
       cookbookId: cookbook4.id,
-      problemId: problems[28].id,
+      problemId: problems[18].id,
       orderNumber: 2,
       cookbook: cookbook4,
-      problem: problems[28],
+      problem: problems[18],
     }, // Multi-AZ Subnets
     {
       cookbookId: cookbook4.id,
-      problemId: problems[29].id,
+      problemId: problems[19].id,
       orderNumber: 3,
       cookbook: cookbook4,
-      problem: problems[29],
+      problem: problems[19],
     }, // IGW
     {
       cookbookId: cookbook4.id,
-      problemId: problems[30].id,
+      problemId: problems[20].id,
       orderNumber: 4,
       cookbook: cookbook4,
-      problem: problems[30],
+      problem: problems[20],
     }, // Unified Routing
     {
       cookbookId: cookbook4.id,
-      problemId: problems[31].id,
+      problemId: problems[21].id,
       orderNumber: 5,
       cookbook: cookbook4,
-      problem: problems[31],
+      problem: problems[21],
     }, // Web SG
     {
       cookbookId: cookbook4.id,
-      problemId: problems[32].id,
+      problemId: problems[22].id,
       orderNumber: 6,
       cookbook: cookbook4,
-      problem: problems[32],
+      problem: problems[22],
     }, // Dual Deployment
   ];
 
   const cookbookProblemRepository = dataSource.getRepository(CookbookProblem);
   for (const cp of [
-    ...cookbookProblems,
     ...cookbook2Problems,
     ...cookbook3Problems,
     ...cookbook4Problems,
