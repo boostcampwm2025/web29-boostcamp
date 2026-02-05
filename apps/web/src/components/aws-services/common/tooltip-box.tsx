@@ -1,5 +1,7 @@
 import { Info } from 'lucide-react'
 
+import ReactMarkdown from 'react-markdown'
+
 import {
   Tooltip,
   TooltipContent,
@@ -15,7 +17,7 @@ export function TooltipBox({ content }: { content: string }) {
           <Info className="text-muted-foreground h-4 w-4 cursor-help" />
         </TooltipTrigger>
         <TooltipContent className="max-w-xs text-center">
-          <p>{content}</p>
+          <ReactMarkdown>{content}</ReactMarkdown>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
