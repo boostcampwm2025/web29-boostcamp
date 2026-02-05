@@ -51,13 +51,7 @@ export default function S3BucketList({
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 p-6">
-      {config.header && (
-        <HeaderSection
-          control={control}
-          config={config}
-          onCreateBucket={onCreateBucket}
-        />
-      )}
+      {config.header && <HeaderSection control={control} config={config} />}
 
       {config.searchBar && (
         <SearchBarSection

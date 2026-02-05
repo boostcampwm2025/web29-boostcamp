@@ -14,8 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { AZ_OPTIONS } from '@/types/aws-services/subnet/constants'
 import { SUBNET_CREATE_TOOLTIPS } from '@/constants/aws-services/subnet'
+import { AZ_OPTIONS } from '@/types/aws-services/subnet/constants'
 import type { SubnetFormData } from '@/types/aws-services/subnet/subnet-form-data.types'
 
 interface SubnetSettingsProps {
