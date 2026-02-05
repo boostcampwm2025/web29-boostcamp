@@ -3,6 +3,7 @@
 import { Controller } from 'react-hook-form'
 import type { Control } from 'react-hook-form'
 
+import { TooltipBox } from '@/components/aws-services/common/tooltip-box'
 import { SectionContainer } from '@/components/section-container'
 import { Input } from '@/components/ui/input'
 import {
@@ -12,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { ROUTE_TABLE_CREATE_TOOLTIPS } from '@/constants/aws-services/route-table'
 import type { RouteTableCreateFormData } from '@/types/aws-services/route-table/route-table.types'
 
 interface GeneralSettingsProps {
@@ -29,7 +31,12 @@ export function GeneralSettings({ control, vpcs }: GeneralSettingsProps) {
       <div className="space-y-6 p-6">
         {/* 이름 입력 */}
         <SectionContainer
-          title="이름 - 선택 사항"
+          title={
+            <div className="flex items-center gap-2">
+              이름 - 선택 사항
+              <TooltipBox content={ROUTE_TABLE_CREATE_TOOLTIPS.nameTag} />
+            </div>
+          }
           description="'Name' 키와 사용자가 지정하는 값을 포함하는 태그를 생성합니다."
         >
           <Controller
@@ -47,7 +54,12 @@ export function GeneralSettings({ control, vpcs }: GeneralSettingsProps) {
 
         {/* VPC 선택 */}
         <SectionContainer
-          title="VPC"
+          title={
+            <div className="flex items-center gap-2">
+              VPC
+              <TooltipBox content={ROUTE_TABLE_CREATE_TOOLTIPS.vpcId} />
+            </div>
+          }
           description="이 라우팅 테이블에 대해 사용할 VPC입니다."
         >
           <Controller
