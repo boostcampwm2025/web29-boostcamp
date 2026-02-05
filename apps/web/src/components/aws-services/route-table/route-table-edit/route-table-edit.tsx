@@ -170,7 +170,7 @@ export default function RouteTableEdit({ onAfterSubmit }: RouteTableEditProps) {
         </div>
 
         {/* 1. 편집 대상 선택 */}
-        <div className="bg-card space-y-4 rounded-lg border p-6 shadow-sm">
+        <div className="bg-card space-y-4 rounded-lg border p-6">
           <div className="space-y-2">
             <Label>편집할 라우팅 테이블 선택</Label>
             <Select
@@ -206,7 +206,7 @@ export default function RouteTableEdit({ onAfterSubmit }: RouteTableEditProps) {
 
         {/* 2. 편집 탭 */}
         {selectedRouteTableId && (
-          <div className="bg-card animate-in fade-in slide-in-from-bottom-2 overflow-hidden rounded-lg border shadow-sm duration-300">
+          <div className="bg-card animate-in fade-in slide-in-from-bottom-2 overflow-hidden rounded-lg border duration-300">
             <Tabs defaultValue="routes" className="w-full">
               <div className="bg-muted/30 border-b px-6 py-3">
                 <TabsList className="grid w-full grid-cols-2">

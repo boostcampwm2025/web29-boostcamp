@@ -31,7 +31,7 @@ interface SubnetSettingsProps {
 
 export function SubnetSettings({ control, vpcCidr }: SubnetSettingsProps) {
   return (
-    <div className="bg-card text-card-foreground animate-in fade-in slide-in-from-top-4 rounded-lg border shadow-sm duration-300">
+    <div className="bg-card text-card-foreground animate-in fade-in slide-in-from-top-4 rounded-lg border duration-300">
       <div className="border-b px-6 py-4">
         <h2 className="text-xl font-semibold">서브넷 설정</h2>
         <p className="text-muted-foreground mt-1 text-sm">
