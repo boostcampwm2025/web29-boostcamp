@@ -2,6 +2,7 @@
 
 import { Controller } from 'react-hook-form'
 
+import { TooltipBox } from '@/components/aws-services/common/tooltip-box'
 import { SectionContainer } from '@/components/section-container'
 import {
   Select,
@@ -10,11 +11,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { VPC_CREATE_TOOLTIPS } from '@/constants/aws-services/vpc'
 import type { VpcSectionProps } from '@/types/aws-services/vpc/vpc-config.types'
 
 export function Tenancy({ control }: VpcSectionProps) {
   return (
-    <SectionContainer title="테넌시">
+    <SectionContainer
+      title={
+        <div className="flex items-center gap-2">
+          테넌시
+          <TooltipBox content={VPC_CREATE_TOOLTIPS.tenancy} />
+        </div>
+      }
+    >
       <Controller
         name="tenancy.type"
         control={control}
