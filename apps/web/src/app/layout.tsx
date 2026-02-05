@@ -25,6 +25,21 @@ export const metadata: Metadata = {
   title: '클라우드 크래프트',
   description: '시각적으로 학습하는 클라우드 시뮬레이터',
   generator: 'Next.js',
+  openGraph: {
+    title: '클라우드 크래프트',
+    description: '시각적으로 학습하는 클라우드 시뮬레이터',
+    url: 'https://your-domain.com',
+    siteName: '클라우드 크래프트',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: 'ko_KR',
+    type: 'website',
+  },
 }
 
 export default function RootLayout({
