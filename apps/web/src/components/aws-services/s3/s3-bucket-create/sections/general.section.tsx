@@ -49,13 +49,34 @@ export const GeneralConfiguration = ({
           <Controller
             name="general.name"
             control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                id="bucket-name"
-                placeholder={GENERAL_OPTIONS.bucketName.placeholder}
-                className="max-w-md"
-              />
+            rules={{
+              required: '버킷 이름을 입력하세요',
+              minLength: {
+                value: 3,
+                message: '버킷 이름은 최소 3자 이상이어야 합니다.',
+              },
+              maxLength: {
+                value: 63,
+                message: '버킷 이름은 최대 63자까지 가능합니다.',
+              },
+              pattern: {
+                value: /^[a-z0-9.-]+$/,
+                message:
+                  '소문자, 숫자, 하이픈(-) 및 마침표(.)만 사용할 수 있습니다.',
+              },
+            }}
+            render={({ field, fieldState: { error } }) => (
+              <>
+                <Input
+                  {...field}
+                  id="bucket-name"
+                  placeholder={GENERAL_OPTIONS.bucketName.placeholder}
+                  className="max-w-md"
+                />
+                {error && (
+                  <p className="text-destructive text-sm">{error.message}</p>
+                )}
+              </>
             )}
           />
           <div className="text-muted-foreground flex items-start gap-2 text-sm">

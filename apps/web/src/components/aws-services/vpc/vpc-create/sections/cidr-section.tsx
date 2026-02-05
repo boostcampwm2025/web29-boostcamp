@@ -18,12 +18,25 @@ export function CidrBlock({ control }: VpcSectionProps) {
             <Controller
               name="cidr.cidrBlock"
               control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  placeholder="10.0.0.0/16"
-                  className="max-w-2xl"
-                />
+              rules={{
+                required: 'CIDR 블록을 입력하세요',
+                pattern: {
+                  value: /^(\d{1,3}\.){3}\d{1,3}\/(1[6-9]|2[0-8])$/,
+                  message:
+                    '올바른 CIDR 형식이어야 하며, /16에서 /28 사이여야 합니다.',
+                },
+              }}
+              render={({ field, fieldState: { error } }) => (
+                <>
+                  <Input
+                    {...field}
+                    placeholder="10.0.0.0/16"
+                    className="max-w-2xl"
+                  />
+                  {error && (
+                    <p className="text-destructive text-sm">{error.message}</p>
+                  )}
+                </>
               )}
             />
             <p className="text-muted-foreground text-xs">

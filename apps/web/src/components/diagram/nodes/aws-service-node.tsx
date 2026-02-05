@@ -23,19 +23,13 @@ export function AwsServiceNode({ data }: AwsServiceNodeProps) {
   return (
     <div className="flex items-center gap-3 rounded-lg border-2 border-gray-300 bg-white px-4 py-3 shadow-lg">
       <Handle type="target" position={Position.Top} className="!bg-gray-400" />
-      <Image
-        src={iconPath}
-        alt={data.label}
-        width={48}
-        height={48}
-        className="h-12 w-12"
-      />
+      <Image src={iconPath} alt={data.label} width={100} height={100} />
       <div className="flex flex-col">
-        <span className="text-sm font-semibold text-gray-800">
+        <span className="text-2xl font-semibold text-gray-800">
           {data.label}
         </span>
         {data.description && (
-          <span className="text-xs text-gray-500">{data.description}</span>
+          <span className="text-xl text-gray-500">{data.description}</span>
         )}
       </div>
       <Handle

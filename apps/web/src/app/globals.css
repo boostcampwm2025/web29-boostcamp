@@ -4,7 +4,9 @@
 
 @theme inline {
   --font-sans: var(--font-pretendard), system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
 
   --screen-xl: 1440px;
   --color-background: var(--background);
