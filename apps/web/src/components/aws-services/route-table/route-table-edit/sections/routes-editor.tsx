@@ -36,9 +36,9 @@ export function RoutesEditor() {
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/50">
-              <TableHead className="w-[45%]">대상 (Destination)</TableHead>
-              <TableHead className="w-[45%]">타겟 (Target)</TableHead>
-              <TableHead className="w-[10%] text-right">삭제</TableHead>
+              <TableHead className="w-[45%] px-6">대상 (Destination)</TableHead>
+              <TableHead className="w-[45%] px-6">타겟 (Target)</TableHead>
+              <TableHead className="w-[10%] text-center">관리</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -77,21 +77,23 @@ export function RoutesEditor() {
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="text-destructive hover:bg-destructive/10"
+                        className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                         onClick={() => remove(index)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     )}
                     {isLocal && (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        disabled
-                        size="icon"
-                      >
-                        <PinIcon className="h-4 w-4" />
-                      </Button>
+                      <span title="로컬 라우트는 삭제할 수 없어요">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          disabled
+                        >
+                          <PinIcon className="h-4 w-4" />
+                        </Button>
+                      </span>
                     )}
                   </TableCell>
                 </TableRow>

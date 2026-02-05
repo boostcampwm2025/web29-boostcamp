@@ -54,7 +54,7 @@ export default function VpcCreate({ config, onSubmit }: VpcCreateProps) {
       </div>
 
       {/* 흰색 배경 카드 */}
-      <div className="bg-card text-card-foreground rounded-lg border shadow-sm">
+      <div className="bg-card text-card-foreground rounded-lg border">
         <div className="border-b px-6 py-4">
           <h2 className="text-xl font-semibold">VPC 설정</h2>
         </div>

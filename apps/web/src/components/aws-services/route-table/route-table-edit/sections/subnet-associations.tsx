@@ -42,11 +42,13 @@ export function SubnetAssociations({
               <Table>
                 <TableHeader>
                   <TableRow className="bg-muted/50">
-                    <TableHead className="w-[50px] text-center">연결</TableHead>
-                    <TableHead>이름</TableHead>
-                    <TableHead>서브넷 ID</TableHead>
-                    <TableHead>IPv4 CIDR</TableHead>
-                    <TableHead>가용 영역</TableHead>
+                    <TableHead className="w-[10%] text-center text-nowrap">
+                      연결
+                    </TableHead>
+                    <TableHead className="w-[23%]">이름</TableHead>
+                    <TableHead className="w-[23%]">서브넷 ID</TableHead>
+                    <TableHead className="w-[21%]">IPv4 CIDR</TableHead>
+                    <TableHead className="w-[23%]">가용 영역</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -67,7 +69,7 @@ export function SubnetAssociations({
                           }}
                         >
                           <TableCell
-                            className="text-center"
+                            className="px-0 text-center"
                             onClick={(e) => e.stopPropagation()}
                           >
                             <Checkbox

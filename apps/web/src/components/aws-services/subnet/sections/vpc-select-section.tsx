@@ -25,7 +25,7 @@ export function VpcSelect({ control, vpcs }: VpcSelectProps) {
   const selectedVpc = vpcs.find((vpc) => vpc.id === selectedVpcId)
 
   return (
-    <div className="bg-card text-card-foreground rounded-lg border shadow-sm">
+    <div className="bg-card text-card-foreground rounded-lg border">
       <div className="border-b px-6 py-4">
         <h2 className="text-xl font-semibold">VPC</h2>
       </div>
