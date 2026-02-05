@@ -1,4 +1,4 @@
-export const EC2_TOOLTIPS = {
+export const INSTANCE_CREATE_TOOLTIPS = {
   nameTag: `인스턴스에 이름을 지정하면 AWS 콘솔에서 쉽게 식별할 수 있습니다. 
 태그는 리소스를 분류하고 관리하는 데 사용되는 키-값 쌍입니다.`,
 

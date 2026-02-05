@@ -10,7 +10,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { EC2_TOOLTIPS, VOLUME_TYPE_OPTIONS } from '@/constants/aws-services/ec2'
+import {
+  INSTANCE_CREATE_TOOLTIPS,
+  VOLUME_TYPE_OPTIONS,
+} from '@/constants/aws-services/ec2'
 import type { EC2SectionProps } from '@/types/aws-services/ec2/instance-create'
 
 export function Storage({ control }: EC2SectionProps) {
@@ -27,7 +30,7 @@ export function Storage({ control }: EC2SectionProps) {
       title={
         <div className="flex items-center gap-2">
           스토리지 구성
-          <TooltipBox content={EC2_TOOLTIPS.storage} />
+          <TooltipBox content={INSTANCE_CREATE_TOOLTIPS.storage} />
         </div>
       }
     >

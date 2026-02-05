@@ -4,7 +4,7 @@ import { TooltipBox } from '@/components/aws-services/common/tooltip-box'
 import { SectionContainer } from '@/components/section-container'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { EC2_TOOLTIPS } from '@/constants/aws-services/ec2'
+import { INSTANCE_CREATE_TOOLTIPS } from '@/constants/aws-services/ec2'
 import type { EC2SectionProps } from '@/types/aws-services/ec2/instance-create'
 
 export function NameTag({ control }: EC2SectionProps) {
@@ -13,7 +13,7 @@ export function NameTag({ control }: EC2SectionProps) {
       title={
         <div className="flex items-center gap-2">
           이름 및 태그
-          <TooltipBox content={EC2_TOOLTIPS.nameTag} />
+          <TooltipBox content={INSTANCE_CREATE_TOOLTIPS.nameTag} />
         </div>
       }
     >
