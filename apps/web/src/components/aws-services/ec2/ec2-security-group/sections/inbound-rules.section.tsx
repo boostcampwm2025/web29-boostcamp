@@ -4,6 +4,7 @@ import { Plus, Trash2 } from 'lucide-react'
 
 import { Controller, type UseFormReturn, useFieldArray } from 'react-hook-form'
 
+import { TooltipBox } from '@/components/aws-services/common/tooltip-box'
 import { SectionContainer } from '@/components/section-container'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -23,6 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { SECURITY_GROUP_TOOLTIPS } from '@/constants/aws-services/ec2/'
 import {
   DEFAULT_SG_RULE,
   RULE_TYPE_PRESETS,
@@ -77,7 +79,12 @@ export function InboundRulesSection({ form }: InboundRulesSectionProps) {
 
   return (
     <SectionContainer
-      title="인바운드 규칙"
+      title={
+        <div className="flex items-center gap-2">
+          인바운드 규칙
+          <TooltipBox content={SECURITY_GROUP_TOOLTIPS.inboundRules} />
+        </div>
+      }
       description="인스턴스로 들어오는 트래픽을 제어하는 규칙을 추가하세요"
     >
       <div className="space-y-4">
