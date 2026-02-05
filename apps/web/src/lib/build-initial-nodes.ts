@@ -39,7 +39,22 @@ export function useBuildDefaultNodes(
             addAwsResource(item.data)
           }
         }
+        if (configs.internetGateway) {
+          for (const item of configs.internetGateway) {
+            addAwsResource(item.data)
+          }
+        }
         // 서브넷이 부모인 노드 생성
+        if (configs.ec2) {
+          for (const item of configs.ec2) {
+            addAwsResource(item.data)
+          }
+        }
+        if (configs.natGateway) {
+          for (const item of configs.natGateway) {
+            addAwsResource(item.data)
+          }
+        }
       }
     },
     [addAwsResource],
