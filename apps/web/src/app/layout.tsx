@@ -22,13 +22,14 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://cloudcraft.o-r.kr'),
   title: '클라우드 크래프트',
   description: '시각적으로 학습하는 클라우드 시뮬레이터',
   generator: 'Next.js',
   openGraph: {
     title: '클라우드 크래프트',
     description: '시각적으로 학습하는 클라우드 시뮬레이터',
-    url: 'https://your-domain.com',
+    url: 'https://cloudcraft.o-r.kr',
     siteName: '클라우드 크래프트',
     images: [
       {
